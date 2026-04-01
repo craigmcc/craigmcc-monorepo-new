@@ -1,0 +1,17 @@
+{
+  "extends": "@repo/typescript-config/react-library",
+  "compilerOptions": {
+    "outDir": "dist",
+    "rootDir": "src",
+    "types": ["vitest"]
+  },
+  "exclude": [
+    "node_modules",
+    "dist",
+    "src/**/*.test.*",
+    "src/**/*.spec.*",
+    "src/tests/**"
+  ],
+  "include": ["src"],
+}
+// Exclude test files from the TypeScript build; they are executed by Vitest separately

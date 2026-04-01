@@ -3,12 +3,20 @@
   "private": true,
   "scripts": {
     "build": "turbo run build",
+    "check-types": "turbo run check-types",
+    "coverage:merge": "node ./scripts/merge-coverage.js",
     "dev": "turbo run dev",
-    "lint": "turbo run lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
-    "check-types": "turbo run check-types"
+    "lint": "turbo run lint",
+    "test": "turbo run test",
+    "test:ci": "turbo run build && turbo run test:ci && pnpm coverage:merge",
+    "test:ci:merged": "turbo run test:ci && pnpm coverage:merge"
   },
   "devDependencies": {
+    "fast-glob": "^3.2.12",
+    "istanbul-lib-coverage": "^3.2.0",
+    "istanbul-lib-report": "^3.0.0",
+    "istanbul-reports": "^3.0.0",
     "prettier": "^3.7.4",
     "turbo": "^2.9.1",
     "typescript": "5.9.2"

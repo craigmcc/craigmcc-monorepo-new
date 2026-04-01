@@ -3,12 +3,12 @@
   "compilerOptions": {
     "declaration": true,
     "declarationMap": false,
-    "sourceMap": false,
+    "emitDeclarationOnly": false,
     "outDir": "dist",
     "rootDir": "src",
-    "emitDeclarationOnly": false,
+    "sourceMap": false,
     "types": ["vitest"]
   },
-  "include": ["src/**/*"],
-  "exclude": ["src/msw/**"]
+  "exclude": ["src/msw/**"],
+  "include": ["src/**/*"]
 }
