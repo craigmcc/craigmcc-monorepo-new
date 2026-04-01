@@ -6,7 +6,7 @@
   "exports": {
     "./base": "./base.js",
     "./next-js": "./next.js",
-    "./react-internal": "./react-internal.js"
+    "./react-library": "./react-library.js"
   },
   "devDependencies": {
     "@eslint/js": "catalog:eslint9",
