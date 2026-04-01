@@ -23,6 +23,6 @@
     "@types/react": "catalog:react19",
     "@types/react-dom": "catalog:react19",
     "eslint": "catalog:eslint9",
-    "typescript": "catalog:typescript"
+    "typescript": "catalog:typescript6"
   }
 }
