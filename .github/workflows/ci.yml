@@ -43,5 +43,4 @@ jobs:
         run: pnpm build
 
       - name: Test
-        env:
         run: pnpm test:ci
