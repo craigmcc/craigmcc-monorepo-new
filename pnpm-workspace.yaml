@@ -5,14 +5,33 @@ allowBuilds:
   msw: false
 
 catalogs:
+  daisy5:
+    daisyui: 5.5.19
   date-fns:
     date-fns: 4.1.0
   eslint9:
+    '@eslint/js': 9.39.2
+    '@eslint/eslintrc': 3.3.3
+    '@next/eslint-plugin-next': 15.3.5
+    '@typescript-eslint/parser': 8.50.1
+    '@typescript-eslint/eslint-plugin': 8.50.1
     eslint: 9.39.4
+    eslint-config-next: 15.3.5
+    eslint-config-prettier: 10.1.8
+    eslint-config-only-warn: 1.1.0
+    eslint-plugin-neverthrow: 1.1.4
+    eslint-plugin-only-warn: 1.1.0
+    eslint-plugin-react: 7.37.5
+    eslint-plugin-react-hooks: 7.0.1
+    eslint-plugin-turbo: 2.7.1
+    globals: 16.5.0
+    typescript-eslint: 8.50.1
   exceljs:
     exceljs: "4.4.0"
   jsdom:
     jsdom: 29.0.1
+  lucide:
+    lucide-react: 1.7.0
   msw:
     msw: 2.12.14
   next-router-mock:
@@ -25,6 +44,8 @@ catalogs:
     node: 24.16.0
   pino:
     pino: 10.3.1
+  react-aria-components:
+    react-aria-components: 1.16.0
   react19:
     "@types/react": 19.2.14
     "@types/react-dom": 19.2.3
@@ -38,6 +59,8 @@ catalogs:
     "@testing-library/jest-dom": 6.9.1
     "@testing-library/react": 16.3.2
     "@testing-library/user-event": 14.6.1
+  typescript5:
+    typescript: 5.8.3
   typescript6:
     typescript: 6.0.2
   vite:
