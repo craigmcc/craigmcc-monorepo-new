@@ -1,0 +1,41 @@
+{
+  "dependencies": {
+    "class-variance-authority": "catalog:cva",
+    "clsx": "catalog:clsx",
+    "daisyui": "catalog:daisyui5",
+    "lucide-react": "catalog:lucide",
+    "postcss": "catalog:postcss",
+    "react-aria-components": "catalog:react-aria-components",
+    "tailwind-merge": "catalog:tailwind-merge"
+  },
+  "devDependencies": {
+    "@repo/eslint-config": "workspace:*",
+    "@repo/testing-react": "workspace:*",
+    "@repo/typescript-config": "workspace:*",
+    "@repo/vitest-config": "workspace:*",
+    "@tailwindcss/postcss": "catalog:tailwind4",
+    "@vitest/coverage-v8": "catalog:vitest",
+    "eslint": "catalog:eslint9",
+    "tailwindcss": "catalog:tailwind4",
+    "typescript": "catalog:typescript6",
+    "vitest": "catalog:vitest"
+  },
+  "exports": {
+    "./*": {
+      "import": "./dist/*.js",
+      "types": "./dist/*.d.ts"
+    },
+    "./styles.css": "./src/styles.css"
+  },
+  "license": "Apache-2.0",
+  "name": "@repo/daisy-ui",
+  "private": true,
+  "scripts": {
+    "build": "tsc",
+    "check-types": "tsc --noEmit",
+    "dev": "tsc --watch",
+    "lint": "eslint . --max-warnings 0"
+  },
+  "type": "module",
+  "version": "0.0.0"
+}
