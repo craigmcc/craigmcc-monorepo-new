@@ -151,6 +151,10 @@ catalogs:
     whatwg-fetch:
       specifier: 3.6.20
       version: 3.6.20
+  zod:
+    zod:
+      specifier: 4.3.6
+      version: 4.3.6
 
 importers:
 
@@ -195,12 +199,21 @@ importers:
       postcss:
         specifier: catalog:postcss
         version: 8.5.8
+      react:
+        specifier: catalog:react19
+        version: 19.2.4
       react-aria-components:
         specifier: catalog:react-aria-components
         version: 1.16.0(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
+      react-dom:
+        specifier: catalog:react19
+        version: 19.2.4(react@19.2.4)
       tailwind-merge:
         specifier: catalog:tailwind-merge
         version: 3.5.0
+      zod:
+        specifier: catalog:zod
+        version: 4.3.6
     devDependencies:
       '@repo/eslint-config':
         specifier: workspace:*
@@ -217,6 +230,12 @@ importers:
       '@tailwindcss/postcss':
         specifier: catalog:tailwind4
         version: 4.2.2
+      '@types/react':
+        specifier: catalog:react19
+        version: 19.2.14
+      '@types/react-dom':
+        specifier: catalog:react19
+        version: 19.2.3(@types/react@19.2.14)
       '@vitest/coverage-v8':
         specifier: catalog:vitest
         version: 4.1.2(vitest@4.1.2(@types/node@24.0.11)(msw@2.12.14(@types/node@24.0.11)(typescript@6.0.2))(vite@8.0.3(@emnapi/core@1.9.1)(@emnapi/runtime@1.7.1)(@types/node@24.0.11)(jiti@2.6.1)))

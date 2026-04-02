@@ -5,8 +5,11 @@
     "daisyui": "catalog:daisyui5",
     "lucide-react": "catalog:lucide",
     "postcss": "catalog:postcss",
+    "react": "catalog:react19",
+    "react-dom": "catalog:react19",
     "react-aria-components": "catalog:react-aria-components",
-    "tailwind-merge": "catalog:tailwind-merge"
+    "tailwind-merge": "catalog:tailwind-merge",
+    "zod": "catalog:zod"
   },
   "devDependencies": {
     "@repo/eslint-config": "workspace:*",
@@ -14,6 +17,8 @@
     "@repo/typescript-config": "workspace:*",
     "@repo/vitest-config": "workspace:*",
     "@tailwindcss/postcss": "catalog:tailwind4",
+    "@types/react": "catalog:react19",
+    "@types/react-dom": "catalog:react19",
     "@vitest/coverage-v8": "catalog:vitest",
     "eslint": "catalog:eslint9",
     "tailwindcss": "catalog:tailwind4",
