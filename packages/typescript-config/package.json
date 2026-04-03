@@ -29,7 +29,7 @@
   "name": "@repo/typescript-config",
   "private": true,
   "scripts": {
-    "check-types": "node -e \"const fs=require('node:fs');['base.json','nextjs.json','node.json','react-library.json'].forEach((f)=>JSON.parse(fs.readFileSync(f,'utf8')));\""
+    "check-types": "node ./scripts/check-json.mjs"
   },
   "publishConfig": {
     "access": "public"

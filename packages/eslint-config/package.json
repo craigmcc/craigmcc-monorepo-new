@@ -9,7 +9,7 @@
     "./react-library": "./react-library.js"
   },
   "scripts": {
-    "check-types": "node --check base.js && node --check next.js && node --check react-library.js"
+    "check-types": "node ./scripts/check-types.mjs"
   },
   "devDependencies": {
     "@eslint/js": "catalog:eslint9",
