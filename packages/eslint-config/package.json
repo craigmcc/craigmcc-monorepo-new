@@ -5,8 +5,11 @@
   "private": true,
   "exports": {
     "./base": "./base.js",
-    "./next-js": "./next.js",
+    "./nextjs": "./next.js",
     "./react-library": "./react-library.js"
+  },
+  "scripts": {
+    "check-types": "node --check base.js && node --check next.js && node --check react-library.js"
   },
   "devDependencies": {
     "@eslint/js": "catalog:eslint9",
@@ -16,7 +19,6 @@
     "eslint-config-prettier": "catalog:eslint9",
     "eslint-plugin-only-warn": "catalog:eslint9",
     "eslint-plugin-neverthrow": "catalog:eslint9",
-    "eslint-plugin-only-warn": "catalog:eslint9",
     "eslint-plugin-react": "catalog:eslint9",
     "eslint-plugin-react-hooks": "catalog:eslint9",
     "eslint-plugin-turbo": "catalog:eslint9",

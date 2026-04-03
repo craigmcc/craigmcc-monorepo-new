@@ -1,0 +1,42 @@
+{
+  "dependencies": {
+    "@repo/daisy-ui": "workspace:*",
+    "@repo/shared-utils": "workspace:*",
+    "lucide-react": "catalog:lucide",
+    "next": "catalog:next16",
+    "pino": "catalog:pino",
+    "react": "catalog:react19",
+    "react-aria-components": "catalog:react-aria-components",
+    "react-dom": "catalog:react19",
+    "zod": "catalog:zod"
+  },
+  "devDependencies": {
+    "@eslint/eslintrc": "catalog:eslint9",
+    "@repo/daisy-ui": "workspace:*",
+    "@repo/eslint-config": "workspace:*",
+    "@repo/typescript-config": "workspace:*",
+    "@repo/vitest-config": "workspace:*",
+    "@types/node": "catalog:node24",
+    "@types/react": "catalog:react19",
+    "@types/react-dom": "catalog:react19",
+    "@vitest/coverage-v8": "catalog:vitest",
+    "eslint": "catalog:eslint9",
+    "eslint-config-next": "catalog:eslint9",
+    "typescript": "catalog:typescript5",
+    "vitest": "catalog:vitest"
+  },
+  "license": "Apache-2.0",
+  "name": "daisy-showcase",
+  "private": true,
+  "scripts": {
+    "build": "next build",
+    "check-types": "tsc --noEmit",
+    "dev": "next dev --turbopack --port 3000",
+    "lint": "eslint .",
+    "start": "next start --port 3000",
+    "test": "vitest",
+    "test:ci": "vitest --run --coverage --passWithNoTests"
+  },
+  "type": "module",
+  "version": "0.1.0"
+}

@@ -28,6 +28,9 @@
   "license": "Apache-2.0",
   "name": "@repo/typescript-config",
   "private": true,
+  "scripts": {
+    "check-types": "node -e \"const fs=require('node:fs');['base.json','nextjs.json','node.json','react-library.json'].forEach((f)=>JSON.parse(fs.readFileSync(f,'utf8')));\""
+  },
   "publishConfig": {
     "access": "public"
   },

@@ -36,4 +36,11 @@ export const config = [
       "react/react-in-jsx-scope": "off",
     },
   },
+  {
+    files: ["**/*.{ts,tsx}"],
+    rules: {
+      // TypeScript already validates component props.
+      "react/prop-types": "off",
+    },
+  },
 ];
