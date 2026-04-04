@@ -4,21 +4,24 @@
 
 // External Modules ----------------------------------------------------------
 
-import "@repo/daisy-ui/styles.css";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { headers } from "next/headers";
 import React from "react";
 import { isRTL } from "react-aria-components";
+import { ToastContainer } from "react-toastify";
 
 // Internal Modules ----------------------------------------------------------
 
+import "@/app/globals.css";
 import { Providers } from "@/app/providers";
+import { NavBar } from "@/components/layout/NavBar";
+import { ThemeWrapper } from "@/components/layout/ThemeWrapper";
 
 // Public Objects ------------------------------------------------------------
 
 // Attempt to avoid pre-rendering on pages that do Prisma calls -- breaks on GitHub Actions
-export const dynamic = "force-dynamic";
+// export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
   title: "Daisy Showcase",
@@ -36,7 +39,18 @@ export default async function RootLayout({
     <html lang={lang} dir={isRTL(lang) ? 'rtl' : 'ltr'}>
     <body className={`${geistSans.variable} ${geistMono.variable}`}>
       <Providers lang={lang}>
-        {children}
+        <ThemeWrapper>
+          <NavBar />
+          <main className="bg-base-100 h-[calc(100vh-80px)]">
+            {children}
+          </main>
+        </ThemeWrapper>
+        <ToastContainer
+          autoClose={5000}
+          hideProgressBar={true}
+          position="bottom-right"
+          theme="colored"
+        />
       </Providers>
     </body>
     </html>

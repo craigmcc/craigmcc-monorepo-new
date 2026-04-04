@@ -5,9 +5,11 @@
     "lucide-react": "catalog:lucide",
     "next": "catalog:next16",
     "pino": "catalog:pino",
+    "postcss": "catalog:postcss",
     "react": "catalog:react19",
     "react-aria-components": "catalog:react-aria-components",
     "react-dom": "catalog:react19",
+    "react-toastify": "catalog:react-toastify",
     "zod": "catalog:zod"
   },
   "devDependencies": {
@@ -16,12 +18,14 @@
     "@repo/eslint-config": "workspace:*",
     "@repo/typescript-config": "workspace:*",
     "@repo/vitest-config": "workspace:*",
+    "@tailwindcss/postcss": "catalog:tailwind4",
     "@types/node": "catalog:node24",
     "@types/react": "catalog:react19",
     "@types/react-dom": "catalog:react19",
     "@vitest/coverage-v8": "catalog:vitest",
     "eslint": "catalog:eslint9",
     "eslint-config-next": "catalog:eslint9",
+    "tailwindcss": "catalog:tailwind4",
     "typescript": "catalog:typescript5",
     "vitest": "catalog:vitest"
   },
