@@ -22,7 +22,7 @@ import { twMerge } from "tailwind-merge";
  * Variant properties for this component.
  */
 export const ButtonVariants = cva(
-  "btn gap-2",
+  "btn",
   {
     defaultVariants: {
       active: false,
