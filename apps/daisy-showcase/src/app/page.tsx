@@ -12,7 +12,7 @@ import React from "react";
 
 export default function HomePage() {
   return (
-      <div className="p-2 mb-4 bg-white rounded-3">
+      <div className="p-2 mb-4 bg-base-100 rounded-3">
         <h1 className="header text-center">
           Welcome To The Daisy Showcase Application
         </h1>

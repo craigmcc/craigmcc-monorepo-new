@@ -34,7 +34,7 @@ export function NavBar() {
         <Link className="font-semibold px-2" href="/">daisyui-showcase</Link>
       </div>
 
-      <div className="navbar-center gap-4">
+      <div className="navbar-center gap-2">
         <Link href="/buttons">
           <Button color="primary">Buttons</Button>
         </Link>

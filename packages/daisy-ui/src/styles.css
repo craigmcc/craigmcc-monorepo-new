@@ -1,5 +1,13 @@
 @import "tailwindcss";
 
+/*
+ * Tell Tailwind to scan this package's source files for class names.
+ * Without this, apps that import this stylesheet will only scan their own
+ * source tree and miss utility classes used inside daisy-ui components.
+ * @source paths are resolved relative to this CSS file.
+ */
+@source ".";
+
 @plugin "daisyui" {
     themes: all;
 }

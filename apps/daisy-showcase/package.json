@@ -23,6 +23,7 @@
     "@types/react": "catalog:react19",
     "@types/react-dom": "catalog:react19",
     "@vitest/coverage-v8": "catalog:vitest",
+    "daisyui": "catalog:daisyui5",
     "eslint": "catalog:eslint9",
     "eslint-config-next": "catalog:eslint9",
     "tailwindcss": "catalog:tailwind4",

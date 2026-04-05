@@ -22,13 +22,14 @@ import { twMerge } from "tailwind-merge";
  * Variant properties for this component.
  */
 export const ButtonVariants = cva(
-  "btn",
+  "btn gap-2",
   {
     defaultVariants: {
       active: false,
       block: false,
       circle: false,
       color: "primary",
+      dash: false,
       disabled: false,
       outline: false,
       size: "md",
@@ -50,7 +51,7 @@ export const ButtonVariants = cva(
       // Present with a 1:1 ratio with rounded corners
       circle: {
         false: null,
-        true: "btn-square",
+        true: "btn-circle",
       },
       // Base color for this component
       color: {
@@ -66,7 +67,7 @@ export const ButtonVariants = cva(
       // Present with dashed border instead of background color
       dash: {
         false: null,
-        true: "btn-outline",
+        true: "btn-dash",
       },
       // Present with disabled styling (can also use "disabled" attribute
       // on a <button>)
@@ -119,6 +120,7 @@ export function Button({
   block,
   circle,
   color,
+  dash,
   disabled,
   outline,
   size,
@@ -129,8 +131,8 @@ export function Button({
 }: AriaButtonProps & VariantProps<typeof ButtonVariants>)
 {
   const variants =
-    ButtonVariants({active, block, circle, color, disabled, outline, size,
-                    soft, square, wide, className });
+    ButtonVariants({active, block, circle, color, dash, disabled, outline,
+                    size, soft, square, wide, className });
   return (
     <AriaButton
       className={twMerge(clsx(variants))}
