@@ -26,7 +26,7 @@ export const CurrentProfileContext = createContext<CurrentProfileContextType>({
   setCurrentProfile: () => {},
 });
 
-const LOCAL_STORAGE_NAME = "daisyui-showcase-currentProfile";
+const LOCAL_STORAGE_NAME = "daisy-showcase-currentProfile";
 
 export const CurrentProfileContextProvider = ({ children }: {
   children: React.ReactNode;
@@ -34,10 +34,13 @@ export const CurrentProfileContextProvider = ({ children }: {
   const [currentProfile, changeCurrentProfile] = useState<Profile | null>(null);
 
   useEffect(() => {
-    // Load the current profile from local storage or other persistent storage
-    const storedProfile = localStorage.getItem(LOCAL_STORAGE_NAME);
-    if (storedProfile) {
-      changeCurrentProfile(JSON.parse(storedProfile));
+    // A lazy useState initializer cannot be used: localStorage is undefined
+    // during SSR, and would cause a hydration mismatch if the server renders a
+    // different default than the client reads from storage.
+    const stored = localStorage.getItem(LOCAL_STORAGE_NAME);
+    if (stored) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      changeCurrentProfile(JSON.parse(stored));
     }
   }, []);
 

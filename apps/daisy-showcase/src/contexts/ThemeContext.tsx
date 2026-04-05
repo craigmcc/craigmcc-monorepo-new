@@ -27,23 +27,20 @@ export const ThemeContext = createContext<ThemeContextType>({
 });
 
 const DEFAULT_INITIAL_THEME = "light";
-const LOCAL_STORAGE_NAME = "daisyui-theme";
+const LOCAL_STORAGE_NAME = "daisy-showcase-theme";
 
 export const ThemeContextProvider = ({children}: {
   children: React.ReactNode,
 }) => {
-  const [isMounted, setIsMounted] = useState<boolean>(false);
   const [theme, setTheme] = useState<string>(DEFAULT_INITIAL_THEME);
 
   useEffect(() => {
-    setIsMounted(true);
-    const storedTheme = localStorage.getItem(LOCAL_STORAGE_NAME) || DEFAULT_INITIAL_THEME;
-    setTheme(storedTheme);
+    // A lazy useState initializer cannot be used: localStorage is undefined
+    // during SSR, and would cause a hydration mismatch if the server renders a
+    // different default than the client reads from storage.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setTheme(localStorage.getItem(LOCAL_STORAGE_NAME) ?? DEFAULT_INITIAL_THEME);
   }, []);
-
-  if (!isMounted) {
-    return <>Loading theme ...</>;
-  }
 
   const changeTheme = (theme: string) => {
     setTheme(theme);
