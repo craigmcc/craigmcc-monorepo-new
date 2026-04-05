@@ -7,6 +7,7 @@
 // External Imports ----------------------------------------------------------
 
 import { Button } from "@repo/daisy-ui/Button";
+import { Navbar } from "@repo/daisy-ui/Navbar";
 import { Flower2 } from "lucide-react";
 import Link from "next/link";
 import { useEffect } from "react";
@@ -27,14 +28,18 @@ export function NavBar() {
   }, [currentProfile]);
 
   return (
-    <div className="navbar bg-base-200">
+    <Navbar>
 
-      <div className="navbar-start">
-        <Flower2 className="navbar-logo" size={32} />
-        <Link className="font-semibold px-2" href="/">daisyui-showcase</Link>
-      </div>
+      <Navbar.Start>
+        <Link href="/">
+          <Button color="ghost">
+            <Flower2 className="navbar-logo" size={32} />
+            <span className="font-semibold px-2">daisyui-showcase</span>
+          </Button>
+        </Link>
+      </Navbar.Start>
 
-      <div className="navbar-center gap-2">
+      <Navbar.Center className="gap-2">
         <Link href="/buttons">
           <Button color="primary">Buttons</Button>
         </Link>
@@ -50,16 +55,16 @@ export function NavBar() {
         <Link href="/tables">
           <Button color="primary">Tables</Button>
         </Link>
-      </div>
+      </Navbar.Center>
 
-      <div className="navbar-end">
+      <Navbar.End>
         {currentProfile && (
           <span className="text-secondary p-2">{currentProfile.email}</span>
         )}
         <ThemeSwitcher />
-      </div>
+      </Navbar.End>
 
-    </div>
+    </Navbar>
   )
 
 }

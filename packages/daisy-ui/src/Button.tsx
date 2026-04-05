@@ -3,7 +3,7 @@
  */
 
 
-// Public Modules ------------------------------------------------------------
+// External Modules ----------------------------------------------------------
 
 import { cva, type VariantProps } from "class-variance-authority";
 import { clsx } from "clsx";
@@ -14,7 +14,7 @@ import {
 } from "react-aria-components";
 import { twMerge } from "tailwind-merge";
 
-// Private Modules -----------------------------------------------------------
+// Internal Modules ----------------------------------------------------------
 
 // Public Objects ------------------------------------------------------------
 
@@ -57,6 +57,7 @@ export const ButtonVariants = cva(
       color: {
         accent: "btn-accent",
         error: "btn-error",
+        ghost: "btn-ghost",
         info: "btn-info",
         neutral: "btn-neutral",
         primary: "btn-primary",
