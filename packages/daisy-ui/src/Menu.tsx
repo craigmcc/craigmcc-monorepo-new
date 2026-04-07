@@ -2,9 +2,6 @@
 
 /**
  * A dropdown menu, triggered by an application-defined trigger.
- *
- * - Initial version of this will not be styled until the functionality works.
- * - Published parent and child component names differ from the Aria React names.
  */
 
 // External Modules ----------------------------------------------------------
@@ -35,30 +32,29 @@ import { twMerge } from "tailwind-merge";
 type MenuProps = {
   // Children to be rendered (should be of type Menu.Item (or maybe submenus/separators?)).
   children: React.ReactNode;
-  // The trigger to open/close this menu
-  trigger: React.ReactElement,
-  // Optional classes to append to the popover wrapper
-  popoverClassName?: string;
+  // Optional classes to customize max height (used with overflow: auto/scroll)
+  maxHeightClassName?: string;
   // Optional classes to append to the menu list
   menuClassName?: string;
   // Optional overflow behavior for long menus
   overflow?: "visible" | "hidden" | "auto" | "scroll";
-  // Optional classes to customize max height (used with overflow: auto/scroll)
-  maxHeightClassName?: string;
+  // Optional classes to append to the popover wrapper
+  popoverClassName?: string;
+  // The trigger to open/close this menu
+  trigger: React.ReactElement,
 }
 
-const POPOVER_BASE_CLASSES = "z-50 mt-2 rounded-box border border-base-300 bg-base-100 p-1 shadow-lg";
-const MENU_BASE_CLASSES = "w-52 flex flex-col flex-nowrap p-1";
 const ITEM_BASE_CLASSES = "rounded-field px-3 py-2";
-
+const MENU_BASE_CLASSES = "w-52 flex flex-col flex-nowrap p-1";
 const OVERFLOW_CLASSES: Record<NonNullable<MenuProps["overflow"]>, string> = {
   auto: "max-h-80 overflow-auto",
   hidden: "overflow-hidden",
   scroll: "max-h-80 overflow-scroll",
   visible: "overflow-visible",
 };
+const POPOVER_BASE_CLASSES = "z-50 mt-2 rounded-box border border-base-300 bg-base-100 p-1 shadow-lg";
 
-export function Menu({ children, trigger, popoverClassName, menuClassName, overflow, maxHeightClassName }: MenuProps) {
+export function Menu({ children, maxHeightClassName, menuClassName, overflow, popoverClassName, trigger,  }: MenuProps) {
   let overflowClasses = overflow ? OVERFLOW_CLASSES[overflow] : undefined;
   // If maxHeightClassName is provided, strip max-h-* from overflow classes and apply custom height
   if (maxHeightClassName && overflowClasses) {
