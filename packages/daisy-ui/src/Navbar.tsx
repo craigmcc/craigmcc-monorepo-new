@@ -23,7 +23,7 @@ const NAVBAR_BASE_CLASSES = "navbar bg-base-200 p-0";
 
 export function Navbar({ children, className }: NavbarProps) {
   return (
-    <NavbarContext.Provider value={null}>
+    <NavbarContext.Provider value={{}}>
     <div className={twMerge(clsx(NAVBAR_BASE_CLASSES, className))}>
       {children}
     </div>
@@ -93,13 +93,13 @@ function Start({ children, className }: StartProps) {
 
 Navbar.Start = Start;
 
-const NavbarContext = React.createContext(null);
+const NavbarContext = React.createContext<Record<string, never> | undefined>(undefined);
 
 function useNavbarContext()  {
   const context = React.useContext(NavbarContext);
   if (!context) {
     throw new Error(
-      "Navbar child components must be wrapped in <Navbar />"
+      "Navbar child components must be wrapped in <Navbar/>"
     );
   }
 }
