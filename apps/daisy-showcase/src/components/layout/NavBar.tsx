@@ -14,7 +14,8 @@ import { useEffect } from "react";
 
 // Internal Imports ----------------------------------------------------------
 
-import { ThemeSwitcher } from "@/components/layout/ThemeSwitcher";
+import { ThemeChanger } from "@/components/layout/ThemeChanger";
+//import { ThemeSwitcher } from "@/components/layout/ThemeSwitcher";
 import { useCurrentProfileContext } from "@/contexts/CurrentProfileContext";
 
 // Public Objects ------------------------------------------------------------
@@ -61,7 +62,8 @@ export function NavBar() {
         {currentProfile && (
           <span className="text-secondary p-2">{currentProfile.email}</span>
         )}
-        <ThemeSwitcher />
+        <ThemeChanger />
+        {/*<ThemeSwitcher />*/}
       </Navbar.End>
 
     </Navbar>
