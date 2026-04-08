@@ -1,3 +1,5 @@
+"use client";
+
 /**
  * A button in various styles.
  */
