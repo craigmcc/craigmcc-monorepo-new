@@ -103,7 +103,7 @@ type ActionsProps = {
   children: React.ReactNode;
   // CSS classes to append for this Actions
   className?: string;
-}
+} & React.ComponentPropsWithoutRef<"div">;
 
 function Actions({ children, className }: ActionsProps) {
   useCardContext();
@@ -121,7 +121,7 @@ type BodyProps = {
   children: React.ReactNode;
   // CSS classes to append for this Body
   className?: string;
-}
+} & React.ComponentPropsWithoutRef<"div">;
 
 function Body({ children, className }: BodyProps) {
   useCardContext();
@@ -139,7 +139,7 @@ type TitleProps = {
   children: React.ReactNode;
   // CSS classes to append for this Title
   className?: string;
-}
+} & React.ComponentPropsWithoutRef<"div">;
 
 function Title({ children, className }: TitleProps) {
   useCardContext();
