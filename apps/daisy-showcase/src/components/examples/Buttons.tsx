@@ -15,7 +15,7 @@ import type { ComponentProps } from "react";
 
 export function Buttons() {
   return (
-    <table className={"table table-zebra border-1 rounded-md w-full"}>
+    <table className={"table table-zebra border rounded-md w-full"}>
       <thead>
       <tr>
         <th>Options</th>

@@ -31,7 +31,7 @@ export const CardVariants = cva(
       // Present with a solid border
       border: {
         false: null,
-        true: "card-border",
+        true: "card-border border-2 border-base-content/30",
       },
       // Base (background  and foreground) color for this component
       color: {
@@ -50,7 +50,7 @@ export const CardVariants = cva(
       // Present with dashed border
       dash: {
         false: null,
-        true: "card-dash",
+        true: "card-dash border-2 border-dashed border-base-content/30",
       },
       // Basic size of this component
       size: {
@@ -65,9 +65,9 @@ export const CardVariants = cva(
   }
 )
 
-const ACTIONS_BASE_CLASSES = "card-actions justify-end";
+const ACTIONS_BASE_CLASSES = "card-actions p-1 justify-end";
 const BODY_BASE_CLASSES = "card-body";
-const TITLE_BASE_CLASSES = "card-title";
+const TITLE_BASE_CLASSES = "card-title p-1";
 
 export function Card({
                        children,
