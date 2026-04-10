@@ -60,7 +60,46 @@ export function Inputs() {
 
       <hr className="my-4"/>
 
-    </>
+      <div className="grid w-full grid-cols-2 gap-2">
+
+        <Card className="w-full">
+          <Card.Title className="justify-center">Horizontal Orientation</Card.Title>
+          <Card.Body>
+            {SIZES.map((size) => (
+              <ExampleInput
+                handleChange={() => {alert("Changed!")}}
+                label={`Input with size: ${size}`}
+                labelClassName="w-60"
+                name={`input-{size}`}
+                placeholder={`${size} placeholder`}
+                size={size}
+                value=""
+                key={size}
+              />
+            ))}
+          </Card.Body>
+        </Card>
+
+        <Card className="w-full">
+          <Card.Title className="justify-center">Vertical Orientation</Card.Title>
+          <Card.Body>
+            {SIZES.map((size) => (
+              <ExampleInput
+                handleChange={() => {alert("Changed!")}}
+                label={`Input with size: ${size}`}
+                name={`input-{size}`}
+                placeholder={`${size} placeholder`}
+                size={size}
+                value=""
+                key={size}
+              />
+            ))}
+          </Card.Body>
+        </Card>
+
+      </div>
+
+      </>
 
   )
 }
@@ -79,7 +118,6 @@ const COLORS = [
   "warning",
 ] as const satisfies readonly InputColor[];
 
-/*
 type InputSize = NonNullable<ComponentProps<typeof Input>["size"]>;
 const SIZES = [
   "lg",
@@ -88,13 +126,12 @@ const SIZES = [
   "xl",
   "xs",
 ] as const satisfies readonly InputSize[];
-*/
 
 type ExampleInputProps = {
   // Should we render a solid border? [false]
   border?: boolean;
   // Base color for this input [neutral]
-  color: InputColor;
+  color?: InputColor;
   // Should we render a dashed border? [false]
   dash?: boolean;
   // Present with disabled styling and behavior
@@ -112,7 +149,9 @@ type ExampleInputProps = {
   // Placeholder for this Input component [none]
   placeholder?: string;
   // Size of this input [md]
-//  size: InputSize;
+  size?: InputSize;
+  // Field type [text]
+  type?: string;
   // Current input field value
   value: string;
 }
@@ -126,7 +165,8 @@ function ExampleInput({
   labelClassName = undefined,
   name,
   placeholder = undefined,
-//  size = "md",
+  size = "md",
+  type = "text",
   value,
 }: ExampleInputProps) {
 
@@ -140,7 +180,8 @@ function ExampleInput({
       labelClassName={labelClassName}
       name={name}
       placeholder={placeholder}
-//      size={size}
+      size={size}
+      type={type}
       value={value}
     />
   )

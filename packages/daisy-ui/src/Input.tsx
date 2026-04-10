@@ -89,6 +89,8 @@ type InputExtraProps = {
   value: string;
 }
 
+type InputNativeProps = Omit<React.ComponentPropsWithoutRef<"input">, "size">;
+
 export function Input({
   className,
   // Variants
@@ -109,7 +111,7 @@ export function Input({
   // Input Element Props
   ...props
 } : VariantProps<typeof InputVariants>
-    & React.ComponentPropsWithoutRef<"input">
+    & InputNativeProps
     & InputExtraProps) {
 
   const variants =
