@@ -24,7 +24,6 @@ export const InputVariants = cva(
     defaultVariants: {
       color: "neutral",
       disabled: false,
-      error: false,
       ghost: false,
       size: "md",
     },
@@ -43,12 +42,7 @@ export const InputVariants = cva(
       // Present with disabled styling and behavior
       disabled: {
         false: null,
-        true: "input-disabled cursor-not-allowed opacity-50",
-      },
-      // Present with error styling and behavior
-      error: {
-        false: null,
-        true: "input-error",
+        true: "disabled cursor-not-allowed opacity-50",
       },
       // Present with ghost styling
       ghost: {
@@ -96,7 +90,6 @@ export function Input({
   // Variants
   color,
   disabled,
-  error,
   ghost,
   size,
   // Extra Props
@@ -115,7 +108,7 @@ export function Input({
     & InputExtraProps) {
 
   const variants =
-    InputVariants({color, disabled, error, ghost, size, className});
+    InputVariants({color, disabled, ghost, size, className});
 
   if (labelClassName) {
     // Horizontal presentation
@@ -138,7 +131,7 @@ export function Input({
           />
         </div>
       </fieldset>
-    )
+    );
   } else {
     // Vertical presentation
     return (
@@ -158,6 +151,6 @@ export function Input({
           />
         </div>
       </fieldset>
-    )
+    );
   }
 }

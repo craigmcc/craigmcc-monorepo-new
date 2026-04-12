@@ -53,6 +53,9 @@ export function NavBar() {
         <Link href="/inputs">
           <Button color="primary">Inputs</Button>
         </Link>
+        <Link href="/selects">
+          <Button color="primary">Selects</Button>
+        </Link>
         <Link href="/tables">
           <Button color="primary">Tables</Button>
         </Link>
