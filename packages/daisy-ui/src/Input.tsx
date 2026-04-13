@@ -9,6 +9,11 @@
 import { cva, type VariantProps } from "class-variance-authority";
 import { clsx } from "clsx";
 import * as React from "react";
+import {
+  Input as AriaInput,
+  Label as AriaLabel,
+  TextField as AriaTextField,
+} from "react-aria-components";
 import { twMerge } from "tailwind-merge";
 
 // Internal Modules ----------------------------------------------------------
@@ -62,6 +67,8 @@ export const InputVariants = cva(
 );
 
 type InputExtraProps = {
+  // Extra CSS class(es) for the rendered text field
+  className?: string;
   // Optional handler for blur events
   handleBlur?: () => void;
   // Handler for value change events
@@ -83,7 +90,7 @@ type InputExtraProps = {
   value: string;
 }
 
-type InputNativeProps = Omit<React.ComponentPropsWithoutRef<"input">, "size">;
+type InputNativeProps = Omit<React.ComponentPropsWithoutRef<typeof AriaInput>, "children" | "className" | "disabled" | "onChange" | "size">;
 
 export function Input({
   className,
@@ -112,22 +119,25 @@ export function Input({
 
     return (
       <fieldset className="fieldset">
-        <div className={labelClassName ? "flex flex-row" : "flex flex-col"}>
-          <legend
-            className={twMerge(clsx("fieldset-legend", labelClassName))}
-          >{label}</legend>
-          <input
+        <AriaTextField
+          className={labelClassName ? "flex flex-row items-center" : "flex flex-col"}
+          isDisabled={Boolean(disabled)}
+          isInvalid={isInvalid}
+          onChange={handleChange}
+          value={value}
+        >
+          <AriaLabel className={twMerge(clsx("fieldset-legend", labelClassName))}>
+            {label}
+          </AriaLabel>
+          <AriaInput
             className={twMerge(clsx(variants, "w-full"))}
-            aria-invalid={isInvalid}
             id={name}
             name={name}
             onBlur={handleBlur}
-            onChange={(e) => handleChange(e.target.value)}
             type={type}
-            value={value}
             {...props}
           />
-        </div>
+        </AriaTextField>
       </fieldset>
     );
 }
