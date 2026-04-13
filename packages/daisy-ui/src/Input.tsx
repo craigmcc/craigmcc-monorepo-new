@@ -110,11 +110,9 @@ export function Input({
   const variants =
     InputVariants({color, disabled, ghost, size, className});
 
-  if (labelClassName) {
-    // Horizontal presentation
     return (
       <fieldset className="fieldset">
-        <div className="flex flex-row">
+        <div className={labelClassName ? "flex flex-row" : "flex flex-col"}>
           <legend
             className={twMerge(clsx("fieldset-legend", labelClassName))}
           >{label}</legend>
@@ -132,25 +130,4 @@ export function Input({
         </div>
       </fieldset>
     );
-  } else {
-    // Vertical presentation
-    return (
-      <fieldset className="fieldset">
-        <div className="flex flex-col">
-          <legend className="fieldset-legend">{label}</legend>
-          <input
-            className={twMerge(clsx(variants, "w-full"))}
-            aria-invalid={isInvalid}
-            id={name}
-            name={name}
-            onBlur={handleBlur}
-            onChange={(e) => handleChange(e.target.value)}
-            type={type}
-            value={value}
-            {...props}
-          />
-        </div>
-      </fieldset>
-    );
-  }
 }
