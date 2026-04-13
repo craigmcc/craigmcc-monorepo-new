@@ -47,6 +47,9 @@ export function NavBar() {
         <Link href="/cards">
           <Button color="primary">Cards</Button>
         </Link>
+        <Link href="/checkboxes">
+          <Button color="primary">Checkboxes</Button>
+        </Link>
         <Link href="/forms">
           <Button color="primary">Forms</Button>
         </Link>
