@@ -62,6 +62,9 @@ export function NavBar() {
         <Link href="/tables">
           <Button color="primary">Tables</Button>
         </Link>
+        <Link href="/textareas">
+          <Button color="primary">Textareas</Button>
+        </Link>
       </Navbar.Center>
 
       <Navbar.End>
