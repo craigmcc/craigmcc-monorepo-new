@@ -9,10 +9,10 @@
 
 import { cva, type VariantProps } from "class-variance-authority";
 import { clsx } from "clsx";
+import { Check } from "lucide-react";
 import * as React from "react";
 import {
-//  Checkbox as AriaCheckbox,
-  type CheckboxProps as AriaCheckboxProps
+  Checkbox as AriaCheckbox,
 } from "react-aria-components";
 import { twMerge } from "tailwind-merge";
 
@@ -60,7 +60,39 @@ export const CheckboxVariants = cva(
   }
 );
 
+const CHECK_ICON_COLOR_CLASSES: Record<NonNullable<VariantProps<typeof CheckboxVariants>["color"]>, string> = {
+  accent: "text-accent-content",
+  error: "text-error-content",
+  info: "text-info-content",
+  neutral: "text-neutral-content",
+  primary: "text-primary-content",
+  secondary: "text-secondary-content",
+  success: "text-success-content",
+  warning: "text-warning-content",
+};
+
+const CHECK_SELECTED_FILL_CLASSES: Record<NonNullable<VariantProps<typeof CheckboxVariants>["color"]>, string> = {
+  accent: "bg-accent border-accent",
+  error: "bg-error border-error",
+  info: "bg-info border-info",
+  neutral: "bg-neutral border-neutral",
+  primary: "bg-primary border-primary",
+  secondary: "bg-secondary border-secondary",
+  success: "bg-success border-success",
+  warning: "bg-warning border-warning",
+};
+
+const CHECK_ICON_SIZE_PX: Record<NonNullable<VariantProps<typeof CheckboxVariants>["size"]>, number> = {
+  lg: 16,
+  md: 14,
+  sm: 12,
+  xl: 18,
+  xs: 10,
+};
+
 type CheckboxExtraProps = {
+  // Extra CSS class(es) for the rendered checkbox indicator
+  className?: string;
   // Optional handler for blur events
   handleBlur?: () => void;
   // Handler for value change events
@@ -75,7 +107,10 @@ type CheckboxExtraProps = {
   value?: boolean;
 }
 
-type CheckboxNativeProps = Omit<AriaCheckboxProps, "size" | "value">;
+type CheckboxNativeProps = Omit<
+  React.ComponentPropsWithoutRef<typeof AriaCheckbox>,
+  "children" | "className" | "isDisabled" | "isInvalid" | "isSelected" | "name" | "onBlur" | "onChange" | "size" | "value"
+>;
 
 export function Checkbox({
                         className,
@@ -86,33 +121,59 @@ export function Checkbox({
                         // Extra Props
                         handleBlur,
                         handleChange,
+                        isInvalid = false,
                         label,
                         name,
                         value = false,
+                        ...props
                       } : VariantProps<typeof CheckboxVariants>
                         & CheckboxNativeProps
                         & CheckboxExtraProps) {
 
   const variants =
     CheckboxVariants({color, disabled, size, className});
+  const iconColorClass = CHECK_ICON_COLOR_CLASSES[color ?? "neutral"];
+  const selectedFillClass = CHECK_SELECTED_FILL_CLASSES[color ?? "neutral"];
+  const iconSizePx = CHECK_ICON_SIZE_PX[size ?? "md"];
 
-    return (
-      <fieldset className="fieldset w-full">
-        <div className="flex flex-row items-center">
-          <input
-            checked={value}
-            className={twMerge(clsx(variants))}
-            id={name}
-            name={name}
-            onBlur={handleBlur}
-            onChange={(e) => handleChange(e.target.checked)}
-            type="checkbox"
-          />
-          <legend
-            className={twMerge(clsx("fieldset-legend", "pl-2"))}
-          >{label}</legend>
-        </div>
-      </fieldset>
-    );
+  return (
+    <fieldset className="fieldset w-full">
+      <AriaCheckbox
+        className="flex flex-row items-center"
+        isDisabled={Boolean(disabled)}
+        isInvalid={isInvalid}
+        isSelected={value}
+        name={name}
+        onBlur={handleBlur}
+        onChange={handleChange}
+        {...props}
+      >
+        {({ isSelected }) => (
+          <>
+            <span className="relative inline-flex items-center justify-center">
+              <span
+                className={twMerge(
+                  clsx(
+                    variants,
+                    "inline-flex items-center justify-center",
+                    selectedFillClass,
+                  ),
+                )}
+              />
+              {isSelected ? (
+                <Check
+                  aria-hidden="true"
+                  className={twMerge(clsx("pointer-events-none absolute inset-0 m-auto", iconColorClass))}
+                  size={iconSizePx}
+                  strokeWidth={3.25}
+                />
+              ) : null}
+            </span>
+            <span className={twMerge(clsx("fieldset-legend", "pl-2"))}>{label}</span>
+          </>
+        )}
+      </AriaCheckbox>
+    </fieldset>
+  );
 
 }
