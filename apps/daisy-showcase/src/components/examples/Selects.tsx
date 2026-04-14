@@ -103,6 +103,80 @@ export function Selects() {
 
       </div>
 
+      <hr className="my-4"/>
+
+      <div className="grid w-full grid-cols-2 gap-2">
+
+        <Card className="w-full">
+          <Card.Title className="justify-center">Horizontal / Disabled</Card.Title>
+          <Card.Body>
+            <ExampleSelect
+              disabled={true}
+              handleChange={() => {alert("Changed!")}}
+              label="Disabled Select"
+              labelClassName="w-60"
+              name="select-disabled-horizontal"
+              options={OPTIONS}
+              placeholder="disabled placeholder"
+              value=""
+            />
+          </Card.Body>
+        </Card>
+
+        <Card className="w-full">
+          <Card.Title className="justify-center">Vertical / Disabled</Card.Title>
+          <Card.Body>
+            <ExampleSelect
+              disabled={true}
+              handleChange={() => {alert("Changed!")}}
+              label="Disabled Select"
+              name="select-disabled-vertical"
+              options={OPTIONS}
+              placeholder="disabled placeholder"
+              value=""
+            />
+          </Card.Body>
+        </Card>
+
+      </div>
+
+      <hr className="my-4"/>
+
+      <div className="grid w-full grid-cols-2 gap-2">
+
+        <Card className="w-full">
+          <Card.Title className="justify-center">Horizontal / Invalid</Card.Title>
+          <Card.Body>
+            <ExampleSelect
+              handleChange={() => {alert("Changed!")}}
+              isInvalid={true}
+              label="Invalid Select"
+              labelClassName="w-60"
+              name="select-invalid-horizontal"
+              options={OPTIONS}
+              placeholder="invalid placeholder"
+              value="first"
+            />
+          </Card.Body>
+        </Card>
+
+        <Card className="w-full">
+          <Card.Title className="justify-center">Vertical / Invalid</Card.Title>
+          <Card.Body>
+            <ExampleSelect
+              handleChange={() => {alert("Changed!")}}
+              isInvalid={true}
+              label="Invalid Select"
+              name="select-invalid-vertical"
+              options={OPTIONS}
+              placeholder="invalid placeholder"
+              value="first"
+            />
+          </Card.Body>
+        </Card>
+
+      </div>
+
     </>
 
   )
@@ -144,6 +218,8 @@ type ExampleSelectProps = {
   handleChange: (newValue: string) => void;
   // Extra CSS class(es) for the Select component [none]
   inputClassName?: string;
+  // Is the current value invalid?
+  isInvalid?: boolean;
   // Label for this Select component [Example Select]
   label: string;
   // Label spacing CSS (implies horizontal alignment) [none]
@@ -173,6 +249,7 @@ function ExampleSelect({
                         disabled = false,
                         handleChange,
                         inputClassName = undefined,
+                        isInvalid = false,
                         label,
                         labelClassName = undefined,
                         name,
@@ -188,6 +265,7 @@ function ExampleSelect({
       color={color}
       disabled={disabled}
       handleChange={handleChange}
+      isInvalid={isInvalid}
       label={label}
       labelClassName={labelClassName}
       name={name}

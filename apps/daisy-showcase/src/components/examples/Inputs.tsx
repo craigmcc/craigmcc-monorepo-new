@@ -99,6 +99,76 @@ export function Inputs() {
 
       </div>
 
+      <hr className="my-4"/>
+
+      <div className="grid w-full grid-cols-2 gap-2">
+
+        <Card className="w-full">
+          <Card.Title className="justify-center">Horizontal / Disabled</Card.Title>
+          <Card.Body>
+            <ExampleInput
+              disabled={true}
+              handleChange={() => {alert("Changed!")}}
+              label="Disabled Input"
+              labelClassName="w-60"
+              name="input-disabled-horizontal"
+              placeholder="disabled placeholder"
+              value=""
+            />
+          </Card.Body>
+        </Card>
+
+        <Card className="w-full">
+          <Card.Title className="justify-center">Vertical / Disabled</Card.Title>
+          <Card.Body>
+            <ExampleInput
+              disabled={true}
+              handleChange={() => {alert("Changed!")}}
+              label="Disabled Input"
+              name="input-disabled-vertical"
+              placeholder="disabled placeholder"
+              value=""
+            />
+          </Card.Body>
+        </Card>
+
+      </div>
+
+      <hr className="my-4"/>
+
+      <div className="grid w-full grid-cols-2 gap-2">
+
+        <Card className="w-full">
+          <Card.Title className="justify-center">Horizontal / Invalid</Card.Title>
+          <Card.Body>
+            <ExampleInput
+              handleChange={() => {alert("Changed!")}}
+              isInvalid={true}
+              label="Invalid Input"
+              labelClassName="w-60"
+              name="input-invalid-horizontal"
+              placeholder="invalid placeholder"
+              value="bad value"
+            />
+          </Card.Body>
+        </Card>
+
+        <Card className="w-full">
+          <Card.Title className="justify-center">Vertical / Invalid</Card.Title>
+          <Card.Body>
+            <ExampleInput
+              handleChange={() => {alert("Changed!")}}
+              isInvalid={true}
+              label="Invalid Input"
+              name="input-invalid-vertical"
+              placeholder="invalid placeholder"
+              value="bad value"
+            />
+          </Card.Body>
+        </Card>
+
+      </div>
+
       </>
 
   )
@@ -140,6 +210,8 @@ type ExampleInputProps = {
   handleChange: (newValue: string) => void;
   // Extra CSS class(es) for the Input component [none]
   inputClassName?: string;
+  // Is the current value invalid?
+  isInvalid?: boolean;
   // Label for this Input component [Example Input]
   label: string;
   // Label spacing CSS (implies horizontal alignment) [none]
@@ -161,6 +233,7 @@ function ExampleInput({
   disabled = false,
   handleChange,
   inputClassName = undefined,
+  isInvalid = false,
   label,
   labelClassName = undefined,
   name,
@@ -176,6 +249,7 @@ function ExampleInput({
       color={color}
       disabled={disabled}
       handleChange={handleChange}
+      isInvalid={isInvalid}
       label={label}
       labelClassName={labelClassName}
       name={name}

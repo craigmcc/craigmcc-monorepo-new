@@ -55,6 +55,46 @@ export function Checkboxes() {
         ))}
       </div>
 
+      <hr className="my-4"/>
+
+      <div className={CHECKBOX_GRID_CLASSES}>
+        {COLORS.map((color) => (
+          <Card className="w-full" color="base300" key={color}>
+            <Card.Title className="justify-center">Disabled Checkbox</Card.Title>
+            <Card.Body>
+              <ExampleCheckbox
+                color={color}
+                disabled={true}
+                handleChange={() => {alert("Changed!")}}
+                label={`Disabled: ${color}`}
+                name={`checkbox-disabled-{color}`}
+                value={true}
+              />
+            </Card.Body>
+          </Card>
+        ))}
+      </div>
+
+      <hr className="my-4"/>
+
+      <div className={CHECKBOX_GRID_CLASSES}>
+        {COLORS.map((color) => (
+          <Card className="w-full" color="base300" key={color}>
+            <Card.Title className="justify-center">Invalid Checkbox</Card.Title>
+            <Card.Body>
+              <ExampleCheckbox
+                color={color}
+                handleChange={() => {alert("Changed!")}}
+                isInvalid={true}
+                label={`Invalid: ${color}`}
+                name={`checkbox-invalid-{color}`}
+                value={false}
+              />
+            </Card.Body>
+          </Card>
+        ))}
+      </div>
+
     </>
 
   )
@@ -95,6 +135,8 @@ type ExampleCheckboxProps = {
   handleChange: (newValue: boolean) => void;
   // Extra CSS class(es) for the Checkbox component [none]
   inputClassName?: string;
+  // Is the current value invalid?
+  isInvalid?: boolean;
   // Label for this Checkbox component [Example Checkbox]
   label: string;
   // Name of this Checkbox component
@@ -110,6 +152,7 @@ function ExampleCheckbox({
                         disabled = false,
                         handleChange,
                         inputClassName = undefined,
+                        isInvalid = false,
                         label,
                         name,
                         size = "md",
@@ -122,6 +165,7 @@ function ExampleCheckbox({
       color={color}
       disabled={disabled}
       handleChange={handleChange}
+      isInvalid={isInvalid}
       label={label}
       name={name}
       size={size}
