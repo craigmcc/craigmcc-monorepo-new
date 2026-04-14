@@ -11,9 +11,11 @@ import { clsx } from "clsx";
 import * as React from "react";
 import {
   Button as AriaButton,
+  Header,
   Label as AriaLabel,
   ListBox as AriaListBox,
   ListBoxItem as AriaListBoxItem,
+  ListBoxSection,
   Popover as AriaPopover,
   Select as AriaSelect,
   SelectValue as AriaSelectValue,
@@ -73,6 +75,8 @@ export const SelectVariants = cva(
 type SelectExtraProps = {
   // Extra CSS class(es) for the trigger button
   className?: string;
+  // CSS class(es) to add to rendered options and sections
+  entryClassName?: string;
   // Optional handler for blur events
   handleBlur?: () => void;
   // Handler for value change events
@@ -84,12 +88,22 @@ type SelectExtraProps = {
   // CSS class(es) to add if horizontal presentation is requested
   // (should set the width of the label area to match multiple select fields)
   labelClassName?: string;
+  // CSS class(es) to add to the rendered ListBox
+  listBoxClassName?: string;
   // Select field name (also used as id)
   name: string;
   // Available options for this Select component
-  options: SelectOption[];
+  options: SelectCollection;
   // Optional placeholder text when no value is selected
   placeholder?: string;
+  // CSS class(es) to add to rendered options
+  optionClassName?: string;
+  // CSS class(es) to add to the popover wrapper
+  popoverClassName?: string;
+  // CSS class(es) to add to rendered sections
+  sectionClassName?: string;
+  // CSS class(es) to add to rendered section headings
+  sectionHeadingClassName?: string;
   // Current selected value (empty string means no selection / show placeholder)
   value: string;
 }
@@ -122,6 +136,22 @@ export type SelectOption = {
   value: string;
 }
 
+/**
+ * A labeled group of options for a Select component.
+ */
+export type SelectSection = {
+  // Optional stable key for this section (defaults to label)
+  id?: string | number;
+  // Displayed heading for this section
+  label: string;
+  // Options rendered within this section
+  options: ReadonlyArray<SelectOption>;
+}
+
+export type SelectCollectionEntry = SelectOption | SelectSection;
+
+export type SelectCollection = ReadonlyArray<SelectCollectionEntry>;
+
 // Styling constants --------------------------------------------------------
 
 const ITEM_BASE_CLASSES = [
@@ -130,13 +160,74 @@ const ITEM_BASE_CLASSES = [
   "data-[disabled=true]:cursor-not-allowed data-[disabled=true]:opacity-50",
 ].join(" ");
 
+const LISTBOX_BASE_CLASSES = "flex flex-col p-1 outline-none";
+
 const POPOVER_BASE_CLASSES =
   "z-50 min-w-[var(--trigger-width)] rounded-box border border-base-300 bg-base-100 shadow-lg";
+
+const SECTION_BASE_CLASSES = "flex flex-col gap-1 py-1";
+
+const SECTION_HEADING_BASE_CLASSES =
+  "px-3 pt-2 pb-1 text-xs font-semibold uppercase tracking-wide text-base-content/60";
+
+// Private Functions ---------------------------------------------------------
+
+function isSelectSection(option: SelectCollectionEntry): option is SelectSection {
+  return "options" in option;
+}
+
+function renderSelectOption(option: SelectOption, entryClassName?: string, optionClassName?: string) {
+  return (
+    <AriaListBoxItem
+      className={twMerge(clsx(ITEM_BASE_CLASSES, entryClassName, optionClassName))}
+      id={option.value}
+      isDisabled={option.isDisabled}
+      key={option.value}
+      textValue={option.textValue ?? option.label}
+    >
+      {option.label}
+    </AriaListBoxItem>
+  );
+}
+
+function renderSelectCollectionEntry(
+  option: SelectCollectionEntry,
+  entryClassName?: string,
+  optionClassName?: string,
+  sectionClassName?: string,
+  sectionHeadingClassName?: string,
+) {
+  if (!isSelectSection(option)) {
+    return renderSelectOption(option, entryClassName, optionClassName);
+  }
+
+  if (option.options.length === 0) {
+    return null;
+  }
+
+  const sectionKey = option.id ?? option.label;
+
+  return (
+    <ListBoxSection
+      className={twMerge(clsx(SECTION_BASE_CLASSES, entryClassName, sectionClassName))}
+      id={option.id}
+      key={sectionKey}
+    >
+      <Header className={twMerge(clsx(SECTION_HEADING_BASE_CLASSES, sectionHeadingClassName))}>
+        {option.label}
+      </Header>
+      {option.options.map((sectionOption) =>
+        renderSelectOption(sectionOption, entryClassName, optionClassName)
+      )}
+    </ListBoxSection>
+  );
+}
 
 // Public Function ------------------------------------------------------------
 
 export function Select({
   className,
+  entryClassName,
   // Variants
   color,
   disabled,
@@ -148,9 +239,14 @@ export function Select({
   isInvalid = false,
   label,
   labelClassName,
+  listBoxClassName,
   name,
   options,
+  optionClassName,
   placeholder,
+  popoverClassName,
+  sectionClassName,
+  sectionHeadingClassName,
   value,
   // React Aria Select Props
   ...props
@@ -185,18 +281,14 @@ export function Select({
             }
           </AriaSelectValue>
         </AriaButton>
-        <AriaPopover className={POPOVER_BASE_CLASSES}>
-          <AriaListBox className="flex flex-col p-1 outline-none">
-            {options.map((option) => (
-              <AriaListBoxItem
-                className={ITEM_BASE_CLASSES}
-                id={option.value}
-                isDisabled={option.isDisabled}
-                key={option.value}
-                textValue={option.textValue ?? option.label}
-              >
-                {option.label}
-              </AriaListBoxItem>
+        <AriaPopover className={twMerge(clsx(POPOVER_BASE_CLASSES, popoverClassName))}>
+          <AriaListBox className={twMerge(clsx(LISTBOX_BASE_CLASSES, listBoxClassName))}>
+            {options.map((option) => renderSelectCollectionEntry(
+              option,
+              entryClassName,
+              optionClassName,
+              sectionClassName,
+              sectionHeadingClassName,
             ))}
           </AriaListBox>
         </AriaPopover>
