@@ -240,7 +240,7 @@ type ExampleSelectProps = {
 
 const OPTIONS: SelectOption[] = [
   { label: "First Option", value: "first" },
-  { disabled: true, label: "Second Option", value: "second" },
+  { isDisabled: true, label: "Second Option", value: "second" },
   { label: "Third Option", value: "third" },
 ]
 
