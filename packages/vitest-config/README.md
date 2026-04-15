@@ -2,8 +2,9 @@
 
 Shared Vitest configuration for the monorepo.
 
-Usage:
-- Import the shared config in a package's `vitest.config.ts` and extend it:
+## Usage
+
+Import the shared config in a package's `vitest.config.ts` and extend it:
 
 ```ts
 import base from '@repo/vitest-config';
@@ -19,11 +20,13 @@ export default defineConfig({
 ```
 
 
-## React packages
+## React Packages
 
 This package also exports a `reactBase` and `reactTestOptions` helper for packages that need React/jsdom testing support.
 
-- React package (recommended): use `reactBase` which is pre-configured for `jsdom` and the shared setup file.
+### React Package (Recommended)
+
+Use `reactBase`, which is pre-configured for `jsdom` and the shared setup file from `@repo/testing-react`.
 
 ```ts
 // vitest.config.ts
@@ -43,7 +46,9 @@ export default defineConfig({
 });
 ```
 
-- React package (alternative): spread `reactTestOptions` into your existing base
+### React Package (Advanced Override)
+
+Spread `reactTestOptions` into your existing base configuration.
 
 ```ts
 import base, { reactTestOptions } from '@repo/vitest-config';
@@ -59,12 +64,13 @@ export default defineConfig({
 });
 ```
 
-Notes
+## Notes
 
 - `reactBase` sets the test environment to `jsdom` and configures `setupFiles` to use the shared `@repo/testing-react` setup file (which mounts msw and other helpers). You can override these locally as needed.
+- `packages/testing-react/README.md` follows the same recommendation: prefer `reactBase` over manual `setupFiles` paths.
 - The examples use minimal `as unknown` casts where necessary to avoid complex typing problems when spreading the exported config object; this is a safe local pattern and keeps your configs simple.
 
-Try it locally
+## Try It Locally
 
 ```bash
 pnpm --filter <your-package> test

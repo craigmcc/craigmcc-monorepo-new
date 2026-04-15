@@ -2,34 +2,42 @@
 
 Shared React testing helpers for the monorepo.
 
-Exports:
+## Exports
+
 - renderWithProviders
 - createTestQueryClient
 - server (MSW server)
 
-Usage:
+## Usage
+
 - Add `@repo/testing-react` as a devDependency (workspace:*)
-- In your package's `vitest.config.ts`, add `setupFiles: ['../../packages/testing-react/dist/vitest.setup.js']` or import the `vitest.setup.ts` directly during development.
+- Configure your package's `vitest.config.ts` using `reactBase` from `@repo/vitest-config` (recommended). `reactBase` is pre-configured for `jsdom` and the shared setup file from `@repo/testing-react`.
 - In tests, `import { renderWithProviders, userEvent, server } from '@repo/testing-react';`
 
-Examples
+## Examples
 
-Extend shared vitest config in a package:
+### Extend Shared Vitest Config in a Package
 
 ```ts
-import base, { reactTestOptions } from '@repo/vitest-config';
+import { reactBase } from '@repo/vitest-config';
 import { defineConfig } from 'vitest/config';
 
+const baseTest = ((reactBase as unknown) as Record<string, unknown>).test as
+  | Record<string, unknown>
+  | undefined;
+
 export default defineConfig({
-  ...base,
+  ...reactBase,
   test: {
-    ...base.test,
-    ...reactTestOptions,
+    ...(baseTest || {}),
+    include: ['src/**/*.test.{ts,tsx}'],
   },
 });
 ```
 
-Use `renderWithProviders` in a test:
+If you need to customize setup manually, treat it as an advanced override and keep it aligned with the shared setup provided by `@repo/vitest-config`.
+
+### Use `renderWithProviders` in a Test
 
 ```ts
 import React from 'react';
@@ -46,9 +54,9 @@ describe('MyComponent', () => {
 });
 ```
 
-MSW test server
+## MSW Test Server
 
-- The MSW test server helper is available as a subpath import so it doesn't pollute the package's top-level public API.
+- The MSW test server helper is available as a subpath import so it does not pollute the package's top-level public API.
 
 ```ts
 import { server } from '@repo/testing-react/msw/server';
@@ -64,11 +72,12 @@ If you prefer, you can also deep-import the file directly from the package `dist
 import { server } from '@repo/testing-react/dist/msw/server';
 ```
 
-Notes
-- `renderWithProviders` returns the `user` helper typed as a small `UserEventLike` interface to avoid leaking internal `@testing-library/user-event` types in the package d.ts. If you need fuller typing, import `@testing-library/user-event` directly in your test file.
-- The package provides `dist/vitest.setup.js` which the shared vitest config references for React tests.
+## Notes
 
-Compatibility with Vitest and `@testing-library/jest-dom`
+- `renderWithProviders` returns the `user` helper typed as a small `UserEventLike` interface to avoid leaking internal `@testing-library/user-event` types in the package d.ts. If you need fuller typing, import `@testing-library/user-event` directly in your test file.
+- The package provides `dist/vitest.setup.js`, and `@repo/vitest-config` (`reactBase`) references it for React tests.
+
+## Compatibility with Vitest and `@testing-library/jest-dom`
 
 This package keeps `@testing-library/jest-dom` as a devDependency even though the name contains "jest". That's intentional: `@testing-library/jest-dom` only provides a set of DOM matchers (e.g. `toBeInTheDocument`) and works fine with Vitest when you explicitly register its matchers with Vitest's `expect`.
 
