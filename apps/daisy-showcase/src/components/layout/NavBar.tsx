@@ -49,6 +49,7 @@ export function NavBar() {
         <NavLinkButton href="/checkboxes">Checkboxes</NavLinkButton>
         <NavLinkButton href="/forms">Forms</NavLinkButton>
         <NavLinkButton href="/inputs">Inputs</NavLinkButton>
+        <NavLinkButton href="/menus">Menus</NavLinkButton>
         <NavLinkButton href="/selects">Selects</NavLinkButton>
         <NavLinkButton href="/tables">Tables</NavLinkButton>
         <NavLinkButton href="/textareas">Textareas</NavLinkButton>
