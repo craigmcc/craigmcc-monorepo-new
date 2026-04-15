@@ -34,14 +34,30 @@ export function ThemeChanger() {
         </Button>
       }
     >
-      {THEMES.map((THEME) => (
+      {COMMON_THEMES.map((themeName) => (
         <Menu.Item
-          className={THEME === theme ? "font-bold" : "font-normal"}
-          key={THEME}
-          onAction={() => changeTheme(THEME)}
+          className={themeName === theme ? "font-bold" : "font-normal"}
+          key={themeName}
+          onAction={() => changeTheme(themeName)}
         >
-          {capitalize(THEME)}
+          {capitalize(themeName)}
         </Menu.Item>
+      ))}
+
+      <Menu.Separator />
+
+      {THEME_GROUPS.map((group) => (
+        <Menu.Submenu key={group.label} label={`${group.label} (${group.themes.length})`}>
+          {group.themes.map((themeName) => (
+            <Menu.Item
+              className={themeName === theme ? "font-bold" : "font-normal"}
+              key={themeName}
+              onAction={() => changeTheme(themeName)}
+            >
+              {capitalize(themeName)}
+            </Menu.Item>
+          ))}
+        </Menu.Submenu>
       ))}
     </Menu>
   )
@@ -88,4 +104,67 @@ const THEMES = [
   "winter",
   "wireframe",
 ];
+
+const COMMON_THEMES = ["light", "dark"] as const;
+
+type ThemeGroup = {
+  label: string;
+  themes: string[];
+}
+
+const THEME_GROUPS: ThemeGroup[] = [
+  {
+    label: "Light",
+    themes: [
+      "autumn",
+      "caramellatte",
+      "cmyk",
+      "corporate",
+      "emerald",
+      "garden",
+      "lemonade",
+      "lofi",
+      "nord",
+      "pastel",
+      "silk",
+      "winter",
+      "wireframe",
+    ],
+  },
+  {
+    label: "Dark",
+    themes: [
+      "abyss",
+      "black",
+      "business",
+      "coffee",
+      "dim",
+      "dracula",
+      "forest",
+      "luxury",
+      "night",
+      "sunset",
+    ],
+  },
+  {
+    label: "Playful",
+    themes: [
+      "acid",
+      "aqua",
+      "bumblebee",
+      "cupcake",
+      "cyberpunk",
+      "fantasy",
+      "halloween",
+      "retro",
+      "synthwave",
+      "valentine",
+    ],
+  },
+].map((group) => ({
+  ...group,
+  themes: group.themes
+    .filter((themeName) => THEMES.includes(themeName))
+    .sort((left, right) => left.localeCompare(right)),
+}));
 

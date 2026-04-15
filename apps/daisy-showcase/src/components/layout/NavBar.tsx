@@ -55,7 +55,7 @@ export function NavBar() {
         <NavLinkButton href="/textareas">Textareas</NavLinkButton>
       </Navbar.Center>
 
-      <Navbar.End>
+      <Navbar.End className="pr-2">
         {currentProfile && (
           <span className="text-secondary p-2">{currentProfile.email}</span>
         )}
