@@ -110,6 +110,8 @@ export const ButtonVariants = cva(
   }
 );
 
+export type ButtonProps = AriaButtonProps & VariantProps<typeof ButtonVariants>
+
 /**
  * In addition to the props defined in the variants above,
  * this component accepts the additional props that a Button
@@ -131,7 +133,7 @@ export function Button({
   square,
   wide,
   ...props
-}: AriaButtonProps & VariantProps<typeof ButtonVariants>)
+}: ButtonProps)
 {
   const variants =
     ButtonVariants({active, block, circle, color, dash, disabled, outline,

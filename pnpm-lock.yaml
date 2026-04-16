@@ -130,6 +130,9 @@ catalogs:
       specifier: 4.2.2
       version: 4.2.2
   tanstack:
+    '@tanstack/react-form':
+      specifier: 1.29.0
+      version: 1.29.0
     '@tanstack/react-query':
       specifier: 5.96.0
       version: 5.96.0
@@ -278,6 +281,79 @@ importers:
       eslint-config-next:
         specifier: catalog:eslint9
         version: 16.2.4(eslint@9.39.4(jiti@2.6.1))(typescript@5.8.3)
+      jsdom:
+        specifier: catalog:jsdom
+        version: 29.0.1
+      tailwindcss:
+        specifier: catalog:tailwind4
+        version: 4.2.2
+      typescript:
+        specifier: catalog:typescript5
+        version: 5.8.3
+      vitest:
+        specifier: catalog:vitest
+        version: 4.1.2(@types/node@24.0.11)(jsdom@29.0.1)(msw@2.12.14(@types/node@24.0.11)(typescript@5.8.3))(vite@8.0.8(@types/node@24.0.11)(esbuild@0.27.7)(jiti@2.6.1))
+
+  packages/daisy-form:
+    dependencies:
+      '@repo/daisy-ui':
+        specifier: workspace:*
+        version: link:../daisy-ui
+      '@repo/shared-utils':
+        specifier: workspace:*
+        version: link:../shared-utils
+      '@tanstack/react-form':
+        specifier: catalog:tanstack
+        version: 1.29.0(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
+      clsx:
+        specifier: catalog:clsx
+        version: 2.1.1
+      lucide-react:
+        specifier: catalog:lucide
+        version: 1.7.0(react@19.2.4)
+      postcss:
+        specifier: catalog:postcss
+        version: 8.5.8
+      react:
+        specifier: catalog:react19
+        version: 19.2.4
+      react-dom:
+        specifier: catalog:react19
+        version: 19.2.4(react@19.2.4)
+      tailwind-merge:
+        specifier: catalog:tailwind-merge
+        version: 3.5.0
+      zod:
+        specifier: catalog:zod
+        version: 4.3.6
+    devDependencies:
+      '@repo/eslint-config':
+        specifier: workspace:*
+        version: link:../eslint-config
+      '@repo/testing-react':
+        specifier: workspace:*
+        version: link:../testing-react
+      '@repo/typescript-config':
+        specifier: workspace:*
+        version: link:../typescript-config
+      '@repo/vitest-config':
+        specifier: workspace:*
+        version: link:../vitest-config
+      '@tailwindcss/postcss':
+        specifier: catalog:tailwind4
+        version: 4.2.2
+      '@types/node':
+        specifier: catalog:node24
+        version: 24.0.11
+      '@types/react':
+        specifier: catalog:react19
+        version: 19.2.14
+      '@types/react-dom':
+        specifier: catalog:react19
+        version: 19.2.3(@types/react@19.2.14)
+      eslint:
+        specifier: catalog:eslint9
+        version: 9.39.4(jiti@2.6.1)
       jsdom:
         specifier: catalog:jsdom
         version: 29.0.1
@@ -2078,13 +2154,43 @@ packages:
   '@tailwindcss/postcss@4.2.2':
     resolution: {integrity: sha512-n4goKQbW8RVXIbNKRB/45LzyUqN451deQK0nzIeauVEqjlI49slUlgKYJM2QyUzap/PcpnS7kzSUmPb1sCRvYQ==}
 
+  '@tanstack/devtools-event-client@0.4.3':
+    resolution: {integrity: sha512-OZI6QyULw0FI0wjgmeYzCIfbgPsOEzwJtCpa69XrfLMtNXLGnz3d/dIabk7frg0TmHo+Ah49w5I4KC7Tufwsvw==}
+    engines: {node: '>=18'}
+    hasBin: true
+
+  '@tanstack/form-core@1.29.0':
+    resolution: {integrity: sha512-uyeKEdJBfbj0bkBSwvSYVRtWLOaXvfNX3CeVw1HqGOXVLxpBBGAqWdYLc+UoX/9xcoFwFXrjR9QqMPzvwm2yyQ==}
+
+  '@tanstack/pacer-lite@0.1.1':
+    resolution: {integrity: sha512-y/xtNPNt/YeyoVxE/JCx+T7yjEzpezmbb+toK8DDD1P4m7Kzs5YR956+7OKexG3f8aXgC3rLZl7b1V+yNUSy5w==}
+    engines: {node: '>=18'}
+
   '@tanstack/query-core@5.96.0':
     resolution: {integrity: sha512-sfO3uQeol1BU7cRP6NYY7nAiX3GiNY20lI/dtSbKLwcIkYw/X+w/tEsQAkc544AfIhBX/IvH/QYtPHrPhyAKGw==}
+
+  '@tanstack/react-form@1.29.0':
+    resolution: {integrity: sha512-jj425NNX0QKqbUzqSNiYI3HCPHSk2df47acXCJyXczWOTmG81ECZGkgofgqamFsSU9kMiH6Di5RLUnftrlhWSw==}
+    peerDependencies:
+      '@tanstack/react-start': '*'
+      react: ^17.0.0 || ^18.0.0 || ^19.0.0
+    peerDependenciesMeta:
+      '@tanstack/react-start':
+        optional: true
 
   '@tanstack/react-query@5.96.0':
     resolution: {integrity: sha512-6qbjdm1K5kizVKv9TNqhIN3doq2anRhdF2XaFMFSn4m8L22S69RV+FilvlyVT4RoJyMxtPU5rs4RpdFa/PEC7A==}
     peerDependencies:
       react: ^18 || ^19
+
+  '@tanstack/react-store@0.9.3':
+    resolution: {integrity: sha512-y2iHd/N9OkoQbFJLUX1T9vbc2O9tjH0pQRgTcx1/Nz4IlwLvkgpuglXUx+mXt0g5ZDFrEeDnONPqkbfxXJKwRg==}
+    peerDependencies:
+      react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
+      react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
+
+  '@tanstack/store@0.9.3':
+    resolution: {integrity: sha512-8reSzl/qGWGGVKhBoxXPMWzATSbZLZFWhwBAFO9NAyp0TxzfBP0mIrGb8CP8KrQTmvzXlR/vFPPUrHTLBGyFyw==}
 
   '@testing-library/dom@10.4.1':
     resolution: {integrity: sha512-o4PXJQidqJl82ckFaXUeoAW+XysPLauYI43Abki5hABd853iMhitooc6znOnczgbTYmEP6U6/y1ZyKAIsvMKGg==}
@@ -6378,12 +6484,39 @@ snapshots:
       postcss: 8.5.8
       tailwindcss: 4.2.2
 
+  '@tanstack/devtools-event-client@0.4.3': {}
+
+  '@tanstack/form-core@1.29.0':
+    dependencies:
+      '@tanstack/devtools-event-client': 0.4.3
+      '@tanstack/pacer-lite': 0.1.1
+      '@tanstack/store': 0.9.3
+
+  '@tanstack/pacer-lite@0.1.1': {}
+
   '@tanstack/query-core@5.96.0': {}
+
+  '@tanstack/react-form@1.29.0(react-dom@19.2.4(react@19.2.4))(react@19.2.4)':
+    dependencies:
+      '@tanstack/form-core': 1.29.0
+      '@tanstack/react-store': 0.9.3(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
+      react: 19.2.4
+    transitivePeerDependencies:
+      - react-dom
 
   '@tanstack/react-query@5.96.0(react@19.2.4)':
     dependencies:
       '@tanstack/query-core': 5.96.0
       react: 19.2.4
+
+  '@tanstack/react-store@0.9.3(react-dom@19.2.4(react@19.2.4))(react@19.2.4)':
+    dependencies:
+      '@tanstack/store': 0.9.3
+      react: 19.2.4
+      react-dom: 19.2.4(react@19.2.4)
+      use-sync-external-store: 1.6.0(react@19.2.4)
+
+  '@tanstack/store@0.9.3': {}
 
   '@testing-library/dom@10.4.1':
     dependencies:
