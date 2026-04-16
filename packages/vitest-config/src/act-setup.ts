@@ -2,6 +2,24 @@
 // react-dom/test-utils do not emit the deprecation warning. This file will
 // be included before other setup files.
 
+import { vi } from 'vitest';
+
+// Mock react-transition-group to avoid running transition timing code in tests
+// which can cause parseFloat('') -> NaN in dom-helpers (and noisy warnings).
+vi.mock('react-transition-group', async () => {
+  const Noop = (props: any) => (props && props.children ? props.children : null);
+  return {
+    Transition: Noop,
+    CSSTransition: Noop,
+    TransitionGroup: Noop,
+  } as unknown as Record<string, unknown>;
+});
+
+// Mock the dom-helpers transitionEnd implementation to avoid setTimeout with NaN.
+vi.mock('dom-helpers/cjs/transitionEnd', () => ({
+  default: (_element: any) => () => {},
+}));
+
 // Normalize timer durations for test environment: if a NaN or non-finite
 // value would be passed to setTimeout/setInterval, coerce it to 1ms. This
 // prevents Node from emitting TimeoutNaNWarning when third-party libs
@@ -72,50 +90,6 @@ if (typeof process !== 'undefined') {
   }
 }
 
-// Mock react-bootstrap OverlayTrigger and Tooltip to avoid transition behavior during tests
-try {
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-ignore
-  const { vi } = await import('vitest');
-  vi.mock('react-bootstrap/OverlayTrigger', () => ({
-    default: (props: any) => (props && props.children ? props.children : null),
-  }));
-  vi.mock('react-bootstrap/Tooltip', () => ({
-    default: (props: any) => (props && props.children ? props.children : null),
-  }));
-} catch (e) {
-  // ignore if mocking isn't available
-}
-
-// Mock react-transition-group to avoid running transition timing code in tests
-// which can cause parseFloat('') -> NaN in dom-helpers (and noisy warnings).
-try {
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-ignore
-  const { vi } = await import('vitest');
-  vi.mock('react-transition-group', async () => {
-    // Use a synchronous no-op component; we don't need to import React here.
-    const Noop = (props: any) => (props && props.children ? props.children : null);
-    return {
-      Transition: Noop,
-      CSSTransition: Noop,
-      TransitionGroup: Noop,
-    } as unknown as Record<string, unknown>;
-  });
-  // Mock the dom-helpers transitionEnd implementation to avoid setTimeout with NaN
-  try {
-    vi.mock('dom-helpers/cjs/transitionEnd', () => ({
-      default: (element: any) => {
-        // emulateTransitionEnd returns a cleanup function
-        return () => {};
-      },
-    }));
-  } catch (e) {
-    // ignore if path resolution differs
-  }
-} catch (e) {
-  // ignore if mocking isn't available in some contexts
-}
 
 // Provide a getComputedStyle shim early so libraries that parse transition
 // durations (dom-helpers used by react-bootstrap) do not read empty strings

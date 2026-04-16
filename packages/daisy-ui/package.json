@@ -21,6 +21,7 @@
     "@types/react-dom": "catalog:react19",
     "@vitest/coverage-v8": "catalog:vitest",
     "eslint": "catalog:eslint9",
+    "jsdom": "catalog:jsdom",
     "tailwindcss": "catalog:tailwind4",
     "typescript": "catalog:typescript6",
     "vitest": "catalog:vitest"
@@ -39,7 +40,9 @@
     "build": "tsc",
     "check-types": "tsc --noEmit",
     "dev": "tsc --watch",
-    "lint": "eslint . --max-warnings 0"
+    "lint": "eslint . --max-warnings 0",
+    "test": "vitest",
+    "test:ci": "vitest --run --coverage"
   },
   "type": "module",
   "version": "0.0.0"
