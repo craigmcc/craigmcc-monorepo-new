@@ -67,8 +67,10 @@ export const InputVariants = cva(
 );
 
 type InputExtraProps = {
-  // Extra CSS class(es) for the rendered text field
+  // Extra CSS class(es) for the rendered input field
   className?: string;
+  // Optional errors component to display below input field
+  errors?: React.ReactElement;
   // Optional handler for blur events
   handleBlur?: () => void;
   // Handler for value change events
@@ -92,11 +94,16 @@ type InputExtraProps = {
 
 type InputNativeProps = Omit<React.ComponentPropsWithoutRef<typeof AriaInput>, "children" | "className" | "disabled" | "onChange" | "size">;
 
+export type InputProps = VariantProps<typeof InputVariants>
+  & InputNativeProps
+  & InputExtraProps;
+
 export function Input({
   className,
   // Variants
   color,
   disabled,
+  errors,
   ghost,
   size,
   // Extra Props
@@ -110,9 +117,7 @@ export function Input({
   value,
   // Input Element Props
   ...props
-} : VariantProps<typeof InputVariants>
-    & InputNativeProps
-    & InputExtraProps) {
+} : InputProps) {
 
   const variants =
     InputVariants({color, disabled, ghost, size, className});
@@ -137,6 +142,9 @@ export function Input({
             type={type}
             {...props}
           />
+          {errors && (
+            <div className="p-1">{errors}</div>
+          )}
         </AriaTextField>
       </fieldset>
     );

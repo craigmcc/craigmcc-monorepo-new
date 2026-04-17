@@ -8,7 +8,8 @@
 
 import { Card } from "@repo/daisy-ui/Card";
 import { Input } from "@repo/daisy-ui/Input";
-import type { ComponentProps } from "react";
+import  { ComponentProps } from "react";
+import * as React from "react";
 
 // Internal Modules ----------------------------------------------------------
 
@@ -169,12 +170,57 @@ export function Inputs() {
 
       </div>
 
-      </>
+      <hr className="my-4"/>
+
+      <div className="grid w-full grid-cols-2 gap-2">
+
+        <Card className="w-full">
+          <Card.Title className="justify-center">Horizontal / Errors</Card.Title>
+          <Card.Body>
+            <ExampleInput
+              errors={<ExampleErrors />}
+              handleChange={() => {alert("Changed!")}}
+              isInvalid={true}
+              label="Errors Input"
+              labelClassName="w-60"
+              name="input-errors-horizontal"
+              placeholder="errors placeholder"
+              value=""
+            />
+          </Card.Body>
+        </Card>
+
+        <Card className="w-full">
+          <Card.Title className="justify-center">Vertical / Errors</Card.Title>
+          <Card.Body>
+            <ExampleInput
+              errors={<ExampleErrors />}
+              handleChange={() => {alert("Changed!")}}
+              isInvalid={true}
+              label="Errors Input"
+              name="input-errors-vertical"
+              placeholder="errors placeholder"
+              value=""
+            />
+          </Card.Body>
+        </Card>
+
+      </div>
+
+    </>
 
   )
 }
 
 // Private Objects -----------------------------------------------------------
+
+function ExampleErrors() {
+  return (
+    <div className="bg-error text-error-content">
+      Sample Errors
+    </div>
+  )
+}
 
 type InputColor = NonNullable<ComponentProps<typeof Input>["color"]>;
 const COLORS = [
@@ -206,6 +252,8 @@ type ExampleInputProps = {
   dash?: boolean;
   // Present with disabled styling and behavior
   disabled?: boolean;
+  // Optional errors component to display below input field
+  errors?: React.ReactElement;
   // Handler for value change events
   handleChange: (newValue: string) => void;
   // Extra CSS class(es) for the Input component [none]
@@ -231,6 +279,7 @@ type ExampleInputProps = {
 function ExampleInput({
   color = "neutral",
   disabled = false,
+  errors,
   handleChange,
   inputClassName = undefined,
   isInvalid = false,
@@ -248,6 +297,7 @@ function ExampleInput({
       className={inputClassName || undefined}
       color={color}
       disabled={disabled}
+      errors={errors}
       handleChange={handleChange}
       isInvalid={isInvalid}
       label={label}
