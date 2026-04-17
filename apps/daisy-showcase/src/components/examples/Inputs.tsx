@@ -254,6 +254,8 @@ type ExampleInputProps = {
   disabled?: boolean;
   // Optional errors component to display below input field
   errors?: React.ReactElement;
+  // Errors rendering CSS [bg-error text-error-content]
+  errorsClassName?: string;
   // Handler for value change events
   handleChange: (newValue: string) => void;
   // Extra CSS class(es) for the Input component [none]
@@ -280,6 +282,7 @@ function ExampleInput({
   color = "neutral",
   disabled = false,
   errors,
+  errorsClassName = "bg-error text-error-content",
   handleChange,
   inputClassName = undefined,
   isInvalid = false,
@@ -298,6 +301,7 @@ function ExampleInput({
       color={color}
       disabled={disabled}
       errors={errors}
+      errorsClassName={errorsClassName}
       handleChange={handleChange}
       isInvalid={isInvalid}
       label={label}
