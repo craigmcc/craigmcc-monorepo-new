@@ -216,9 +216,9 @@ export function Inputs() {
 
 function ExampleErrors() {
   return (
-    <div className="bg-error text-error-content">
+    <span>
       Sample Errors
-    </div>
+    </span>
   )
 }
 
@@ -282,7 +282,7 @@ function ExampleInput({
   color = "neutral",
   disabled = false,
   errors,
-  errorsClassName = "bg-error text-error-content",
+  errorsClassName,
   handleChange,
   inputClassName = undefined,
   isInvalid = false,
