@@ -125,60 +125,31 @@ export function Input({
   const variants =
     InputVariants({color, disabled, ghost, size, className});
 
-    if (labelClassName) {
-      return (
-        <fieldset className="fieldset">
-          <AriaTextField
-            className="flex flex-row"
-            isDisabled={Boolean(disabled)}
-            isInvalid={isInvalid}
-            onChange={handleChange}
-            value={value}
-          >
-            <AriaLabel className={twMerge(clsx("fieldset-legend", labelClassName))}>
-              {label}
-            </AriaLabel>
-            <AriaInput
-              className={twMerge(clsx(variants, "w-full"))}
-              id={name}
-              name={name}
-              onBlur={handleBlur}
-              type={type}
-              {...props}
-            />
-          </AriaTextField>
-          {errors && (
-            <div className={errorsClassName}>{errors}</div>
-          )}
-        </fieldset>
-      )
-    } else {
-      return (
-        <fieldset className="fieldset">
-          <AriaTextField
-            className="flex flex-col"
-            isDisabled={Boolean(disabled)}
-            isInvalid={isInvalid}
-            onChange={handleChange}
-            value={value}
-          >
-            <AriaLabel className={twMerge(clsx("fieldset-legend", labelClassName))}>
-              {label}
-            </AriaLabel>
-            <AriaInput
-              className={twMerge(clsx(variants, "w-full"))}
-              id={name}
-              name={name}
-              onBlur={handleBlur}
-              type={type}
-              {...props}
-            />
-          </AriaTextField>
-          {errors && (
-            <div className={errorsClassName}>{errors}</div>
-          )}
-        </fieldset>
-      );
-    }
+  return (
+    <fieldset className="fieldset">
+      <AriaTextField
+        className={labelClassName ? "flex flex-row" : "flex flex-col"}
+        isDisabled={Boolean(disabled)}
+        isInvalid={isInvalid}
+        onChange={handleChange}
+        value={value}
+      >
+        <AriaLabel className={twMerge(clsx("fieldset-legend", labelClassName))}>
+          {label}
+        </AriaLabel>
+        <AriaInput
+          className={twMerge(clsx(variants, "w-full"))}
+          id={name}
+          name={name}
+          onBlur={handleBlur}
+          type={type}
+          {...props}
+        />
+      </AriaTextField>
+      {errors && (
+        <div className={errorsClassName}>{errors}</div>
+      )}
+    </fieldset>
+  )
 
 }
