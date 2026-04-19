@@ -38,7 +38,7 @@ export function NavBar() {
         <Link href="/">
           <Button color="ghost">
             <Flower2 className="navbar-logo" size={32} />
-            <span className="font-semibold px-2">daisyui-showcase</span>
+            <span className="font-semibold px-2">daisy-showcase</span>
           </Button>
         </Link>
       </Navbar.Start>

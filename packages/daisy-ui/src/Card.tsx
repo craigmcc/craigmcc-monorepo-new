@@ -41,7 +41,7 @@ export const CardVariants = cva(
         base300: "bg-base-300 text-base-content",
         error: "bg-error text-error-content",
         info: "bg-info text-info-content",
-        neutral: "bg-neutral text-neutral-cotent",
+        neutral: "bg-neutral text-neutral-content",
         primary: "bg-primary text-primary-content",
         secondary: "bg-secondary text-secondary-content",
         success: "bg-success text-success-content",
