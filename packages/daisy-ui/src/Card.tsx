@@ -67,7 +67,7 @@ export const CardVariants = cva(
 
 const ACTIONS_BASE_CLASSES = "card-actions p-1 justify-end";
 const BODY_BASE_CLASSES = "card-body";
-const TITLE_BASE_CLASSES = "card-title p-1";
+const TITLE_BASE_CLASSES = "card-title";
 
 export function Card({
                        children,

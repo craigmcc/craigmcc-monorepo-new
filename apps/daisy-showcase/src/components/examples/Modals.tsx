@@ -6,6 +6,7 @@
 
 // External Modules ----------------------------------------------------------
 
+import {Card} from "@repo/daisy-ui/Card";
 import { Modal, ModalTrigger } from "@repo/daisy-ui/Modal";
 import { Select, SelectOption } from "@repo/daisy-ui/Select";
 import type { ComponentProps } from "react";
@@ -60,11 +61,19 @@ export function Modals() {
       >
         <Modal.Closer/>
         <Modal.Body>
-          <p className="font-bold text-lg">Example Modal</p>
-          <p className={"py-4"}>
-            This is an example modal.  Click the close button above,
-            or press ESC, to close it.
-          </p>
+          <Card
+            color={color as CardColor}
+            title={"Example Modal with color: " + color}
+          >
+            <Card.Title>
+              Example Modal with color: {color}
+            </Card.Title>
+            <Card.Body>
+              This is an example modal.  Click the close button above,
+              or press ESC, to close it.  It can contain whatever we
+              want to include, such as a form and/or an image.
+            </Card.Body>
+          </Card>
         </Modal.Body>
       </Modal>
 
@@ -75,6 +84,7 @@ export function Modals() {
 
 // Private Objects -----------------------------------------------------------
 
+type CardColor = NonNullable<ComponentProps<typeof Card>["color"]>;
 type ModalColor = NonNullable<ComponentProps<typeof Modal>["color"]>;
 
 const MODAL_ID = "my-modal";

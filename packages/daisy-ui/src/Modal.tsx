@@ -197,7 +197,7 @@ function Closer({className, onPress, ...props}: CloserProps) {
     <Button
       aria-label="Close dialog"
       circle
-      className={twMerge(clsx("absolute right-2 top-2", className))}
+      className={twMerge(clsx("absolute right-2 top-2 pb-4", className))}
       color="ghost"
       onPress={(event) => {
         onPress?.(event);
