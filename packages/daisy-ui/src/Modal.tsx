@@ -88,19 +88,28 @@ export function Modal(
   ...props
 }: ModalProps) {
 
-  const variants =
+  const bodyVariants =
     ModalVariants({border, color, dash});
 
+  const closeModal = React.useCallback(() => {
+    const modalElement = document.getElementById(id);
+    if (modalElement instanceof HTMLDialogElement) {
+      modalElement.close();
+    }
+  }, [id]);
+
   return (
-    <ModalContext.Provider value={{}}>
+    <ModalContext.Provider value={{ bodyVariants, closeModal }}>
       <dialog
         aria-labelledby={id}
         aria-describedby={id}
         id={id}
-        className={twMerge(clsx(variants, className))}
+        className={twMerge(clsx("modal", className))}
         {...props}
       >
-        {children}
+        <div className={twMerge(clsx("modal-box relative", bodyVariants))}>
+          {children}
+        </div>
         {/* Allow a click outside the modal to close it */}
         <form method="dialog" className="modal-backdrop">
           <button>close</button>
@@ -115,10 +124,10 @@ export function Modal(
  * Properties for the trigger that can cause the modal element to be rendered.
  */
 export type ModalTriggerExtraProps = {
-  // ID of the modal element that will be opened (much match the id of the modal)
-  id: string;
   // Label for the Modal trigger [Open]
   label?: string | React.ReactNode;
+  // ID of the modal element that will be opened (much match the id of the modal)
+  modalId: string;
 }
 
 export type ModalTriggerProps = ModalTriggerExtraProps & ButtonProps;
@@ -128,19 +137,26 @@ export type ModalTriggerProps = ModalTriggerExtraProps & ButtonProps;
  * This must NOT be inside the Modal component.
  */
 export function ModalTrigger({
-  id,
   label = "Open",
+  modalId,
+  onPress,
   ...props
 }: ModalTriggerProps)  {
 
   return (
     <Button
-      onPress={() => `document.getElementById("${id}").showModal()`}
       {...props}
+      onPress={(event) => {
+        onPress?.(event);
+         const modalElement = document.getElementById(modalId);
+         if (modalElement instanceof HTMLDialogElement) {
+           modalElement.showModal();
+         }
+       }}
     >
-      {label}
-    </Button>
-  )
+       {label}
+     </Button>
+   )
 
 }
 
@@ -175,32 +191,39 @@ type CloserProps = CloserExtraProps & ButtonProps;
  * Renders a close button at the right edge of a Modal.  This will typically be
  * rendered first to put the button in the upper right corner.
  */
-function Closer({className, ...props}: CloserProps) {
-  useModalContext();
+function Closer({className, onPress, ...props}: CloserProps) {
+  const { closeModal } = useModalContext();
   return (
-    <div className="modal-action">
-      <form method="dialog">
-        <Button
-          circle
-          className={twMerge(clsx("justify-end"), className)}
-          color="ghost"
-          size="sm"
-          {...props}
-        >
-          <X aria-hidden="true" className="h-4 w-4" />
-        </Button>
-      </form>
-    </div>
+    <Button
+      aria-label="Close dialog"
+      circle
+      className={twMerge(clsx("absolute right-2 top-2", className))}
+      color="ghost"
+      onPress={(event) => {
+        onPress?.(event);
+        closeModal();
+      }}
+      size="sm"
+      {...props}
+    >
+      <X aria-hidden="true" className="h-4 w-4" />
+    </Button>
   )
-}
+ }
 
 Modal.Closer = Closer;
 
-const ModalContext = React.createContext<Record<string, never> | undefined>(undefined);
+type ModalContextValue = {
+  bodyVariants: string;
+  closeModal: () => void;
+};
+
+const ModalContext = React.createContext<ModalContextValue | undefined>(undefined);
 
 function useModalContext() {
   const context = React.useContext(ModalContext);
   if (!context) {
-    throw new Error("Card child components must be wrapped in <Modal/>");
+    throw new Error("Modal child components must be wrapped in <Modal/>");
   }
+  return context;
 }

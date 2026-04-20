@@ -1,7 +1,7 @@
 "use client";
 
 /**
- * Examples of DaisyUI+ReactArea Card component.
+ * Examples of DaisyUI+ReactAria Card component.
  */
 
 // External Modules ----------------------------------------------------------
