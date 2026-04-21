@@ -98,8 +98,10 @@ export function Modal(
     }
   }, [id]);
 
+  const [hasCloser, setHasCloser] = React.useState(false);
+
   return (
-    <ModalContext.Provider value={{ bodyVariants, closeModal }}>
+    <ModalContext.Provider value={{ bodyVariants, closeModal, setHasCloser, hasCloser }}>
       <dialog
         aria-labelledby={id}
         aria-describedby={id}
@@ -170,9 +172,9 @@ type BodyExtraProps = {
 type BodyProps = BodyExtraProps & React.ComponentPropsWithoutRef<"div">;
 
 function Body({ children, className, ...props }: BodyProps) {
-  useModalContext();
+  const { hasCloser } = useModalContext();
   return (
-    <div className={twMerge(clsx("modal-body", className))} {...props}>
+    <div className={twMerge(clsx("modal-body", hasCloser && "mt-6", className))} {...props}>
       {children}
     </div>
   )
@@ -188,16 +190,25 @@ type CloserExtraProps = {
 type CloserProps = CloserExtraProps & ButtonProps;
 
 /**
- * Renders a close button at the right edge of a Modal.  This will typically be
- * rendered first to put the button in the upper right corner.
+ * Always renders a close button in the upper right corner of a Modal,
+ * and it will introduce some margin between the body and the closer.
+ * When this button is pressed, the modal will be closed.
+ *
+ * NOTE:  It does not matter where in the <Modal> children that the
+ * <Modal.Closer> is specified -- it will always be in the upper right corner.
  */
 function Closer({className, onPress, ...props}: CloserProps) {
-  const { closeModal } = useModalContext();
+  const { closeModal, setHasCloser } = useModalContext();
+
+  React.useEffect(() => {
+    setHasCloser(true);
+  }, [setHasCloser]);
+
   return (
     <Button
       aria-label="Close dialog"
       circle
-      className={twMerge(clsx("absolute right-2 top-2 pb-4", className))}
+      className={twMerge(clsx("absolute right-2 top-2", className))}
       color="ghost"
       onPress={(event) => {
         onPress?.(event);
@@ -216,6 +227,8 @@ Modal.Closer = Closer;
 type ModalContextValue = {
   bodyVariants: string;
   closeModal: () => void;
+  setHasCloser: (has: boolean) => void;
+  hasCloser?: boolean;
 };
 
 const ModalContext = React.createContext<ModalContextValue | undefined>(undefined);
