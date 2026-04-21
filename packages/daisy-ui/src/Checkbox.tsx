@@ -93,6 +93,10 @@ const CHECK_ICON_SIZE_PX: Record<NonNullable<VariantProps<typeof CheckboxVariant
 type CheckboxExtraProps = {
   // Extra CSS class(es) for the rendered checkbox indicator
   className?: string;
+  // Optional errors component to display below checkbox field
+  errors?: React.ReactElement;
+  // Optional CSS for any rendered errors [bg-error text-error-content]
+  errorsClassName?: string;
   // Optional handler for blur events
   handleBlur?: () => void;
   // Handler for value change events
@@ -112,8 +116,14 @@ type CheckboxNativeProps = Omit<
   "children" | "className" | "isDisabled" | "isInvalid" | "isSelected" | "name" | "onBlur" | "onChange" | "size" | "value"
 >;
 
+export type CheckboxProps = VariantProps<typeof CheckboxVariants>
+  & CheckboxNativeProps
+  & CheckboxExtraProps;
+
 export function Checkbox({
                         className,
+                        errors,
+                        errorsClassName = "bg-error text-error-content",
                         // Variants
                         color,
                         disabled,
@@ -126,9 +136,7 @@ export function Checkbox({
                         name,
                         value = false,
                         ...props
-                      } : VariantProps<typeof CheckboxVariants>
-                        & CheckboxNativeProps
-                        & CheckboxExtraProps) {
+                      } : CheckboxProps) {
 
   const variants =
     CheckboxVariants({color, disabled, size, className});
@@ -173,6 +181,9 @@ export function Checkbox({
           </>
         )}
       </AriaCheckbox>
+      {errors && (
+        <div className={errorsClassName}>{errors}</div>
+      )}
     </fieldset>
   );
 

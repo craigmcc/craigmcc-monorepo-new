@@ -69,6 +69,10 @@ export const TextareaVariants = cva(
 type TextareaExtraProps = {
   // Extra CSS class(es) for the rendered textarea
   className?: string;
+  // Optional errors component to display below textarea field
+  errors?: React.ReactElement;
+  // Optional CSS for any rendered errors [bg-error text-error-content]
+  errorsClassName?: string;
   // Optional handler for blur events
   handleBlur?: () => void;
   // Handler for value change events
@@ -95,8 +99,14 @@ type TextareaNativeProps = Omit<
   "children" | "className" | "disabled" | "onChange" | "rows" | "size"
 >;
 
+export type TextareaProps = VariantProps<typeof TextareaVariants>
+  & TextareaNativeProps
+  & TextareaExtraProps;
+
 export function Textarea({
   className,
+  errors,
+  errorsClassName = "bg-error text-error-content",
   // Variants
   color,
   disabled,
@@ -114,9 +124,7 @@ export function Textarea({
   value,
   // TextArea Element Props
   ...props
-}: VariantProps<typeof TextareaVariants> &
-  TextareaNativeProps &
-  TextareaExtraProps) {
+}: TextareaProps) {
   const variants = TextareaVariants({ color, disabled, ghost, size, className });
 
   return (
@@ -141,7 +149,9 @@ export function Textarea({
           {...props}
         />
       </AriaTextField>
+      {errors && (
+        <div className={errorsClassName}>{errors}</div>
+      )}
     </fieldset>
   );
 }
-

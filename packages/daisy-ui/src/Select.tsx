@@ -75,6 +75,10 @@ export const SelectVariants = cva(
 type SelectExtraProps = {
   // Extra CSS class(es) for the trigger button
   className?: string;
+  // Optional errors component to display below select field
+  errors?: React.ReactElement;
+  // Optional CSS for any rendered errors [bg-error text-error-content]
+  errorsClassName?: string;
   // CSS class(es) to add to rendered options and sections
   entryClassName?: string;
   // Optional handler for blur events
@@ -121,6 +125,10 @@ type SelectNativeProps = Omit<
   | "selectedKey"
   | "value"
 >;
+
+export type SelectProps = VariantProps<typeof SelectVariants>
+  & SelectNativeProps
+  & SelectExtraProps;
 
 /**
  * An option for a Select component.
@@ -228,6 +236,8 @@ function renderSelectCollectionEntry(
 export function Select({
   className,
   entryClassName,
+  errors,
+  errorsClassName = "bg-error text-error-content",
   // Variants
   color,
   disabled,
@@ -250,9 +260,7 @@ export function Select({
   value,
   // React Aria Select Props
   ...props
-}: VariantProps<typeof SelectVariants>
-  & SelectNativeProps
-  & SelectExtraProps) {
+}: SelectProps) {
 
   const variants = SelectVariants({ color, disabled, ghost, size, className });
 
@@ -293,6 +301,9 @@ export function Select({
           </AriaListBox>
         </AriaPopover>
       </AriaSelect>
+      {errors && (
+        <div className={errorsClassName}>{errors}</div>
+      )}
     </fieldset>
   );
 }

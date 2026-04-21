@@ -1,7 +1,7 @@
 # Forms Architecture Plan (daisy-ui + daisy-form)
 
-Status: Draft for future implementation
-Last Updated: 2026-04-20 (revised)
+Status: Phase 1 in progress
+Last Updated: 2026-04-21
 
 ## Why This Exists
 
@@ -54,17 +54,16 @@ Use a **downward context contract** from wrapper components to controls.
 - `daisy-ui` controls should accept optional `errors` content, but never generate validation state themselves.
 - Parent components should not try to discover child type at first render.
 
-## Immediate First Step (Before Full Form Primitives)
+## Immediate First Step (COMPLETED 2026-04-21)
 
-1. In `packages/daisy-ui/src/Checkbox.tsx`, `packages/daisy-ui/src/Select.tsx`, and `packages/daisy-ui/src/Textarea.tsx`:
-   - Export unified public props (`CheckboxProps`, `SelectProps`, `TextareaProps`) so consumers do not need internal prop details.
-   - Add optional `errors` support (and matching class hook if needed), rendered similarly to `packages/daisy-ui/src/Input.tsx`.
-2. In `packages/daisy-form/src`:
-   - Implement `FieldCheckbox.tsx`, `FieldSelect.tsx`, and `FieldTextarea.tsx` following `FieldInput.tsx`.
-   - Use `useFieldContext(...)` and pass `errors={<FieldErrors field={field} />}` to the corresponding `daisy-ui` component.
-3. Keep behavior optional:
-   - `daisy-ui` components render normally if `errors` is omitted.
-   - `daisy-form` decides when errors are passed based on TanStack field state.
+1. ✅ In `packages/daisy-ui/src/Checkbox.tsx`, `packages/daisy-ui/src/Select.tsx`, and `packages/daisy-ui/src/Textarea.tsx`:
+   - Exported unified public props (`CheckboxProps`, `SelectProps`, `TextareaProps`) so consumers do not need internal prop details.
+   - Added optional `errors` support (and matching `errorsClassName`) rendered below the fieldset, consistently with `packages/daisy-ui/src/Input.tsx`.
+2. ✅ In `packages/daisy-form/src`:
+   - Implemented `FieldCheckbox.tsx`, `FieldSelect.tsx`, and `FieldTextarea.tsx` following `FieldInput.tsx`.
+   - Each uses `useFieldContext(...)` and passes `errors={<FieldErrors field={field} />}` to the corresponding `daisy-ui` component.
+3. ✅ Registered `FieldCheckbox`, `FieldSelect`, and `FieldTextarea` in `useAppForm.tsx` `fieldComponents`.
+4. ✅ `check-types` passes for both `@repo/daisy-ui` and `@repo/daisy-form`.
 
 ## UI Strategy in `daisy-ui` (Adapt Existing Components)
 
@@ -104,17 +103,18 @@ Behavior:
 
 ## Phased Implementation Plan
 
-### Phase 1: Contracts + Scaffolding
+### Phase 1: Contracts + Scaffolding (COMPLETED 2026-04-21)
 
-- Define `daisy-ui` form context types and primitive component interfaces.
-- Define `daisy-form` adapter interface shapes.
-- Add/refresh docs for package boundaries and import guidance.
-- Complete immediate first-step alignment for `Checkbox`/`Select`/`Textarea` + `FieldCheckbox`/`FieldSelect`/`FieldTextarea`.
+- ✅ Immediate First Step alignment for `Checkbox`/`Select`/`Textarea` + `FieldCheckbox`/`FieldSelect`/`FieldTextarea`.
+- ✅ Unified public prop types exported from all `daisy-ui` input components.
+- ✅ `daisy-ui` components accept optional `errors` slot; `daisy-form` adapters populate it.
+- ⬜ Define remaining `daisy-ui` form context types and primitive component interfaces (deferred to Phase 2).
+- ⬜ README updates in both packages.
 
 Exit criteria:
-- Type-only contracts compile.
-- README updates in both packages are consistent.
-- New `Field*` adapters compile and mirror `FieldInput` strategy.
+- ✅ Type-only contracts compile.
+- ✅ New `Field*` adapters compile and mirror `FieldInput` strategy.
+- ⬜ README updates in both packages are consistent.
 
 ### Phase 2: `daisy-ui` Generic Primitives
 
@@ -164,12 +164,12 @@ Exit criteria:
 
 - 2026-04-20: Defer Card/Form nested spacing auto-detection until Form architecture exists.
 - 2026-04-20: Keep split: generic primitives in `daisy-ui`, TanStack-specific integration in `daisy-form`.
-- 2026-04-20: Avoid `FormXxx` naming in `daisy-ui`; adapt existing generic components so they work for forms, search, and filter use cases.
-- 2026-04-20: `daisy-ui` components stay clean/presentational and accept optional `errors`; `daisy-form` owns validation/error mapping and decides when to pass it.
+- 2026-04-21: Completed Immediate First Step — `CheckboxProps`/`SelectProps`/`TextareaProps` exported, `errors` prop added to all three; `FieldCheckbox`/`FieldSelect`/`FieldTextarea` adapters created and registered in `useAppForm`.
+- 2026-04-21: Both `@repo/daisy-ui` and `@repo/daisy-form` pass `check-types`.
 
 ## Resume Checklist (After `/clear`)
 
 - Re-open this file.
 - Confirm current package scripts (`check-types`, `test`, `test:ci`) still pass.
-- Start Phase 1 tasks in order.
+- **Phase 1 is done** — next work is Phase 2 (`daisy-ui` component adaptation + a11y props).
 - Keep package boundary rule strict: no TanStack imports in `daisy-ui`.
