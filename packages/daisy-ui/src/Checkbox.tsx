@@ -13,6 +13,7 @@ import { Check } from "lucide-react";
 import * as React from "react";
 import {
   Checkbox as AriaCheckbox,
+  Text as AriaText,
 } from "react-aria-components";
 import { twMerge } from "tailwind-merge";
 
@@ -93,10 +94,16 @@ const CHECK_ICON_SIZE_PX: Record<NonNullable<VariantProps<typeof CheckboxVariant
 type CheckboxExtraProps = {
   // Extra CSS class(es) for the rendered checkbox indicator
   className?: string;
+  // Optional description (help text) displayed below the checkbox, wired to aria-describedby
+  description?: string;
+  // Optional CSS for any rendered description [text-base-content/60 text-sm]
+  descriptionClassName?: string;
   // Optional errors component to display below checkbox field
   errors?: React.ReactElement;
   // Optional CSS for any rendered errors [bg-error text-error-content]
   errorsClassName?: string;
+  // Optional CSS for the outer fieldset wrapper
+  fieldsetClassName?: string;
   // Optional handler for blur events
   handleBlur?: () => void;
   // Handler for value change events
@@ -124,6 +131,9 @@ export function Checkbox({
                         className,
                         errors,
                         errorsClassName = "bg-error text-error-content",
+                        description,
+                        descriptionClassName = "text-base-content/60 text-sm",
+                        fieldsetClassName,
                         // Variants
                         color,
                         disabled,
@@ -145,7 +155,7 @@ export function Checkbox({
   const iconSizePx = CHECK_ICON_SIZE_PX[size ?? "md"];
 
   return (
-    <fieldset className="fieldset w-full">
+    <fieldset className={twMerge(clsx("fieldset w-full", fieldsetClassName))}>
       <AriaCheckbox
         className="flex flex-row items-center"
         isDisabled={Boolean(disabled)}
@@ -181,6 +191,11 @@ export function Checkbox({
           </>
         )}
       </AriaCheckbox>
+      {description && (
+        <AriaText slot="description" className={descriptionClassName}>
+          {description}
+        </AriaText>
+      )}
       {errors && (
         <div className={errorsClassName}>{errors}</div>
       )}

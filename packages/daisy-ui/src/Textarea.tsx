@@ -12,6 +12,7 @@ import * as React from "react";
 import {
   Label as AriaLabel,
   TextArea as AriaTextArea,
+  Text as AriaText,
   TextField as AriaTextField,
 } from "react-aria-components";
 import { twMerge } from "tailwind-merge";
@@ -69,10 +70,16 @@ export const TextareaVariants = cva(
 type TextareaExtraProps = {
   // Extra CSS class(es) for the rendered textarea
   className?: string;
+  // Optional description (help text) displayed below the label, wired to aria-describedby
+  description?: string;
+  // Optional CSS for any rendered description [text-base-content/60 text-sm]
+  descriptionClassName?: string;
   // Optional errors component to display below textarea field
   errors?: React.ReactElement;
   // Optional CSS for any rendered errors [bg-error text-error-content]
   errorsClassName?: string;
+  // Optional CSS for the outer fieldset wrapper
+  fieldsetClassName?: string;
   // Optional handler for blur events
   handleBlur?: () => void;
   // Handler for value change events
@@ -105,8 +112,11 @@ export type TextareaProps = VariantProps<typeof TextareaVariants>
 
 export function Textarea({
   className,
+  description,
+  descriptionClassName = "text-base-content/60 text-sm",
   errors,
   errorsClassName = "bg-error text-error-content",
+  fieldsetClassName,
   // Variants
   color,
   disabled,
@@ -128,7 +138,7 @@ export function Textarea({
   const variants = TextareaVariants({ color, disabled, ghost, size, className });
 
   return (
-    <fieldset className="fieldset">
+    <fieldset className={twMerge(clsx("fieldset", fieldsetClassName))}>
       <AriaTextField
         className={labelClassName ? "flex flex-row items-center" : "flex flex-col"}
         isDisabled={Boolean(disabled)}
@@ -139,6 +149,11 @@ export function Textarea({
         <AriaLabel className={twMerge(clsx("fieldset-legend", labelClassName))}>
           {label}
         </AriaLabel>
+        {description && (
+          <AriaText slot="description" className={descriptionClassName}>
+            {description}
+          </AriaText>
+        )}
         <AriaTextArea
           className={twMerge(clsx(variants, "w-full"))}
           id={name}

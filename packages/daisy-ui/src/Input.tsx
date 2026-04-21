@@ -12,6 +12,7 @@ import * as React from "react";
 import {
   Input as AriaInput,
   Label as AriaLabel,
+  Text as AriaText,
   TextField as AriaTextField,
 } from "react-aria-components";
 import { twMerge } from "tailwind-merge";
@@ -69,10 +70,16 @@ export const InputVariants = cva(
 type InputExtraProps = {
   // Extra CSS class(es) for the rendered input field
   className?: string;
+  // Optional description (help text) displayed below the label, wired to aria-describedby
+  description?: string;
+  // Optional CSS for any rendered description [text-base-content/60 text-sm]
+  descriptionClassName?: string;
   // Optional errors component to display below input field
   errors?: React.ReactElement;
   // Optional CSS for any rendered errors [bg-error text-error-content]
   errorsClassName?: string;
+  // Optional CSS for the outer fieldset wrapper
+  fieldsetClassName?: string;
   // Optional handler for blur events
   handleBlur?: () => void;
   // Handler for value change events
@@ -105,8 +112,11 @@ export function Input({
   // Variants
   color,
   disabled,
+  description,
+  descriptionClassName = "text-base-content/60 text-sm",
   errors,
   errorsClassName = "bg-error text-error-content",
+  fieldsetClassName,
   ghost,
   size,
   // Extra Props
@@ -126,7 +136,7 @@ export function Input({
     InputVariants({color, disabled, ghost, size, className});
 
   return (
-    <fieldset className="fieldset">
+    <fieldset className={twMerge(clsx("fieldset", fieldsetClassName))}>
       <AriaTextField
         className={labelClassName ? "flex flex-row" : "flex flex-col"}
         isDisabled={Boolean(disabled)}
@@ -137,6 +147,11 @@ export function Input({
         <AriaLabel className={twMerge(clsx("fieldset-legend", labelClassName))}>
           {label}
         </AriaLabel>
+        {description && (
+          <AriaText slot="description" className={descriptionClassName}>
+            {description}
+          </AriaText>
+        )}
         <AriaInput
           className={twMerge(clsx(variants, "w-full"))}
           id={name}

@@ -1,6 +1,6 @@
 # Forms Architecture Plan (daisy-ui + daisy-form)
 
-Status: Phase 1 in progress
+Status: Phase 2 completed
 Last Updated: 2026-04-21
 
 ## Why This Exists
@@ -116,16 +116,17 @@ Exit criteria:
 - ✅ New `Field*` adapters compile and mirror `FieldInput` strategy.
 - ⬜ README updates in both packages are consistent.
 
-### Phase 2: `daisy-ui` Generic Primitives
+### Phase 2: `daisy-ui` Generic Primitives (COMPLETED 2026-04-21)
 
-- Adapt existing components (`Input`, `Checkbox`, `Select`, `Textarea`, etc.) with
-  optional props/slots needed by adapter layers.
-- Ensure a11y wiring remains component-local and framework-agnostic.
-- Add class override props for spacing/padding/extensibility.
+- ✅ Adapted existing components (`Input`, `Checkbox`, `Select`, `Textarea`) with
+  optional `description`, `descriptionClassName`, and `fieldsetClassName` props.
+- ✅ Kept a11y wiring component-local and framework-agnostic (including description slots).
+- ✅ Added unit tests for updated component behavior (description, errors, variants, fieldset classes).
+- ✅ Added static (non-TanStack) Forms showcase examples in `apps/daisy-showcase`.
 
 Exit criteria:
-- Unit tests cover a11y wiring and class merges.
-- Showcase has static (non-TanStack) form examples.
+- ✅ Unit tests cover a11y wiring and class merges.
+- ✅ Showcase has static (non-TanStack) form examples.
 
 ### Phase 3: `daisy-form` TanStack Adapters
 
@@ -166,10 +167,11 @@ Exit criteria:
 - 2026-04-20: Keep split: generic primitives in `daisy-ui`, TanStack-specific integration in `daisy-form`.
 - 2026-04-21: Completed Immediate First Step — `CheckboxProps`/`SelectProps`/`TextareaProps` exported, `errors` prop added to all three; `FieldCheckbox`/`FieldSelect`/`FieldTextarea` adapters created and registered in `useAppForm`.
 - 2026-04-21: Both `@repo/daisy-ui` and `@repo/daisy-form` pass `check-types`.
+- 2026-04-21: Completed Phase 2 — `description`/`descriptionClassName`/`fieldsetClassName` added to input family, tests added for `Input`/`Checkbox`/`Select`/`Textarea`, and static `Forms` showcase route implemented.
 
 ## Resume Checklist (After `/clear`)
 
 - Re-open this file.
 - Confirm current package scripts (`check-types`, `test`, `test:ci`) still pass.
-- **Phase 1 is done** — next work is Phase 2 (`daisy-ui` component adaptation + a11y props).
+- **Phase 1 and Phase 2 are done** — next work is Phase 3 (`daisy-form` TanStack adapters/tests).
 - Keep package boundary rule strict: no TanStack imports in `daisy-ui`.

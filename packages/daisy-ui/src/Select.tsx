@@ -19,6 +19,7 @@ import {
   Popover as AriaPopover,
   Select as AriaSelect,
   SelectValue as AriaSelectValue,
+  Text as AriaText,
 } from "react-aria-components";
 import { twMerge } from "tailwind-merge";
 
@@ -75,12 +76,18 @@ export const SelectVariants = cva(
 type SelectExtraProps = {
   // Extra CSS class(es) for the trigger button
   className?: string;
+  // Optional description (help text) displayed below the label, wired to aria-describedby
+  description?: string;
+  // Optional CSS for any rendered description [text-base-content/60 text-sm]
+  descriptionClassName?: string;
   // Optional errors component to display below select field
   errors?: React.ReactElement;
   // Optional CSS for any rendered errors [bg-error text-error-content]
   errorsClassName?: string;
   // CSS class(es) to add to rendered options and sections
   entryClassName?: string;
+  // Optional CSS for the outer fieldset wrapper
+  fieldsetClassName?: string;
   // Optional handler for blur events
   handleBlur?: () => void;
   // Handler for value change events
@@ -236,8 +243,11 @@ function renderSelectCollectionEntry(
 export function Select({
   className,
   entryClassName,
+  description,
+  descriptionClassName = "text-base-content/60 text-sm",
   errors,
   errorsClassName = "bg-error text-error-content",
+  fieldsetClassName,
   // Variants
   color,
   disabled,
@@ -265,7 +275,7 @@ export function Select({
   const variants = SelectVariants({ color, disabled, ghost, size, className });
 
   return (
-    <fieldset className="fieldset">
+    <fieldset className={twMerge(clsx("fieldset", fieldsetClassName))}>
       <AriaSelect
         className={labelClassName ? "flex flex-row items-center" : "flex flex-col"}
         isDisabled={Boolean(disabled)}
@@ -279,6 +289,11 @@ export function Select({
         <AriaLabel className={twMerge(clsx("fieldset-legend", labelClassName))}>
           {label}
         </AriaLabel>
+        {description && (
+          <AriaText slot="description" className={descriptionClassName}>
+            {description}
+          </AriaText>
+        )}
         <AriaButton
           className={twMerge(clsx(variants, "w-full flex items-center justify-between"))}
           id={name}
