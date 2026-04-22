@@ -202,6 +202,9 @@ importers:
 
   apps/daisy-showcase:
     dependencies:
+      '@repo/daisy-form':
+        specifier: workspace:*
+        version: link:../../packages/daisy-form
       '@repo/daisy-ui':
         specifier: workspace:*
         version: link:../../packages/daisy-ui

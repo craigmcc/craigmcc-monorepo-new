@@ -21,12 +21,18 @@ describe("FieldInput", () => {
 
   it("maps field context state/handlers into Input props", () => {
     const field = {
+      form: {
+        state: {
+          submissionAttempts: 0,
+        },
+      },
       handleBlur: vi.fn(),
       handleChange: vi.fn(),
       name: "email",
       state: {
         meta: {
           errors: [{ message: "Email is required" }],
+          isPristine: true,
           isTouched: false,
         },
         value: "person@example.com",
@@ -38,10 +44,7 @@ describe("FieldInput", () => {
     renderWithProviders(
       <FieldInput
         disabled
-        handleChange={() => undefined}
         label="Email"
-        name="ignored"
-        value=""
       />
     );
 
@@ -61,8 +64,8 @@ describe("FieldInput", () => {
     (inputProps.handleChange as (nextValue: string) => void)("next@example.com");
     expect(field.handleChange).toHaveBeenCalledWith("next@example.com");
 
-    const { getByText } = renderWithProviders(inputProps.errors as React.ReactElement);
-    expect(getByText("Email is required")).toBeTruthy();
+    const { queryByText } = renderWithProviders(inputProps.errors as React.ReactElement);
+    expect(queryByText("Email is required")).toBeNull();
   });
 });
 

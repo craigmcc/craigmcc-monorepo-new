@@ -21,12 +21,18 @@ describe("FieldCheckbox", () => {
 
   it("maps field context state/handlers into Checkbox props", () => {
     const field = {
+      form: {
+        state: {
+          submissionAttempts: 0,
+        },
+      },
       handleBlur: vi.fn(),
       handleChange: vi.fn(),
       name: "terms",
       state: {
         meta: {
           errors: [{ message: "You must accept the terms" }],
+          isPristine: false,
           isTouched: true,
         },
         value: true,
@@ -38,10 +44,7 @@ describe("FieldCheckbox", () => {
     renderWithProviders(
       <FieldCheckbox
         disabled
-        handleChange={() => undefined}
         label="Accept Terms"
-        name="ignored"
-        value={false}
       />
     );
 

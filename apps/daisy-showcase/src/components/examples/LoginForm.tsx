@@ -1,95 +1,88 @@
 "use client";
 
-import * as React from "react";
-
 /**
- * LoginForm component demonstrating useAppForm with Zod validation.
- * Shows how validation errors flow through to daisy-ui Input components.
+ * LoginForm component demonstrating daisy-form + TanStack + Zod validation.
  */
 
-import { Input } from "@repo/daisy-ui/Input";
+import { useAppForm } from "@repo/daisy-form/useAppForm";
+import type { FieldErrorVisibilityPolicy } from "@repo/daisy-form/FieldErrors";
 import { z } from "zod";
 
-// Zod schemas for individual field validation
-const emailSchema = z
-  .string()
-  .min(1, "Email is required")
-  .email("Please enter a valid email address");
-const passwordSchema = z
-  .string()
-  .min(1, "Password is required")
-  .min(8, "Password must be at least 8 characters");
+// Zod schema for full-form validation via useAppForm validators
+const loginSchema = z.object({
+  email: z
+    .string()
+    .min(1, "Email is required")
+    .email("Please enter a valid email address"),
+  password: z
+    .string()
+    .min(1, "Password is required")
+    .min(8, "Password must be at least 8 characters"),
+});
 
 type LoginFormValues = { email: string; password: string };
 
 interface LoginFormProps {
+  errorVisibilityPolicy?: FieldErrorVisibilityPolicy;
   onSubmit?: (values: LoginFormValues) => void | Promise<void>;
 }
 
-export function LoginForm({ onSubmit }: LoginFormProps) {
-  const [values, setValues] = React.useState<LoginFormValues>({ email: "", password: "" });
-  const [errors, setErrors] = React.useState<Record<string, string | null>>({ email: null, password: null });
-
-  const handleValidateAndSubmit = () => {
-    const emailResult = emailSchema.safeParse(values.email);
-    const passwordResult = passwordSchema.safeParse(values.password);
-
-    const newErrors = {
-      email: emailResult.success
-        ? null
-        : emailResult.error.issues?.[0]?.message || "Invalid email",
-      password: passwordResult.success
-        ? null
-        : passwordResult.error.issues?.[0]?.message || "Invalid password",
-    };
-    setErrors(newErrors);
-
-    if (emailResult.success && passwordResult.success) {
-      onSubmit?.(values);
-    }
-  };
+export function LoginForm({ errorVisibilityPolicy, onSubmit }: LoginFormProps) {
+  const form = useAppForm({
+    defaultValues: {
+      email: "",
+      password: "",
+    } satisfies LoginFormValues,
+    onSubmit: async ({ value }) => {
+      await onSubmit?.(value);
+    },
+    validators: {
+      onBlur: loginSchema,
+      onChange: loginSchema,
+      onSubmit: loginSchema,
+    },
+  });
 
   return (
     <form
+      data-testid="login-form"
+      noValidate
       onSubmit={(event) => {
         event.preventDefault();
         event.stopPropagation();
-        handleValidateAndSubmit();
+        void form.handleSubmit();
       }}
       className="space-y-4"
     >
-      <Input
-        errors={errors.email ? <span>{errors.email}</span> : undefined}
-        handleChange={(newValue) => {
-          setValues((prev) => ({ ...prev, email: newValue }));
-          if (errors.email) setErrors((prev) => ({ ...prev, email: null }));
-        }}
-        label="Email"
-        name="email"
-        placeholder="you@example.com"
-        type="email"
-        value={values.email}
-      />
+      <form.AppField name="email">
+        {(field) => (
+          <field.FieldInput
+            description="We'll never share your email."
+            errorVisibilityPolicy={errorVisibilityPolicy}
+            label="Email"
+            placeholder="you@example.com"
+            type="email"
+          />
+        )}
+      </form.AppField>
 
-      <Input
-        errors={errors.password ? <span>{errors.password}</span> : undefined}
-        handleChange={(newValue) => {
-          setValues((prev) => ({ ...prev, password: newValue }));
-          if (errors.password) setErrors((prev) => ({ ...prev, password: null }));
-        }}
-        label="Password"
-        name="password"
-        placeholder="••••••••"
-        type="password"
-        value={values.password}
-      />
+      <form.AppField name="password">
+        {(field) => (
+          <field.FieldInput
+            errorVisibilityPolicy={errorVisibilityPolicy}
+            label="Password"
+            placeholder="Enter your password"
+            type="password"
+          />
+        )}
+      </form.AppField>
 
-      <button
-        type="submit"
-        className="btn btn-primary w-full"
-      >
-        Sign In
-      </button>
+      <form.AppForm>
+        <div className="flex flex-col gap-2 sm:flex-row">
+          <form.FormSubmitButton className="w-full" label="Sign In" />
+          <form.FormResetButton className="w-full" />
+        </div>
+      </form.AppForm>
     </form>
   );
 }

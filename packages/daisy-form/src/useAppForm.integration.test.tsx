@@ -1,5 +1,6 @@
 import { renderWithProviders } from "@repo/testing-react";
 import { describe, expect, it, vi } from "vitest";
+import { z } from "zod";
 
 import { useAppForm } from "./useAppForm";
 
@@ -39,10 +40,7 @@ function IntegrationTestForm({ onSubmit }: { onSubmit: (values: TestFormValues) 
       >
         {(field) => (
           <field.FieldInput
-            handleChange={() => undefined}
             label="Email"
-            name="email"
-            value=""
           />
         )}
       </form.AppField>
@@ -50,11 +48,8 @@ function IntegrationTestForm({ onSubmit }: { onSubmit: (values: TestFormValues) 
       <form.AppField name="notes">
         {(field) => (
           <field.FieldTextarea
-            handleChange={() => undefined}
             label="Notes"
-            name="notes"
             rows={3}
-            value=""
           />
         )}
       </form.AppField>
@@ -67,14 +62,11 @@ function IntegrationTestForm({ onSubmit }: { onSubmit: (values: TestFormValues) 
       >
         {(field) => (
           <field.FieldSelect
-            handleChange={() => undefined}
             label="Country"
-            name="country"
             options={[
               { label: "United States", value: "us" },
               { label: "Canada", value: "ca" },
             ]}
-            value=""
           />
         )}
       </form.AppField>
@@ -87,15 +79,115 @@ function IntegrationTestForm({ onSubmit }: { onSubmit: (values: TestFormValues) 
       >
         {(field) => (
           <field.FieldCheckbox
-            handleChange={() => undefined}
             label="Accept Terms"
-            name="accepted"
           />
         )}
       </form.AppField>
 
       <button type="submit">Submit</button>
       <button onClick={() => form.reset()} type="button">Reset</button>
+    </form>
+  );
+}
+
+type SchemaFormValues = {
+  email: string;
+  password: string;
+};
+
+const schemaValidators = z.object({
+  email: z
+    .string()
+    .min(1, "Email is required")
+    .email("Please enter a valid email address"),
+  password: z
+    .string()
+    .min(1, "Password is required")
+    .min(8, "Password must be at least 8 characters"),
+});
+
+function SchemaValidatorsForm({ onSubmit }: { onSubmit: (values: SchemaFormValues) => void }) {
+  const form = useAppForm({
+    defaultValues: {
+      email: "",
+      password: "",
+    } satisfies SchemaFormValues,
+    onSubmit: ({ value }) => {
+      onSubmit(value);
+    },
+    validators: {
+      onBlur: schemaValidators,
+      onChange: schemaValidators,
+      onSubmit: schemaValidators,
+    },
+  });
+
+  return (
+    <form
+      noValidate
+      onSubmit={(event) => {
+        event.preventDefault();
+        event.stopPropagation();
+        void form.handleSubmit();
+      }}
+    >
+      <form.AppField name="email">
+        {(field) => <field.FieldInput label="Email" type="email" />}
+      </form.AppField>
+
+      <form.AppField name="password">
+        {(field) => <field.FieldInput label="Password" type="password" />}
+      </form.AppField>
+
+      <button type="submit">Submit</button>
+    </form>
+  );
+}
+
+function TouchedOnlyVisibilityForm() {
+  const form = useAppForm({
+    defaultValues: {
+      email: "",
+      password: "",
+    } satisfies SchemaFormValues,
+    onSubmit: () => {},
+    validators: {
+      onBlur: schemaValidators,
+      onChange: schemaValidators,
+      onSubmit: schemaValidators,
+    },
+  });
+
+  return (
+    <form
+      noValidate
+      onSubmit={(event) => {
+        event.preventDefault();
+        event.stopPropagation();
+        void form.handleSubmit();
+      }}
+    >
+      <form.AppField name="email">
+        {(field) => (
+          <field.FieldInput
+            errorVisibilityPolicy="touched-only"
+            label="Email"
+            type="email"
+          />
+        )}
+      </form.AppField>
+
+      <form.AppField name="password">
+        {(field) => (
+          <field.FieldInput
+            errorVisibilityPolicy="touched-only"
+            label="Password"
+            type="password"
+          />
+        )}
+      </form.AppField>
+
+      <button type="submit">Submit</button>
     </form>
   );
 }
@@ -172,6 +264,63 @@ describe("useAppForm integration", () => {
     expect(emailInput.value).toBe("");
     expect(notesTextarea.value).toBe("");
     expect(termsCheckbox.checked).toBe(false);
+  });
+
+  it("supports object-schema validators across blur/change/submit", async () => {
+    const onSubmit = vi.fn();
+
+    const { getByLabelText, getByText, queryByText, user } = renderWithProviders(
+      <SchemaValidatorsForm onSubmit={onSubmit} />
+    );
+
+    const emailInput = getByLabelText("Email");
+    const passwordInput = getByLabelText("Password");
+
+    await user.click(emailInput);
+    await user.tab();
+
+    await vi.waitFor(() => {
+      expect(getByText(/Email is required/)).toBeTruthy();
+    });
+
+    await user.type(emailInput, "not-an-email");
+    await vi.waitFor(() => {
+      expect(getByText(/Please enter a valid email address/)).toBeTruthy();
+    });
+    await user.type(passwordInput, "short");
+    await vi.waitFor(() => {
+      expect(getByText(/Password must be at least 8 characters/)).toBeTruthy();
+    });
+
+    await user.click(getByText("Submit"));
+    expect(onSubmit).toHaveBeenCalledTimes(0);
+
+    await user.clear(emailInput);
+    await user.type(emailInput, "person@example.com");
+    await user.clear(passwordInput);
+    await user.type(passwordInput, "securepass123");
+    await user.click(getByText("Submit"));
+
+    await vi.waitFor(() => {
+      expect(onSubmit).toHaveBeenCalledTimes(1);
+      expect(queryByText("Email is required")).toBeNull();
+      expect(queryByText("Please enter a valid email address")).toBeNull();
+      expect(queryByText("Password must be at least 8 characters")).toBeNull();
+    });
+  });
+
+  it("can customize visibility with touched-only policy", async () => {
+    const { getByLabelText, getByText, queryByText, user } = renderWithProviders(
+      <TouchedOnlyVisibilityForm />
+    );
+
+    expect(queryByText(/Please enter a valid email address/)).toBeNull();
+
+    await user.type(getByLabelText("Email"), "not-an-email");
+    await vi.waitFor(() => {
+      expect(getByText(/Please enter a valid email address/)).toBeTruthy();
+    });
+    expect(queryByText(/Password is required/)).toBeNull();
   });
 });
 

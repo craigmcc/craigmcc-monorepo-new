@@ -10,28 +10,28 @@ import { Input, InputProps } from "@repo/daisy-ui/Input";
 
 // Internal Modules ----------------------------------------------------------
 
-import { FieldErrors } from "./FieldErrors";
+import { FieldErrors, FieldErrorVisibilityPolicy } from "./FieldErrors";
 import { useFieldContext } from "./useAppContexts";
 
 // Public Objects ------------------------------------------------------------
 
 type FieldInputProps = {
-} & InputProps;
+  errorVisibilityPolicy?: FieldErrorVisibilityPolicy;
+} & Omit<InputProps, "errors" | "handleBlur" | "handleChange" | "name" | "value">;
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-export function FieldInput({ handleBlur, handleChange, name, value, ...props }: FieldInputProps) {
+export function FieldInput({ errorVisibilityPolicy, ...props }: FieldInputProps) {
 
   const field = useFieldContext<string>();
 
   return (
     <Input
-      errors={<FieldErrors field={field}/>}
+      {...props}
+      errors={<FieldErrors field={field} visibilityPolicy={errorVisibilityPolicy} />}
       id={field.name}
       name={field.name}
       handleBlur={field.handleBlur}
       handleChange={(value) => field.handleChange(value)}
       value={field.state.value}
-      {...props}
     />
   )
 

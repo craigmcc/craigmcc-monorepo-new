@@ -21,12 +21,18 @@ describe("FieldTextarea", () => {
 
   it("maps field context state/handlers into Textarea props", () => {
     const field = {
+      form: {
+        state: {
+          submissionAttempts: 0,
+        },
+      },
       handleBlur: vi.fn(),
       handleChange: vi.fn(),
       name: "message",
       state: {
         meta: {
           errors: [{ message: "Message is required" }],
+          isPristine: false,
           isTouched: true,
         },
         value: "Initial message",
@@ -38,11 +44,8 @@ describe("FieldTextarea", () => {
     renderWithProviders(
       <FieldTextarea
         disabled
-        handleChange={() => undefined}
         label="Message"
-        name="ignored"
         rows={4}
-        value=""
       />
     );
 

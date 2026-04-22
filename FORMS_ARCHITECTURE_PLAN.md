@@ -1,6 +1,6 @@
 # Forms Architecture Plan (daisy-ui + daisy-form)
 
-Status: Phase 3 completed
+Status: Phase 4 completed
 Last Updated: 2026-04-21
 
 ## Why This Exists
@@ -53,6 +53,7 @@ Use a **downward context contract** from wrapper components to controls.
 - `daisy-form` adapters should translate TanStack state into those metadata props.
 - `daisy-ui` controls should accept optional `errors` content, but never generate validation state themselves.
 - Parent components should not try to discover child type at first render.
+- Field-level validation messages should remain hidden for pristine untouched fields, and become visible after interaction or submit attempts.
 
 ## Immediate First Step (COMPLETED 2026-04-21)
 
@@ -143,23 +144,27 @@ Exit criteria:
 - ✅ Type inference/contracts compile for field values and component props (`check-types` passing in `@repo/daisy-form`).
 - ✅ Showcase LoginForm testbed demonstrates error slot rendering with daisy-ui Input component.
 
-### Phase 4: Showcase Integration + Hardening
+### Phase 4: Showcase Integration + Hardening (COMPLETED 2026-04-21)
 
-- Convert static `LoginForm` (Phase 3 testbed) to use `useAppForm` + `FieldInput` + `FormSubmitButton`.
-  - Replace manual Zod validation with TanStack validators on each `form.AppField`.
-  - Test that `useAppForm` wiring works end-to-end (field state, error propagation, submit handling).
-- Build real forms in `apps/daisy-showcase` Forms route (use converted TanStack-backed `LoginForm`).
-- Add route-level integration tests for Forms page (rendering + interaction + theme switching).
-- Validate component behavior with different DaisyUI themes and layout variants.
-- Add regression tests for:
-  - Field-level validation error flow (TanStack → `FieldInput` → `errors` prop).
-  - Submit button disabled state during form submission.
+- ✅ Converted static `LoginForm` (Phase 3 testbed) to use `useAppForm` + `FieldInput` + `FormSubmitButton`/`FormResetButton`.
+  - ✅ Replaced manual form state with TanStack validators and full-object schema validators.
+  - ✅ Added object-schema validation handlers on `onBlur`, `onChange`, and `onSubmit`.
+  - ✅ Verified `useAppForm` wiring end-to-end (field state, error propagation, submit handling).
+- ✅ Hardened `FieldErrors` to support schema-driven error payload shapes (strings, nested objects, arrays, and error maps).
+- ✅ Integrated converted TanStack-backed `LoginForm` into `apps/daisy-showcase` Forms route.
+- ✅ Added route-level integration tests for Forms page rendering + interaction.
+- ✅ Added theme-switching interaction coverage for Forms route.
+- ✅ Added regression tests for:
+  - Field-level validation error flow (TanStack/object schema → `FieldInput` → `errors` prop).
+  - Submit button disabled/loading behavior during async submission.
   - Reset button state restoration.
   - Error clearing on valid input.
 
 Exit criteria:
 - Forms route demonstrates both generic (daisy-ui-only) and TanStack-backed (daisy-form) usage.
 - `LoginForm` component uses `useAppForm` + `FieldInput` adapters.
+- `useAppForm` object-schema validators (`onBlur`/`onChange`/`onSubmit`) are supported and covered by tests.
+- `FieldErrors` correctly renders schema-driven error payloads from TanStack metadata.
 - Route-level tests cover form rendering, submission, validation, and reset flows.
 - `test:ci` and `check-types` pass for `@repo/daisy-ui`, `@repo/daisy-form`, and `daisy-showcase`.
 - Visual regression tests confirm theme-aware styling and accessibility across themes.
@@ -173,7 +178,7 @@ Exit criteria:
 ## Open Questions (Decide During Phase 1)
 
 1. Export strategy: deep imports only vs. package barrel exports.
-2. Error visibility policy: show on touched vs. on submit vs. configurable.
+2. Error visibility policy configuration scope: form-wide only, field-level only, or both.
 3. Default spacing policy for generic input/selector components and error blocks.
 4. Naming convention (`AppForm` vs. `TanstackFormProvider` vs. both).
 
@@ -186,14 +191,18 @@ Exit criteria:
 - 2026-04-21: Completed Phase 2 — `description`/`descriptionClassName`/`fieldsetClassName` added to input family, tests added for `Input`/`Checkbox`/`Select`/`Textarea`, and static `Forms` showcase route implemented.
 - 2026-04-21: Completed Phase 3 — added adapter and form action tests in `@repo/daisy-form` (`FieldInput`, `FieldCheckbox`, `FieldSelect`, `FieldTextarea`, `FormSubmitButton`, `FormResetButton`) and verified `check-types` + `test:ci`.
 - 2026-04-21: Created showcase `LoginForm` testbed component (Phase 3 → Phase 4 bridge) using standalone Zod validation to prove error forwarding to daisy-ui Input `errors` prop works correctly. Phase 4 will convert it to use `useAppForm` + `FieldInput` adapters.
+- 2026-04-21: Began Phase 4 implementation — converted showcase `LoginForm` to TanStack-backed `useAppForm` + `FieldInput`, integrated into Forms route, and added LoginForm + route integration tests.
+- 2026-04-21: Tightened `Field*` adapter contracts to omit controlled props (`handleChange`, `name`, `value`, etc.) so TanStack context wiring cannot be accidentally overridden by caller props.
+- 2026-04-21: Completed Phase 4 hardening — added support/tests for `useAppForm` object-schema validators (`onBlur`/`onChange`/`onSubmit`), hardened `FieldErrors` for schema error shapes, added async submit loading-state tests, and added Forms route theme-switching integration coverage.
+- 2026-04-21: `FieldErrors` now suppresses messages for pristine untouched fields and only displays them after user interaction (`isTouched` / non-pristine state) or after form submit attempts.
+- 2026-04-21: Added configurable `FieldErrors` visibility policies (`submit-or-interaction` default, plus `submit-only`, `touched-only`, `dirty-or-touched`, and custom callback support) exposed through all `Field*` adapters via `errorVisibilityPolicy`.
 
 ## Resume Checklist (After `/clear`)
 
 - Re-open this file.
 - Confirm current package scripts (`check-types`, `test`, `test:ci`) still pass.
-- **Phase 1 through Phase 3 are done** — next work is Phase 4.
-- Phase 4 focus: Convert showcase `LoginForm` from standalone Zod → `useAppForm` + `FieldInput` adapters.
-  - Verify TanStack field state flows through to daisy-ui error slots correctly.
-  - Add route-level tests for Forms page (rendering, interaction, theme switching).
-  - Ensure `test:ci` and `check-types` pass across all three packages.
+- **Phase 1 through Phase 4 are complete.**
+- Next focus (future enhancements):
+  - Add broader visual regression snapshots across representative DaisyUI themes.
+  - Expand async validation coverage for server-side / delayed validators.
 - Keep package boundary rule strict: no TanStack imports in `daisy-ui`.

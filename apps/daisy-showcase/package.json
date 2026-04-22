@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "@repo/daisy-form": "workspace:*",
     "@repo/daisy-ui": "workspace:*",
     "@repo/shared-utils": "workspace:*",
     "lucide-react": "catalog:lucide",

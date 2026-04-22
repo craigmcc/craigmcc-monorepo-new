@@ -21,12 +21,18 @@ describe("FieldSelect", () => {
 
   it("maps field context state/handlers into Select props", () => {
     const field = {
+      form: {
+        state: {
+          submissionAttempts: 0,
+        },
+      },
       handleBlur: vi.fn(),
       handleChange: vi.fn(),
       name: "country",
       state: {
         meta: {
           errors: [{ message: "Country is required" }],
+          isPristine: true,
           isTouched: false,
         },
         value: "ca",
@@ -38,14 +44,11 @@ describe("FieldSelect", () => {
     renderWithProviders(
       <FieldSelect
         disabled
-        handleChange={() => undefined}
         label="Country"
-        name="ignored"
         options={[
           { label: "Canada", value: "ca" },
           { label: "United States", value: "us" },
         ]}
-        value=""
       />
     );
 
@@ -65,8 +68,8 @@ describe("FieldSelect", () => {
     (selectProps.handleChange as (nextValue: string) => void)("us");
     expect(field.handleChange).toHaveBeenCalledWith("us");
 
-    const { getByText } = renderWithProviders(selectProps.errors as React.ReactElement);
-    expect(getByText("Country is required")).toBeTruthy();
+    const { queryByText } = renderWithProviders(selectProps.errors as React.ReactElement);
+    expect(queryByText("Country is required")).toBeNull();
   });
 });
 

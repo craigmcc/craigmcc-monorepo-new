@@ -13,6 +13,8 @@ import { Select } from "@repo/daisy-ui/Select";
 import { Textarea } from "@repo/daisy-ui/Textarea";
 import * as React from "react";
 
+import { LoginForm } from "./LoginForm";
+
 // Public Objects ------------------------------------------------------------
 
 export function Forms() {
@@ -176,6 +178,21 @@ export function Forms() {
           </Card>
 
         </div>
+
+        <hr className="my-4" />
+
+        <section aria-labelledby="tanstack-form-heading" data-testid="tanstack-form-section">
+          <h2 id="tanstack-form-heading" className="text-lg font-semibold mb-4">
+            TanStack Form Integration
+          </h2>
+
+          <Card className="w-full">
+            <Card.Title className="justify-center">Login Form (daisy-form)</Card.Title>
+            <Card.Body>
+              <LoginForm />
+            </Card.Body>
+          </Card>
+        </section>
       </section>
     </>
   );
