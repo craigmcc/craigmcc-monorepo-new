@@ -2,8 +2,8 @@ import Link from "next/link";
 
 import { getDocIndex } from "@/lib/docs";
 
-export function DocsNav() {
-  const docs = getDocIndex();
+export async function DocsNav() {
+  const docs = await getDocIndex();
 
   return (
     <nav className="rounded-box border border-base-300 p-4">
@@ -20,4 +20,3 @@ export function DocsNav() {
     </nav>
   );
 }
-

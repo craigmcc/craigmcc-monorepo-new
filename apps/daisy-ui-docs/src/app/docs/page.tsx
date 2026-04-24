@@ -2,8 +2,8 @@ import Link from "next/link";
 
 import { getDocIndex } from "@/lib/docs";
 
-export default function DocsIndexPage() {
-  const docs = getDocIndex();
+export default async function DocsIndexPage() {
+  const docs = await getDocIndex();
 
   return (
     <section className="space-y-4">
@@ -29,4 +29,3 @@ export default function DocsIndexPage() {
     </section>
   );
 }
-
