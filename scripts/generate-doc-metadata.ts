@@ -220,7 +220,17 @@ async function extractComponentMeta(componentName: string, filePath: string): Pr
 async function main() {
   await fs.mkdir(outDir, { recursive: true });
 
-  const components = ["Button", "Input", "Modal"];
+  const components = [
+    "Button",
+    "Card",
+    "Checkbox",
+    "Input",
+    "Menu",
+    "Modal",
+    "Navbar",
+    "Select",
+    "Textarea",
+  ];
 
   for (const name of components) {
     const fileName = `${name}.tsx`;
