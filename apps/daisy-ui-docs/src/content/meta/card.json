@@ -60,5 +60,63 @@
       ]
     }
   ],
-  "examples": []
+  "examples": [],
+  "subcomponents": [
+    "Card.Actions",
+    "Card.Body",
+    "Card.Title"
+  ],
+  "subcomponentDocs": [
+    {
+      "name": "Card.Actions",
+      "props": [
+        {
+          "name": "children",
+          "type": "React.ReactNode",
+          "required": true,
+          "description": "Actions for the footer of this Card"
+        },
+        {
+          "name": "className",
+          "type": "string",
+          "required": false,
+          "description": "CSS classes to append for this Actions"
+        }
+      ]
+    },
+    {
+      "name": "Card.Body",
+      "props": [
+        {
+          "name": "children",
+          "type": "React.ReactNode",
+          "required": true,
+          "description": "Children that body that wll be rendered, plus optionally Title and Actions"
+        },
+        {
+          "name": "className",
+          "type": "string",
+          "required": false,
+          "description": "CSS classes to append for this Body"
+        }
+      ]
+    },
+    {
+      "name": "Card.Title",
+      "props": [
+        {
+          "name": "children",
+          "type": "React.ReactNode",
+          "required": true,
+          "description": "Children that make up the title for this Card"
+        },
+        {
+          "name": "className",
+          "type": "string",
+          "required": false,
+          "description": "CSS classes to append for this Title"
+        }
+      ]
+    }
+  ]
 }

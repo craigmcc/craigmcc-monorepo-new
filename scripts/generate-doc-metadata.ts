@@ -2,7 +2,7 @@ import * as fs from "node:fs/promises";
 import * as path from "node:path";
 import * as url from "node:url";
 
-import type { ComponentMeta, PropMeta } from "@repo/docs-schema";
+import type { ComponentMeta, PropMeta, SubcomponentMeta } from "@repo/docs-schema";
 
 const args = new Set(process.argv.slice(2));
 const target = args.has("--target") ? process.argv[process.argv.indexOf("--target") + 1] : undefined;
@@ -108,20 +108,115 @@ interface PropInfo {
   description: string;
 }
 
+type DetectedSubcomponent = {
+  displayName: string;
+  memberName: string;
+  implementationName: string;
+};
+
+type CompoundSubcomponentOverride = {
+  description?: string;
+  propsTypeName?: string;
+};
+
+const COMPOUND_SUBCOMPONENT_OVERRIDES: Record<string, Record<string, CompoundSubcomponentOverride>> = {
+  Menu: {
+    "Menu.Item": { description: "Selectable menu item row." },
+    "Menu.Section": { description: "Grouped menu section with heading." },
+    "Menu.Separator": { description: "Visual separator between menu groups." },
+    "Menu.Submenu": { description: "Nested submenu trigger and panel." },
+  },
+  Navbar: {
+    "Navbar.Start": { description: "Left/start content region." },
+    "Navbar.Center": { description: "Center content region." },
+    "Navbar.End": { description: "Right/end content region." },
+  },
+};
+
+function detectCompoundSubcomponents(content: string, componentName: string): DetectedSubcomponent[] {
+  const detections: DetectedSubcomponent[] = [];
+  const seen = new Set<string>();
+
+  // Matches patterns like: Menu.Item = Item;
+  const assignmentPattern = new RegExp(`${componentName}\\.(\\w+)\\s*=\\s*(\\w+)\\s*;`, "g");
+  let match: RegExpExecArray | null;
+
+  while ((match = assignmentPattern.exec(content)) !== null) {
+    const memberName = match[1];
+    const implementationName = match[2];
+    const displayName = `${componentName}.${memberName}`;
+
+    if (seen.has(displayName)) {
+      continue;
+    }
+    seen.add(displayName);
+
+    detections.push({ displayName, memberName, implementationName });
+  }
+
+  return detections;
+}
+
 function extractPropsFromInterface(content: string, interfaceName: string): PropInfo[] {
   const props: PropInfo[] = [];
 
-  // Find the interface/type definition - more robust pattern for multiline
-  const interfaceRegex = new RegExp(
-    `type\\s+${interfaceName}\\s*=\\s*\\{([\\s\\S]*?)\\n}|interface\\s+${interfaceName}\\s*\\{([\\s\\S]*?)\\n}`,
-  );
-  const match = content.match(interfaceRegex);
+  // Find a direct object-style declaration first.
+  let blockContent: string | undefined;
 
-  if (!match) {
+  const directTypeRegex = new RegExp(
+    `type\\s+${interfaceName}\\s*=\\s*\\{([\\s\\S]*?)\\n}`,
+  );
+  const interfaceRegex = new RegExp(
+    `interface\\s+${interfaceName}\\s*\\{([\\s\\S]*?)\\n}`,
+  );
+
+  const directTypeMatch = content.match(directTypeRegex);
+  if (directTypeMatch) {
+    blockContent = directTypeMatch[1];
+  }
+
+  if (!blockContent) {
+    const interfaceMatch = content.match(interfaceRegex);
+    if (interfaceMatch) {
+      blockContent = interfaceMatch[1];
+    }
+  }
+
+  // Support intersection aliases: type X = Omit<...> & { ... };
+  if (!blockContent) {
+    const aliasStart = content.indexOf(`type ${interfaceName} =`);
+    if (aliasStart >= 0) {
+      const aliasSlice = content.slice(aliasStart);
+      const andObjectIndex = aliasSlice.indexOf("& {");
+      if (andObjectIndex >= 0) {
+        const objectStart = aliasStart + andObjectIndex + 2; // points at '{'
+        let depth = 0;
+        let objectEnd = -1;
+
+        for (let i = objectStart; i < content.length; i++) {
+          const ch = content[i];
+          if (ch === "{") {
+            depth += 1;
+          } else if (ch === "}") {
+            depth -= 1;
+            if (depth === 0) {
+              objectEnd = i;
+              break;
+            }
+          }
+        }
+
+        if (objectEnd > objectStart) {
+          blockContent = content.slice(objectStart + 1, objectEnd);
+        }
+      }
+    }
+  }
+
+  if (!blockContent) {
     return props;
   }
 
-  const blockContent = match[1] || match[2];
   const lines = blockContent.split("\n");
 
   let currentComment = "";
@@ -193,9 +288,14 @@ async function extractComponentMeta(componentName: string, filePath: string): Pr
     });
   }
 
-  // Extract extra props from interfaces (e.g., InputExtraProps, ButtonExtraProps)
+  // Extract component-level props. Prefer <Component>ExtraProps, then fall back to <Component>Props.
   const extraInterfaceName = `${componentName}ExtraProps`;
-  const extraProps = extractPropsFromInterface(sourceContent, extraInterfaceName);
+  const primaryProps = extractPropsFromInterface(sourceContent, extraInterfaceName);
+  const fallbackProps = primaryProps.length > 0
+    ? []
+    : extractPropsFromInterface(sourceContent, `${componentName}Props`);
+  const extraProps = [...primaryProps, ...fallbackProps];
+
   for (const prop of extraProps) {
     // Skip if already added from CVA
     if (!props.find((p) => p.name === prop.name)) {
@@ -208,12 +308,42 @@ async function extractComponentMeta(componentName: string, filePath: string): Pr
     }
   }
 
+  const subcomponentOverrides = COMPOUND_SUBCOMPONENT_OVERRIDES[componentName] ?? {};
+  const detectedSubcomponents = detectCompoundSubcomponents(sourceContent, componentName);
+
+  const subcomponentDocs: SubcomponentMeta[] = detectedSubcomponents
+    .map((detected) => {
+      const override = subcomponentOverrides[detected.displayName];
+      const candidateTypeNames = [
+        override?.propsTypeName,
+        `${detected.implementationName}Props`,
+        `${detected.memberName}Props`,
+      ].filter(Boolean) as string[];
+
+      let extractedProps: PropInfo[] = [];
+      for (const typeName of candidateTypeNames) {
+        extractedProps = extractPropsFromInterface(sourceContent, typeName);
+        if (extractedProps.length > 0) {
+          break;
+        }
+      }
+
+      return {
+        name: detected.displayName,
+        description: override?.description,
+        props: extractedProps,
+      };
+    })
+    .filter((entry) => entry.props.length > 0);
+
   return {
     component: componentName,
     package: "@repo/daisy-ui",
     description: desc,
     props,
     examples: [],
+    subcomponents: subcomponentDocs.length > 0 ? subcomponentDocs.map((entry) => entry.name) : undefined,
+    subcomponentDocs: subcomponentDocs.length > 0 ? subcomponentDocs : undefined,
   };
 }
 

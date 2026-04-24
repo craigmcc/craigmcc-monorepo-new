@@ -17,6 +17,12 @@ export const exampleMetaSchema = z.object({
   code: z.string().min(1),
 });
 
+export const subcomponentMetaSchema = z.object({
+  name: z.string().min(1),
+  description: z.string().optional(),
+  props: z.array(propMetaSchema),
+});
+
 export const componentMetaSchema = z.object({
   component: z.string().min(1),
   package: z.string().min(1),
@@ -25,9 +31,11 @@ export const componentMetaSchema = z.object({
   examples: z.array(exampleMetaSchema).default([]),
   slots: z.array(z.string()).optional(),
   subcomponents: z.array(z.string()).optional(),
+  subcomponentDocs: z.array(subcomponentMetaSchema).optional(),
 });
 
 export type PropMeta = z.infer<typeof propMetaSchema>;
 export type ExampleMeta = z.infer<typeof exampleMetaSchema>;
+export type SubcomponentMeta = z.infer<typeof subcomponentMetaSchema>;
 export type ComponentMeta = z.infer<typeof componentMetaSchema>;
 

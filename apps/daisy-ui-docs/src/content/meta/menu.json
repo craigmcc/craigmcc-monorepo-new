@@ -2,6 +2,171 @@
   "component": "Menu",
   "package": "@repo/daisy-ui",
   "description": "A dropdown menu, triggered by an application-defined trigger.",
-  "props": [],
-  "examples": []
+  "props": [
+    {
+      "name": "children",
+      "type": "React.ReactNode",
+      "required": true,
+      "description": "Children to be rendered (should be of type Menu.Item, Menu.Section, or Menu.Separator)."
+    },
+    {
+      "name": "maxHeightClassName",
+      "type": "string",
+      "required": false,
+      "description": "Optional classes to customize max height (used with overflow: auto/scroll)"
+    },
+    {
+      "name": "menuClassName",
+      "type": "string",
+      "required": false,
+      "description": "Optional classes to append to the menu list"
+    },
+    {
+      "name": "overflow",
+      "type": "\"visible\" | \"hidden\" | \"auto\" | \"scroll\"",
+      "required": false,
+      "description": "Optional overflow behavior for long menus"
+    },
+    {
+      "name": "popoverClassName",
+      "type": "string",
+      "required": false,
+      "description": "Optional classes to append to the popover wrapper"
+    },
+    {
+      "name": "trigger",
+      "type": "React.ReactElement",
+      "required": true,
+      "description": "The trigger to open/close this menu"
+    }
+  ],
+  "examples": [],
+  "subcomponents": [
+    "Menu.Item",
+    "Menu.Section",
+    "Menu.Separator",
+    "Menu.Submenu"
+  ],
+  "subcomponentDocs": [
+    {
+      "name": "Menu.Item",
+      "description": "Selectable menu item row.",
+      "props": [
+        {
+          "name": "children",
+          "type": "React.ReactNode",
+          "required": true,
+          "description": "Children that represent this Item"
+        },
+        {
+          "name": "className",
+          "type": "string",
+          "required": false,
+          "description": "CSS classes to append for this Item"
+        }
+      ]
+    },
+    {
+      "name": "Menu.Section",
+      "description": "Grouped menu section with heading.",
+      "props": [
+        {
+          "name": "children",
+          "type": "React.ReactNode",
+          "required": true,
+          "description": "Children that represent this Section"
+        },
+        {
+          "name": "className",
+          "type": "string",
+          "required": false,
+          "description": "CSS classes to append for this Section"
+        },
+        {
+          "name": "heading",
+          "type": "React.ReactNode",
+          "required": true,
+          "description": "Heading content displayed for this Section"
+        },
+        {
+          "name": "headingClassName",
+          "type": "string",
+          "required": false,
+          "description": "CSS classes to append for this Section heading"
+        }
+      ]
+    },
+    {
+      "name": "Menu.Separator",
+      "description": "Visual separator between menu groups.",
+      "props": [
+        {
+          "name": "className",
+          "type": "string",
+          "required": false,
+          "description": "CSS classes to append for this Separator"
+        }
+      ]
+    },
+    {
+      "name": "Menu.Submenu",
+      "description": "Nested submenu trigger and panel.",
+      "props": [
+        {
+          "name": "children",
+          "type": "React.ReactNode",
+          "required": true,
+          "description": "Children rendered in this submenu"
+        },
+        {
+          "name": "className",
+          "type": "string",
+          "required": false,
+          "description": "CSS classes to append to the trigger item row"
+        },
+        {
+          "name": "isDisabled",
+          "type": "boolean",
+          "required": false,
+          "description": "Should this submenu be disabled?"
+        },
+        {
+          "name": "label",
+          "type": "React.ReactNode",
+          "required": true,
+          "description": "Label content displayed in this submenu trigger"
+        },
+        {
+          "name": "maxHeightClassName",
+          "type": "string",
+          "required": false,
+          "description": "Optional classes to customize submenu max height"
+        },
+        {
+          "name": "menuClassName",
+          "type": "string",
+          "required": false,
+          "description": "Optional classes to append to the submenu list"
+        },
+        {
+          "name": "overflow",
+          "type": "MenuProps[\"overflow\"]",
+          "required": false,
+          "description": "Optional overflow behavior for long submenu lists"
+        },
+        {
+          "name": "popoverClassName",
+          "type": "string",
+          "required": false,
+          "description": "Optional classes to append to the submenu popover wrapper"
+        },
+        {
+          "name": "textValue",
+          "type": "string",
+          "required": false,
+          "description": "Plain-text value for type-ahead search on the submenu trigger"
+        }
+      ]
+    }
+  ]
 }

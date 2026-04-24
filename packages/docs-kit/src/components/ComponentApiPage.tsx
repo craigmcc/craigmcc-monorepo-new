@@ -21,6 +21,21 @@ export function ComponentApiPage({ meta }: ComponentApiPageProps) {
         <PropsTable props={meta.props} />
       </section>
 
+      {meta.subcomponentDocs?.length ? (
+        <section className="space-y-4">
+          <h2 className="text-xl font-semibold">Subcomponent Props</h2>
+          {meta.subcomponentDocs.map((subcomponent) => (
+            <article className="space-y-2" key={subcomponent.name}>
+              <h3 className="text-lg font-semibold">
+                <code>{subcomponent.name}</code>
+              </h3>
+              {subcomponent.description ? <p className="text-base-content/70">{subcomponent.description}</p> : null}
+              <PropsTable props={subcomponent.props} />
+            </article>
+          ))}
+        </section>
+      ) : null}
+
       {meta.examples.length > 0 ? (
         <section className="space-y-3">
           <h2 className="text-xl font-semibold">Examples</h2>
@@ -47,4 +62,3 @@ export function ComponentApiPage({ meta }: ComponentApiPageProps) {
     </article>
   );
 }
-

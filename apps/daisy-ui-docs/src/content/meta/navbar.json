@@ -2,6 +2,80 @@
   "component": "Navbar",
   "package": "@repo/daisy-ui",
   "description": "A navigation bar with start/center/end parts.",
-  "props": [],
-  "examples": []
+  "props": [
+    {
+      "name": "children",
+      "type": "React.ReactNode",
+      "required": true,
+      "description": "Children to be rendered (should be Navbar.Start, Navbar.Middle, Navbar.End)"
+    },
+    {
+      "name": "className",
+      "type": "string",
+      "required": false,
+      "description": "Optional classes to append to this div"
+    }
+  ],
+  "examples": [],
+  "subcomponents": [
+    "Navbar.Center",
+    "Navbar.End",
+    "Navbar.Start"
+  ],
+  "subcomponentDocs": [
+    {
+      "name": "Navbar.Center",
+      "description": "Center content region.",
+      "props": [
+        {
+          "name": "children",
+          "type": "React.ReactNode",
+          "required": true,
+          "description": "Children to be rendered in the center section of the navbar"
+        },
+        {
+          "name": "className",
+          "type": "string",
+          "required": false,
+          "description": "Optional classes to append to this div"
+        }
+      ]
+    },
+    {
+      "name": "Navbar.End",
+      "description": "Right/end content region.",
+      "props": [
+        {
+          "name": "children",
+          "type": "React.ReactNode",
+          "required": true,
+          "description": "Children to be rendered in the end section of the navbar"
+        },
+        {
+          "name": "className",
+          "type": "string",
+          "required": false,
+          "description": "Optional classes to append to this div"
+        }
+      ]
+    },
+    {
+      "name": "Navbar.Start",
+      "description": "Left/start content region.",
+      "props": [
+        {
+          "name": "children",
+          "type": "React.ReactNode",
+          "required": true,
+          "description": "Children to be rendered in the start section of the navbar"
+        },
+        {
+          "name": "className",
+          "type": "string",
+          "required": false,
+          "description": "Optional classes to append to this div"
+        }
+      ]
+    }
+  ]
 }
