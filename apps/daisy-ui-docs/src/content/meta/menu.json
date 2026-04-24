@@ -1,0 +1,7 @@
+{
+  "component": "Menu",
+  "package": "@repo/daisy-ui",
+  "description": "A dropdown menu, triggered by an application-defined trigger.",
+  "props": [],
+  "examples": []
+}

@@ -1,0 +1,64 @@
+{
+  "component": "Card",
+  "package": "@repo/daisy-ui",
+  "description": "A card in various styles.",
+  "props": [
+    {
+      "name": "border",
+      "type": "\"false\" | \"true\"",
+      "required": false,
+      "default": "false",
+      "description": "Present with a solid border",
+      "enumValues": [
+        "false",
+        "true"
+      ]
+    },
+    {
+      "name": "color",
+      "type": "\"accent\" | \"base100\" | \"base200\" | \"base300\" | \"error\" | \"info\" | \"neutral\" | \"primary\" | \"secondary\" | \"success\" | \"warning\"",
+      "required": false,
+      "default": "base300",
+      "description": "Base (background and foreground) color for this component",
+      "enumValues": [
+        "accent",
+        "base100",
+        "base200",
+        "base300",
+        "error",
+        "info",
+        "neutral",
+        "primary",
+        "secondary",
+        "success",
+        "warning"
+      ]
+    },
+    {
+      "name": "dash",
+      "type": "\"false\" | \"true\"",
+      "required": false,
+      "default": "false",
+      "description": "Present with dashed border",
+      "enumValues": [
+        "false",
+        "true"
+      ]
+    },
+    {
+      "name": "size",
+      "type": "\"lg\" | \"md\" | \"sm\" | \"xl\" | \"xs\"",
+      "required": false,
+      "default": "md",
+      "description": "Basic size of this component",
+      "enumValues": [
+        "lg",
+        "md",
+        "sm",
+        "xl",
+        "xs"
+      ]
+    }
+  ],
+  "examples": []
+}

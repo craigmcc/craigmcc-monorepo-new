@@ -1,0 +1,7 @@
+{
+  "component": "Navbar",
+  "package": "@repo/daisy-ui",
+  "description": "A navigation bar with start/center/end parts.",
+  "props": [],
+  "examples": []
+}

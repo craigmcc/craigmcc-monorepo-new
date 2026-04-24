@@ -1,0 +1,98 @@
+{
+  "component": "Textarea",
+  "package": "@repo/daisy-ui",
+  "description": "A textarea input in various styles.",
+  "props": [
+    {
+      "name": "className",
+      "type": "string",
+      "required": false,
+      "description": "Extra CSS class(es) for the rendered textarea"
+    },
+    {
+      "name": "description",
+      "type": "string",
+      "required": false,
+      "description": "Optional description (help text) displayed below the label, wired to aria-describedby"
+    },
+    {
+      "name": "descriptionClassName",
+      "type": "string",
+      "required": false,
+      "description": "Optional CSS for any rendered description [text-base-content/60 text-sm]"
+    },
+    {
+      "name": "errors",
+      "type": "React.ReactElement",
+      "required": false,
+      "description": "Optional errors component to display below textarea field"
+    },
+    {
+      "name": "errorsClassName",
+      "type": "string",
+      "required": false,
+      "description": "Optional CSS for any rendered errors [bg-error text-error-content]"
+    },
+    {
+      "name": "fieldsetClassName",
+      "type": "string",
+      "required": false,
+      "description": "Optional CSS for the outer fieldset wrapper"
+    },
+    {
+      "name": "handleBlur",
+      "type": "() => void",
+      "required": false,
+      "description": "Optional handler for blur events"
+    },
+    {
+      "name": "handleChange",
+      "type": "(newValue: string) => void",
+      "required": true,
+      "description": "Handler for value change events"
+    },
+    {
+      "name": "isInvalid",
+      "type": "boolean",
+      "required": false,
+      "description": "Is the current value invalid?"
+    },
+    {
+      "name": "label",
+      "type": "string",
+      "required": true,
+      "description": "Visual label for this textarea field"
+    },
+    {
+      "name": "labelClassName",
+      "type": "string",
+      "required": false,
+      "description": "(should set the width of the label area to match multiple fields)"
+    },
+    {
+      "name": "name",
+      "type": "string",
+      "required": true,
+      "description": "Textarea field name (also used as id)"
+    },
+    {
+      "name": "placeholder",
+      "type": "string",
+      "required": false,
+      "description": "Optional placeholder for empty value"
+    },
+    {
+      "name": "rows",
+      "type": "number",
+      "required": false,
+      "description": "Number of visible text rows [3]"
+    },
+    {
+      "name": "value",
+      "type": "string",
+      "required": true,
+      "description": "Current textarea field value"
+    }
+  ],
+  "examples": []
+}
