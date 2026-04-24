@@ -8,7 +8,7 @@
       "type": "\"false\" | \"true\"",
       "required": false,
       "default": "false",
-      "description": "Controls active variant.",
+      "description": "Present with active styling",
       "enumValues": [
         "false",
         "true"
@@ -19,7 +19,7 @@
       "type": "\"false\" | \"true\"",
       "required": false,
       "default": "false",
-      "description": "Controls block variant.",
+      "description": "Make this component full width",
       "enumValues": [
         "false",
         "true"
@@ -30,7 +30,7 @@
       "type": "\"false\" | \"true\"",
       "required": false,
       "default": "false",
-      "description": "Controls circle variant.",
+      "description": "Present with a 1:1 ratio with rounded corners",
       "enumValues": [
         "false",
         "true"
@@ -40,8 +40,8 @@
       "name": "color",
       "type": "\"accent\" | \"error\" | \"ghost\" | \"info\" | \"neutral\" | \"primary\" | \"secondary\" | \"success\" | \"warning\"",
       "required": false,
-      "default": "\"primary\"",
-      "description": "Controls color variant.",
+      "default": "primary",
+      "description": "Base color for this component",
       "enumValues": [
         "accent",
         "error",
@@ -59,7 +59,7 @@
       "type": "\"false\" | \"true\"",
       "required": false,
       "default": "false",
-      "description": "Controls dash variant.",
+      "description": "Present with dashed border instead of background color",
       "enumValues": [
         "false",
         "true"
@@ -70,7 +70,7 @@
       "type": "\"false\" | \"true\"",
       "required": false,
       "default": "false",
-      "description": "Controls disabled variant.",
+      "description": "Present with disabled styling (can also use \"disabled\" attribute on a <button>)",
       "enumValues": [
         "false",
         "true"
@@ -81,7 +81,7 @@
       "type": "\"false\" | \"true\"",
       "required": false,
       "default": "false",
-      "description": "Controls outline variant.",
+      "description": "Present with solid outline border instead of background color",
       "enumValues": [
         "false",
         "true"
@@ -91,8 +91,8 @@
       "name": "size",
       "type": "\"lg\" | \"md\" | \"sm\" | \"xl\" | \"xs\"",
       "required": false,
-      "default": "\"md\"",
-      "description": "Controls size variant.",
+      "default": "md",
+      "description": "Basic size of this component",
       "enumValues": [
         "lg",
         "md",
@@ -106,7 +106,7 @@
       "type": "\"false\" | \"true\"",
       "required": false,
       "default": "false",
-      "description": "Controls soft variant.",
+      "description": "Soften the color presentation if true",
       "enumValues": [
         "false",
         "true"
@@ -117,7 +117,7 @@
       "type": "\"false\" | \"true\"",
       "required": false,
       "default": "false",
-      "description": "Controls square variant.",
+      "description": "Present with a 1:1 ratio",
       "enumValues": [
         "false",
         "true"

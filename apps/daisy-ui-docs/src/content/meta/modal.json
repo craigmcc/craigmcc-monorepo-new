@@ -8,7 +8,7 @@
       "type": "\"false\" | \"true\"",
       "required": false,
       "default": "false",
-      "description": "Controls border variant.",
+      "description": "Present with a solid border",
       "enumValues": [
         "false",
         "true"
@@ -18,8 +18,8 @@
       "name": "color",
       "type": "\"accent\" | \"base100\" | \"base200\" | \"base300\" | \"error\" | \"info\" | \"neutral\" | \"primary\" | \"secondary\" | \"success\" | \"warning\"",
       "required": false,
-      "default": "\"base200\"",
-      "description": "Controls color variant.",
+      "default": "base200",
+      "description": "Base (background and foreground) color for this component",
       "enumValues": [
         "accent",
         "base100",
@@ -39,7 +39,7 @@
       "type": "\"false\" | \"true\"",
       "required": false,
       "default": "false",
-      "description": "Controls dash variant.",
+      "description": "Present with dashed border",
       "enumValues": [
         "false",
         "true"

@@ -8,12 +8,14 @@ export function generateStaticParams() {
   return getDocIndex().map((entry) => ({ component: entry.slug }));
 }
 
-export default function ComponentPage({ params }: { params: { component: string } }) {
-  const meta = getComponentDoc(params.component);
+export default async function ComponentPage(
+  { params }: { params: Promise<{ component: string }> },
+) {
+  const { component } = await params;
+  const meta = getComponentDoc(component);
   if (!meta) {
     notFound();
   }
 
   return <ComponentApiPage meta={meta} />;
 }
-

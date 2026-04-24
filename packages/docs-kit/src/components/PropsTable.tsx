@@ -13,7 +13,7 @@ export function PropsTable({ props }: PropsTableProps) {
 
   return (
     <div className="overflow-x-auto rounded border border-base-300">
-      <table className="table table-zebra">
+      <table className="table table-zebra border-collapse [&_td]:border [&_td]:border-base-300 [&_th]:border [&_th]:border-base-300">
         <thead>
           <tr>
             <th>Prop</th>
@@ -56,4 +56,3 @@ export function PropsTable({ props }: PropsTableProps) {
     </div>
   );
 }
-

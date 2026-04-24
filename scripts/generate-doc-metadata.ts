@@ -26,32 +26,59 @@ function extractFileDescription(content: string, fallback: string): string {
 interface VariantInfo {
   variants: Record<string, string[]>;
   defaults: Record<string, string>;
+  descriptions: Record<string, string>;
 }
 
 function extractCvaInfo(content: string): VariantInfo {
-  const info = { variants: {} as Record<string, string[]>, defaults: {} as Record<string, string> };
+  const info = {
+    variants: {} as Record<string, string[]>,
+    defaults: {} as Record<string, string>,
+    descriptions: {} as Record<string, string>,
+  };
 
   // Extract defaultVariants block
-  const defaultsMatch = content.match(/defaultVariants:\s*\{([^}]+)\}/);
+  const defaultsMatch = content.match(/defaultVariants:\s*\{([^}]+)}/);
   if (defaultsMatch) {
     const defaultsBlock = defaultsMatch[1];
     for (const line of defaultsBlock.split("\n")) {
       const match = line.match(/(\w+):\s*([^,}]+)/);
       if (match) {
         const key = match[1];
-        const value = match[2].trim().replace(/[,\s]/g, "");
-        info.defaults[key] = value;
+        info.defaults[key] = match[2]
+          .trim()
+          .replace(/[\s,]/g, "")
+          .replace(/^['"]|['"]$/g, "");
       }
     }
   }
 
   // Extract variants block - find all variant properties
-  const variantsMatch = content.match(/variants:\s*\{([\s\S]+?)\n\s*\}\s*\}/);
+  const variantsMatch = content.match(/variants:\s*\{([\s\S]+?)\n\s*}\s*}/);
   if (variantsMatch) {
     const variantsBlock = variantsMatch[1];
 
+    // Capture leading comments for each top-level variant key.
+    const lines = variantsBlock.split("\n");
+    let pendingCommentLines: string[] = [];
+    for (const line of lines) {
+      const trimmed = line.trim();
+      if (trimmed.startsWith("//")) {
+        pendingCommentLines.push(trimmed.replace(/^\/\/\s*/, "").trim());
+        continue;
+      }
+      if (!trimmed) {
+        continue;
+      }
+
+      const variantDecl = trimmed.match(/^(\w+):\s*\{$/);
+      if (variantDecl && pendingCommentLines.length > 0) {
+        info.descriptions[variantDecl[1]] = pendingCommentLines.join(" ").replace(/\s+/g, " ").trim();
+      }
+      pendingCommentLines = [];
+    }
+
     // Split by variant property name
-    const variantPattern = /(\w+):\s*\{([^}]+)\}/g;
+    const variantPattern = /(\w+):\s*\{([^}]+)}/g;
     let m;
     while ((m = variantPattern.exec(variantsBlock)) !== null) {
       const variantName = m[1];
@@ -86,7 +113,7 @@ function extractPropsFromInterface(content: string, interfaceName: string): Prop
 
   // Find the interface/type definition - more robust pattern for multiline
   const interfaceRegex = new RegExp(
-    `type\\s+${interfaceName}\\s*=\\s*\\{([\\s\\S]*?)\\n\\}|interface\\s+${interfaceName}\\s*\\{([\\s\\S]*?)\\n\\}`,
+    `type\\s+${interfaceName}\\s*=\\s*\\{([\\s\\S]*?)\\n}|interface\\s+${interfaceName}\\s*\\{([\\s\\S]*?)\\n}`,
   );
   const match = content.match(interfaceRegex);
 
@@ -154,13 +181,14 @@ async function extractComponentMeta(componentName: string, filePath: string): Pr
   for (const [variantName, values] of Object.entries(cvaInfo.variants)) {
     const defaultValue = cvaInfo.defaults[variantName];
     const typeStr = values.map((v) => `"${v}"`).join(" | ");
+    const variantDescription = cvaInfo.descriptions[variantName] ?? `Controls ${variantName} variant.`;
 
     props.push({
       name: variantName,
       type: typeStr,
       required: false,
       default: defaultValue,
-      description: `Controls ${variantName} variant.`,
+      description: variantDescription,
       enumValues: values,
     });
   }
@@ -215,9 +243,4 @@ async function main() {
 }
 
 void main();
-
-
-
-
-
 

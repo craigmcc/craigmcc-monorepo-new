@@ -1,5 +1,9 @@
 @import "@repo/daisy-ui/styles.css";
 
+/* Ensure Tailwind scans this app and shared docs-kit components. */
+@source "../**/*.{ts,tsx,mdx}";
+@source "../../../../packages/docs-kit/src/**/*.{ts,tsx}";
+
 :root {
   color-scheme: light dark;
 }
@@ -7,4 +11,3 @@
 body {
   margin: 0;
 }
-
