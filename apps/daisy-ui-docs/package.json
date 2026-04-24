@@ -1,0 +1,48 @@
+{
+  "name": "@repo/daisy-ui-docs",
+  "private": true,
+  "license": "Apache-2.0",
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "build": "next build",
+    "check-types": "tsc --noEmit",
+    "dev": "next dev --turbopack --port 3001",
+    "docs:generate-meta": "tsx ../../scripts/generate-doc-metadata.ts --target daisy-ui",
+    "docs:validate-meta": "tsx ../../scripts/validate-doc-metadata.ts --app daisy-ui-docs",
+    "lint": "eslint . --max-warnings 0",
+    "start": "next start --port 3001",
+    "test": "vitest",
+    "test:ci": "vitest --run --coverage --passWithNoTests"
+  },
+  "dependencies": {
+    "@repo/daisy-ui": "workspace:*",
+    "@repo/docs-kit": "workspace:*",
+    "@repo/docs-schema": "workspace:*",
+    "next": "catalog:next16",
+    "postcss": "catalog:postcss",
+    "react": "catalog:react19",
+    "react-dom": "catalog:react19"
+  },
+  "devDependencies": {
+    "@eslint/eslintrc": "catalog:eslint9",
+    "@repo/eslint-config": "workspace:*",
+    "@repo/testing-react": "workspace:*",
+    "@repo/typescript-config": "workspace:*",
+    "@repo/vitest-config": "workspace:*",
+    "@tailwindcss/postcss": "catalog:tailwind4",
+    "@types/node": "catalog:node24",
+    "@types/react": "catalog:react19",
+    "@types/react-dom": "catalog:react19",
+    "@vitejs/plugin-react": "^5.1.0",
+    "@vitest/coverage-v8": "catalog:vitest",
+    "eslint": "catalog:eslint9",
+    "eslint-config-next": "catalog:eslint9",
+    "jsdom": "catalog:jsdom",
+    "tailwindcss": "catalog:tailwind4",
+    "tsx": "^4.20.6",
+    "typescript": "catalog:typescript5",
+    "vitest": "catalog:vitest"
+  }
+}
+

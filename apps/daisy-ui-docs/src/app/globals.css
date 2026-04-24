@@ -1,0 +1,10 @@
+@import "@repo/daisy-ui/styles.css";
+
+:root {
+  color-scheme: light dark;
+}
+
+body {
+  margin: 0;
+}
+

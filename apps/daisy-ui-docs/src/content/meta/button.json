@@ -1,0 +1,128 @@
+{
+  "component": "Button",
+  "package": "@repo/daisy-ui",
+  "description": "A button in various styles.",
+  "props": [
+    {
+      "name": "active",
+      "type": "\"false\" | \"true\"",
+      "required": false,
+      "default": "false",
+      "description": "Controls active variant.",
+      "enumValues": [
+        "false",
+        "true"
+      ]
+    },
+    {
+      "name": "block",
+      "type": "\"false\" | \"true\"",
+      "required": false,
+      "default": "false",
+      "description": "Controls block variant.",
+      "enumValues": [
+        "false",
+        "true"
+      ]
+    },
+    {
+      "name": "circle",
+      "type": "\"false\" | \"true\"",
+      "required": false,
+      "default": "false",
+      "description": "Controls circle variant.",
+      "enumValues": [
+        "false",
+        "true"
+      ]
+    },
+    {
+      "name": "color",
+      "type": "\"accent\" | \"error\" | \"ghost\" | \"info\" | \"neutral\" | \"primary\" | \"secondary\" | \"success\" | \"warning\"",
+      "required": false,
+      "default": "\"primary\"",
+      "description": "Controls color variant.",
+      "enumValues": [
+        "accent",
+        "error",
+        "ghost",
+        "info",
+        "neutral",
+        "primary",
+        "secondary",
+        "success",
+        "warning"
+      ]
+    },
+    {
+      "name": "dash",
+      "type": "\"false\" | \"true\"",
+      "required": false,
+      "default": "false",
+      "description": "Controls dash variant.",
+      "enumValues": [
+        "false",
+        "true"
+      ]
+    },
+    {
+      "name": "disabled",
+      "type": "\"false\" | \"true\"",
+      "required": false,
+      "default": "false",
+      "description": "Controls disabled variant.",
+      "enumValues": [
+        "false",
+        "true"
+      ]
+    },
+    {
+      "name": "outline",
+      "type": "\"false\" | \"true\"",
+      "required": false,
+      "default": "false",
+      "description": "Controls outline variant.",
+      "enumValues": [
+        "false",
+        "true"
+      ]
+    },
+    {
+      "name": "size",
+      "type": "\"lg\" | \"md\" | \"sm\" | \"xl\" | \"xs\"",
+      "required": false,
+      "default": "\"md\"",
+      "description": "Controls size variant.",
+      "enumValues": [
+        "lg",
+        "md",
+        "sm",
+        "xl",
+        "xs"
+      ]
+    },
+    {
+      "name": "soft",
+      "type": "\"false\" | \"true\"",
+      "required": false,
+      "default": "false",
+      "description": "Controls soft variant.",
+      "enumValues": [
+        "false",
+        "true"
+      ]
+    },
+    {
+      "name": "square",
+      "type": "\"false\" | \"true\"",
+      "required": false,
+      "default": "false",
+      "description": "Controls square variant.",
+      "enumValues": [
+        "false",
+        "true"
+      ]
+    }
+  ],
+  "examples": []
+}

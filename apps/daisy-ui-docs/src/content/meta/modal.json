@@ -1,0 +1,62 @@
+{
+  "component": "Modal",
+  "package": "@repo/daisy-ui",
+  "description": "A modal dialog that overlays part of the underlying browser window or tab.",
+  "props": [
+    {
+      "name": "border",
+      "type": "\"false\" | \"true\"",
+      "required": false,
+      "default": "false",
+      "description": "Controls border variant.",
+      "enumValues": [
+        "false",
+        "true"
+      ]
+    },
+    {
+      "name": "color",
+      "type": "\"accent\" | \"base100\" | \"base200\" | \"base300\" | \"error\" | \"info\" | \"neutral\" | \"primary\" | \"secondary\" | \"success\" | \"warning\"",
+      "required": false,
+      "default": "\"base200\"",
+      "description": "Controls color variant.",
+      "enumValues": [
+        "accent",
+        "base100",
+        "base200",
+        "base300",
+        "error",
+        "info",
+        "neutral",
+        "primary",
+        "secondary",
+        "success",
+        "warning"
+      ]
+    },
+    {
+      "name": "dash",
+      "type": "\"false\" | \"true\"",
+      "required": false,
+      "default": "false",
+      "description": "Controls dash variant.",
+      "enumValues": [
+        "false",
+        "true"
+      ]
+    },
+    {
+      "name": "className",
+      "type": "string",
+      "required": false,
+      "description": "Extra CSS class(es) for the rendered dialog element"
+    },
+    {
+      "name": "id",
+      "type": "string",
+      "required": true,
+      "description": "Unique id of this dialog (required for trigger)"
+    }
+  ],
+  "examples": []
+}
