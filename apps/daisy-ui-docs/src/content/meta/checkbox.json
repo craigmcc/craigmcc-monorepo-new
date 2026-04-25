@@ -1,7 +1,7 @@
 {
   "component": "Checkbox",
   "package": "@repo/daisy-ui",
-  "description": "Variant properties for this component.",
+  "description": "A checkbox in various styles.  NOTE: Checkbox does not have a\nvertical presentation - it's shown as the checkbox followed by the label.",
   "props": [
     {
       "name": "className",

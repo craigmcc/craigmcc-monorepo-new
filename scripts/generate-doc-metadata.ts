@@ -18,8 +18,25 @@ const outDir = path.join(rootDir, "apps/daisy-ui-docs/src/content/meta");
 
 // Extract description from file JSDoc comment
 function extractFileDescription(content: string, fallback: string): string {
-  const match = content.match(/\/\*\*\s*\n\s*\*\s*([^*\n]+)\n\s*\*\//);
-  return match?.[1]?.trim() ?? fallback;
+  const match = content.match(/\/\*\*([\s\S]*?)\*\//);
+  if (!match) {
+    return fallback;
+  }
+
+  const lines = match[1]
+    .split("\n")
+    .map((line) => line.replace(/^\s*\*\s?/, ""));
+
+  while (lines[0]?.trim() === "") {
+    lines.shift();
+  }
+
+  while (lines.at(-1)?.trim() === "") {
+    lines.pop();
+  }
+
+  const description = lines.join("\n").trim();
+  return description || fallback;
 }
 
 // Extract enum values and defaults from CVA variant definition

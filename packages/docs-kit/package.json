@@ -30,7 +30,8 @@
   "dependencies": {
     "@repo/docs-schema": "workspace:*",
     "react": "catalog:react19",
-    "react-dom": "catalog:react19"
+    "react-dom": "catalog:react19",
+    "react-markdown": "catalog:react-markdown"
   },
   "devDependencies": {
     "@repo/eslint-config": "workspace:*",

@@ -12,6 +12,22 @@ type DocIndexEntry = {
 
 let docsCache: Promise<Record<string, ComponentMeta>> | null = null;
 
+function toPlainTextExcerpt(markdown: string): string {
+  return markdown
+    .replace(/```[\s\S]*?```/g, " ")
+    .replace(/`([^`]+)`/g, "$1")
+    .replace(/!\[([^\]]*)\]\([^)]*\)/g, "$1")
+    .replace(/\[([^\]]+)\]\([^)]*\)/g, "$1")
+    .replace(/^#{1,6}\s+/gm, "")
+    .replace(/^>\s?/gm, "")
+    .replace(/^\s*[-*+]\s+/gm, "")
+    .replace(/^\s*\d+\.\s+/gm, "")
+    .replace(/[*_~]/g, "")
+    .replace(/\n+/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
 async function loadDocsBySlug(): Promise<Record<string, ComponentMeta>> {
   if (docsCache) {
     return docsCache;
@@ -43,7 +59,7 @@ export async function getDocIndex(): Promise<DocIndexEntry[]> {
     .map(([slug, meta]) => ({
       slug,
       title: meta.component,
-      description: meta.description,
+      description: toPlainTextExcerpt(meta.description),
     }))
     .sort((a, b) => a.title.localeCompare(b.title));
 }

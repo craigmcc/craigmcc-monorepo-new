@@ -2,6 +2,7 @@ import type { ComponentMeta } from "@repo/docs-schema";
 
 import { ExampleBlock } from "./ExampleBlock";
 import { PropsTable } from "./PropsTable";
+import { RestrictedMarkdown } from "./RestrictedMarkdown";
 
 type ComponentApiPageProps = {
   meta: ComponentMeta;
@@ -13,7 +14,7 @@ export function ComponentApiPage({ meta }: ComponentApiPageProps) {
       <header className="space-y-2">
         <p className="text-xs uppercase tracking-wide text-base-content/60">{meta.package}</p>
         <h1 className="text-3xl font-semibold">{meta.component}</h1>
-        <p className="text-base-content/70">{meta.description}</p>
+        <RestrictedMarkdown content={meta.description} />
       </header>
 
       <section className="space-y-3">
@@ -29,7 +30,7 @@ export function ComponentApiPage({ meta }: ComponentApiPageProps) {
               <h3 className="text-lg font-semibold">
                 <code>{subcomponent.name}</code>
               </h3>
-              {subcomponent.description ? <p className="text-base-content/70">{subcomponent.description}</p> : null}
+              {subcomponent.description ? <RestrictedMarkdown content={subcomponent.description} /> : null}
               <PropsTable props={subcomponent.props} />
             </article>
           ))}
