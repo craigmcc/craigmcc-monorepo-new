@@ -52,6 +52,7 @@ export function NavBar() {
         <NavLinkButton href="/menus">Menus</NavLinkButton>
         <NavLinkButton href="/modals">Modals</NavLinkButton>
         <NavLinkButton href="/selects">Selects</NavLinkButton>
+        <NavLinkButton href="/signups">SignUps</NavLinkButton>
         <NavLinkButton href="/tables">Tables</NavLinkButton>
         <NavLinkButton href="/textareas">Textareas</NavLinkButton>
       </Navbar.Center>
@@ -90,6 +91,7 @@ function NavLinkButton({ children, exact = false, href }: NavLinkButtonProps) {
         active={isActive}
         color="primary"
         outline={!isActive}
+        size="sm"
       >
         {children}
       </Button>
