@@ -2,7 +2,13 @@
 
 /**
  * A select input in various styles.
- */
+ *
+ * By default, the label will be presented vertically above the select field.
+ * If the *labelClassName* property is included, the label will be presented
+ * horizontally to the left of the select field, and the label will receive
+ * the CSS classes in that property.  This can be used to set the width of
+ * the label area for multiple fields, no matter how long the label itself is.
+*/
 
 // External Modules ----------------------------------------------------------
 
@@ -96,8 +102,7 @@ type SelectExtraProps = {
   isInvalid?: boolean;
   // Visual label for this select field
   label: string;
-  // CSS class(es) to add if horizontal presentation is requested
-  // (should set the width of the label area to match multiple select fields)
+  // CSS class(es) to add if horizontal presentation is requested.  This should set the width of the label area to match multiple input fields.
   labelClassName?: string;
   // CSS class(es) to add to the rendered ListBox
   listBoxClassName?: string;

@@ -2,6 +2,12 @@
 
 /**
  * A textarea input in various styles.
+ *
+ * By default, the label will be presented vertically above the textarea field.
+ * If the *labelClassName* property is included, the label will be presented
+ * horizontally to the left of the textarea field, and the label will receive
+ * the CSS classes in that property.  This can be used to set the width of
+ * the label area for multiple fields, no matter how long the label itself is.
  */
 
 // External Modules ----------------------------------------------------------
@@ -88,8 +94,7 @@ type TextareaExtraProps = {
   isInvalid?: boolean;
   // Visual label for this textarea field
   label: string;
-  // CSS class(es) to add if horizontal presentation is requested
-  // (should set the width of the label area to match multiple fields)
+  // CSS class(es) to add if horizontal presentation is requested.  This should set the width of the label area to match multiple input fields.
   labelClassName?: string;
   // Textarea field name (also used as id)
   name: string;

@@ -1,5 +1,9 @@
 /**
- * A navigation bar with start/center/end parts.
+ * A navigation bar with start/center/end parts.  These parts will be
+ * formatted as follows:
+ * * *Navbar.Start* content will be left-aligned at the beginning.
+ * * *Navbar.Center* content will be visually centered in the middle.
+ * * *Navbar.End* content will be right-aligned at the end.
  */
 
 // External Modules ----------------------------------------------------------

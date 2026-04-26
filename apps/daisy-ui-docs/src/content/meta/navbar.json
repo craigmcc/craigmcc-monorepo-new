@@ -1,7 +1,7 @@
 {
   "component": "Navbar",
   "package": "@repo/daisy-ui",
-  "description": "A navigation bar with start/center/end parts.",
+  "description": "A navigation bar with start/center/end parts.  These parts will be\nformatted as follows:\n* *Navbar.Start* content will be left-aligned at the beginning.\n* *Navbar.Center* content will be visually centered in the middle.\n* *Navbar.End* content will be right-aligned at the end.",
   "props": [
     {
       "name": "children",

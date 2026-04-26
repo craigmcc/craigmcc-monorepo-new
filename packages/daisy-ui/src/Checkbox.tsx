@@ -1,8 +1,10 @@
 "use client";
 
 /**
- * A checkbox in various styles.  NOTE: Checkbox does not have a
- * vertical presentation - it's shown as the checkbox followed by the label.
+ * A checkbox in various styles.
+ *
+ * *NOTE*: Checkbox does not have a vertical presentation.
+ * Instead, it is always shown as the checkbox followed by the label.
  */
 
 // External Modules ----------------------------------------------------------

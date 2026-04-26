@@ -1,7 +1,7 @@
 {
   "component": "Input",
   "package": "@repo/daisy-ui",
-  "description": "A text input in various styles.",
+  "description": "A text input in various styles.\n\nBy default, the label will be presented vertically above the text field.\nIf the *labelClassName* property is included, the label will be presented\nhorizontally to the left of the text field, and the label will receive\nthe CSS classes in that property.  This can be used to set the width of\nthe label area for multiple fields, no matter how long the label itself is.",
   "props": [
     {
       "name": "className",
@@ -67,7 +67,7 @@
       "name": "labelClassName",
       "type": "string",
       "required": false,
-      "description": "(should set the width of the label area to match multiple input fields)"
+      "description": "CSS class(es) to add if horizontal presentation is requested.  This should set the width of the label area to match multiple input fields."
     },
     {
       "name": "name",
