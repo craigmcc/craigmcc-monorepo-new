@@ -1,0 +1,48 @@
+{
+  "dependencies": {
+    "clsx": "catalog:clsx",
+    "@repo/daisy-ui": "workspace:*",
+    "@repo/shared-utils": "workspace:*",
+    "@tanstack/react-table": "catalog:tanstack",
+    "lucide-react": "catalog:lucide",
+    "postcss": "catalog:postcss",
+    "react": "catalog:react19",
+    "react-dom": "catalog:react19",
+    "tailwind-merge": "catalog:tailwind-merge",
+    "zod": "catalog:zod"
+  },
+  "devDependencies": {
+    "@repo/eslint-config": "workspace:*",
+    "@repo/testing-react": "workspace:*",
+    "@repo/typescript-config": "workspace:*",
+    "@repo/vitest-config": "workspace:*",
+    "@tailwindcss/postcss": "catalog:tailwind4",
+    "@types/node": "catalog:node24",
+    "@types/react": "catalog:react19",
+    "@types/react-dom": "catalog:react19",
+    "eslint": "catalog:eslint9",
+    "jsdom": "catalog:jsdom",
+    "tailwindcss": "catalog:tailwind4",
+    "typescript": "catalog:typescript5",
+    "vitest": "catalog:vitest"
+  },
+  "exports": {
+    "./*": {
+      "import": "./dist/*.js",
+      "types": "./dist/*.d.ts"
+    }
+  },
+  "license": "Apache-2.0",
+  "name": "@repo/daisy-table",
+  "private": true,
+  "scripts": {
+    "build": "tsc",
+    "check-types": "tsc --noEmit",
+    "dev": "tsc --watch",
+    "lint": "eslint . --max-warnings 0",
+    "test": "vitest",
+    "test:ci": "vitest --run --coverage"
+  },
+  "type": "module",
+  "version": "0.0.0"
+}

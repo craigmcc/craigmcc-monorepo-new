@@ -140,6 +140,9 @@ catalogs:
     '@tanstack/react-query':
       specifier: 5.96.0
       version: 5.96.0
+    '@tanstack/react-table':
+      specifier: 8.21.3
+      version: 8.21.3
   testing-library:
     '@testing-library/jest-dom':
       specifier: 6.9.1
@@ -394,6 +397,79 @@ importers:
       '@tanstack/react-form':
         specifier: catalog:tanstack
         version: 1.29.0(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
+      clsx:
+        specifier: catalog:clsx
+        version: 2.1.1
+      lucide-react:
+        specifier: catalog:lucide
+        version: 1.7.0(react@19.2.4)
+      postcss:
+        specifier: catalog:postcss
+        version: 8.5.8
+      react:
+        specifier: catalog:react19
+        version: 19.2.4
+      react-dom:
+        specifier: catalog:react19
+        version: 19.2.4(react@19.2.4)
+      tailwind-merge:
+        specifier: catalog:tailwind-merge
+        version: 3.5.0
+      zod:
+        specifier: catalog:zod
+        version: 4.3.6
+    devDependencies:
+      '@repo/eslint-config':
+        specifier: workspace:*
+        version: link:../eslint-config
+      '@repo/testing-react':
+        specifier: workspace:*
+        version: link:../testing-react
+      '@repo/typescript-config':
+        specifier: workspace:*
+        version: link:../typescript-config
+      '@repo/vitest-config':
+        specifier: workspace:*
+        version: link:../vitest-config
+      '@tailwindcss/postcss':
+        specifier: catalog:tailwind4
+        version: 4.2.2
+      '@types/node':
+        specifier: catalog:node24
+        version: 24.0.11
+      '@types/react':
+        specifier: catalog:react19
+        version: 19.2.14
+      '@types/react-dom':
+        specifier: catalog:react19
+        version: 19.2.3(@types/react@19.2.14)
+      eslint:
+        specifier: catalog:eslint9
+        version: 9.39.4(jiti@2.6.1)
+      jsdom:
+        specifier: catalog:jsdom
+        version: 29.0.1
+      tailwindcss:
+        specifier: catalog:tailwind4
+        version: 4.2.2
+      typescript:
+        specifier: catalog:typescript5
+        version: 5.8.3
+      vitest:
+        specifier: catalog:vitest
+        version: 4.1.2(@types/node@24.0.11)(jsdom@29.0.1)(msw@2.12.14(@types/node@24.0.11)(typescript@5.8.3))(vite@8.0.8(@types/node@24.0.11)(esbuild@0.27.7)(jiti@2.6.1)(tsx@4.21.0))
+
+  packages/daisy-table:
+    dependencies:
+      '@repo/daisy-ui':
+        specifier: workspace:*
+        version: link:../daisy-ui
+      '@repo/shared-utils':
+        specifier: workspace:*
+        version: link:../shared-utils
+      '@tanstack/react-table':
+        specifier: catalog:tanstack
+        version: 8.21.3(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
       clsx:
         specifier: catalog:clsx
         version: 2.1.1
@@ -2361,8 +2437,19 @@ packages:
       react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
       react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
 
+  '@tanstack/react-table@8.21.3':
+    resolution: {integrity: sha512-5nNMTSETP4ykGegmVkhjcS8tTLW6Vl4axfEGQN3v0zdHYbK4UfoqfPChclTrJ4EoK9QynqAu9oUf8VEmrpZ5Ww==}
+    engines: {node: '>=12'}
+    peerDependencies:
+      react: '>=16.8'
+      react-dom: '>=16.8'
+
   '@tanstack/store@0.9.3':
     resolution: {integrity: sha512-8reSzl/qGWGGVKhBoxXPMWzATSbZLZFWhwBAFO9NAyp0TxzfBP0mIrGb8CP8KrQTmvzXlR/vFPPUrHTLBGyFyw==}
+
+  '@tanstack/table-core@8.21.3':
+    resolution: {integrity: sha512-ldZXEhOBb8Is7xLs01fR3YEc3DERiz5silj8tnGkFZytt1abEvl/GhUmCE0PMLaMPTa3Jk4HbKmRlHmu+gCftg==}
+    engines: {node: '>=12'}
 
   '@testing-library/dom@10.4.1':
     resolution: {integrity: sha512-o4PXJQidqJl82ckFaXUeoAW+XysPLauYI43Abki5hABd853iMhitooc6znOnczgbTYmEP6U6/y1ZyKAIsvMKGg==}
@@ -6931,7 +7018,15 @@ snapshots:
       react-dom: 19.2.4(react@19.2.4)
       use-sync-external-store: 1.6.0(react@19.2.4)
 
+  '@tanstack/react-table@8.21.3(react-dom@19.2.4(react@19.2.4))(react@19.2.4)':
+    dependencies:
+      '@tanstack/table-core': 8.21.3
+      react: 19.2.4
+      react-dom: 19.2.4(react@19.2.4)
+
   '@tanstack/store@0.9.3': {}
+
+  '@tanstack/table-core@8.21.3': {}
 
   '@testing-library/dom@10.4.1':
     dependencies:
