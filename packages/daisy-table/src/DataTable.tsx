@@ -6,6 +6,8 @@
 
 // External Modules ----------------------------------------------------------
 
+import { Button } from "@repo/daisy-ui/Button";
+import { Tooltip } from "@repo/daisy-ui/Tooltip";
 import {
   flexRender,
   Row,
@@ -145,42 +147,42 @@ export function DataTable<TData>(
         <tr>
           <th colSpan={table.getCenterLeafColumns().length + extraColumn}>
             <div className="text-center space-x-4">
-              <span className="tooltip" data-tip="First Page">
-                <button
-                  className="btn btn-info"
+              <Tooltip tip="First Page">
+                <Button
+                  color="info"
                   disabled={!table.getCanPreviousPage()}
-                  onClick={() => table.firstPage()}
+                  onPress={() => table.firstPage()}
                 >
                   <ArrowLeftToLine/>
-                </button>
-              </span>
-              <span className="tooltip" data-tip="Previous Page">
-                <button
-                  className="btn btn-info"
+                </Button>
+              </Tooltip>
+              <Tooltip tip="Previous Page">
+                <Button
+                  color="info"
                   disabled={!table.getCanPreviousPage()}
-                  onClick={() => table.previousPage()}
+                  onPress={() => table.previousPage()}
                 >
-                  <ArrowLeft/>
-                </button>
-              </span>
-              <span className="tooltip" data-tip="Next Page">
-                <button
-                  className="btn btn-info"
+                  <ArrowLeftToLine/>
+                </Button>
+              </Tooltip>
+              <Tooltip tip="Next Page">
+                <Button
+                  color="info"
                   disabled={!table.getCanNextPage()}
-                  onClick={() => table.nextPage()}
+                  onPress={() => table.nextPage()}
                 >
                   <ArrowRight/>
-                </button>
-              </span>
-              <span className="tooltip" data-tip="Last Page">
-                <button
-                  className="btn btn-info"
+                </Button>
+              </Tooltip>
+              <Tooltip tip="Last Page">
+                <Button
+                  color="info"
                   disabled={!table.getCanNextPage()}
-                  onClick={() => table.lastPage()}
+                  onPress={() => table.lastPage()}
                 >
                   <ArrowRightToLine/>
-                </button>
-              </span>
+                </Button>
+              </Tooltip>
               <span>
                 Page {table.getState().pagination.pageIndex + 1} of{" "}
                 {pageCount > 0 ? pageCount : `1`}{" "}| Total of{" "}
