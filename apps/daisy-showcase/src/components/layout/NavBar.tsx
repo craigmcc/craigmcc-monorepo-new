@@ -55,6 +55,7 @@ export function NavBar() {
         <NavLinkButton href="/signups">SignUps</NavLinkButton>
         <NavLinkButton href="/tables">Tables</NavLinkButton>
         <NavLinkButton href="/textareas">Textareas</NavLinkButton>
+        <NavLinkButton href="/tooltips">Tooltips</NavLinkButton>
       </Navbar.Center>
 
       <Navbar.End className="pr-2">
