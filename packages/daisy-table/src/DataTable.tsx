@@ -7,6 +7,7 @@
 // External Modules ----------------------------------------------------------
 
 import { Button } from "@repo/daisy-ui/Button";
+import { Menu } from "@repo/daisy-ui/Menu";
 import { Tooltip } from "@repo/daisy-ui/Tooltip";
 import {
   flexRender,
@@ -108,34 +109,27 @@ export function DataTable<TData>(
           ))}
           {actions && actions.length > 0 ? (
             <td key={`${row.id}-actions`} className="flex flex-row justify-center">
-              <div className="dropdown dropdown-end">
-                <details>
-                  <summary className="btn bth-ghost">
-                    ...
-                  </summary>
-                  <ul tabIndex={0} className="menu dropdown-content z-1 mt-6 shadow-sm bg-base-300 rounded-box">
-                    {actions.map((action, idx) => (
-                      <li
-                        key={idx}
-                        onClick={() => {
-                          try {
-                            action.onClick(row as Row<TData>);
-                          } catch (err) {
-                            console.error(err);
-                          }
-                        }}
-                      >
-                        {action.icon ? (
-                          <span className="mr-2">
+              <Menu trigger={<Button>...</Button>}>
+                {actions.map((action, idx) => (
+                  <Menu.Item
+                    key={idx}
+                    onAction={() => {
+                      try {
+                        action.onClick(row as Row<TData>);
+                      } catch (err) {
+                        console.error(err);
+                      }
+                    }}
+                  >
+                    {action.icon ? (
+                      <span className="mr-2">
                             {action.icon}
                           </span>
-                        ) : null}
-                        {action.label}
-                      </li>
-                    ))}
-                  </ul>
-                </details>
-              </div>
+                    ) : null}
+                    {action.label}
+                  </Menu.Item>
+                ))}
+              </Menu>
             </td>
           ) : null}
         </tr>
@@ -162,7 +156,7 @@ export function DataTable<TData>(
                   disabled={!table.getCanPreviousPage()}
                   onPress={() => table.previousPage()}
                 >
-                  <ArrowLeftToLine/>
+                  <ArrowLeft/>
                 </Button>
               </Tooltip>
               <Tooltip tip="Next Page">
