@@ -1,15 +1,19 @@
 import { renderWithProviders } from "@repo/testing-react";
 import { createElement } from "react";
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 
 import TablesPage from "./page";
 
+vi.mock("@/components/examples/Tables", () => ({
+  Tables: () => createElement("div", { "data-testid": "tables-example" }, "Mocked Tables"),
+}));
+
 describe("TablesPage", () => {
-  it("renders the page wrapper and placeholder content", () => {
-    const { container, getByText } = renderWithProviders(createElement(TablesPage));
+  it("renders the page wrapper and Tables content", () => {
+    const { container, getByTestId } = renderWithProviders(createElement(TablesPage));
 
     expect(container.firstChild).toHaveClass("p-4");
-    expect(getByText(/Tables page coming soon/)).toBeInTheDocument();
+    expect(getByTestId("tables-example")).toBeInTheDocument();
   });
 });
 

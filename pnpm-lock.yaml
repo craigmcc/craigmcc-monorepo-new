@@ -215,12 +215,18 @@ importers:
       '@repo/daisy-form':
         specifier: workspace:*
         version: link:../../packages/daisy-form
+      '@repo/daisy-table':
+        specifier: workspace:*
+        version: link:../../packages/daisy-table
       '@repo/daisy-ui':
         specifier: workspace:*
         version: link:../../packages/daisy-ui
       '@repo/shared-utils':
         specifier: workspace:*
         version: link:../../packages/shared-utils
+      '@tanstack/react-table':
+        specifier: catalog:tanstack
+        version: 8.21.3(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
       lucide-react:
         specifier: catalog:lucide
         version: 1.7.0(react@19.2.4)

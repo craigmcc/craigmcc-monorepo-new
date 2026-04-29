@@ -1,8 +1,10 @@
 {
   "dependencies": {
     "@repo/daisy-form": "workspace:*",
+    "@repo/daisy-table": "workspace:*",
     "@repo/daisy-ui": "workspace:*",
     "@repo/shared-utils": "workspace:*",
+    "@tanstack/react-table": "catalog:tanstack",
     "lucide-react": "catalog:lucide",
     "next": "catalog:next16",
     "pino": "catalog:pino",

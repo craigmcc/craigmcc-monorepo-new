@@ -66,7 +66,7 @@ export function DataTable<TData>(
         <tr key={headerGroup.id}>
           {headerGroup.headers.map(header => (
             <th key={header.id} colSpan={header.colSpan}>
-              <div  className="flex flex-row w-full justify-center">
+              <div  className="flex flex-row gap-2 w-full justify-center">
                 {flexRender(
                   header.column.columnDef.header,
                   header.getContext()
@@ -78,11 +78,11 @@ export function DataTable<TData>(
                       style={{ cursor: "pointer" }}
                     >
                       {header.column.getIsSorted() === "asc" ? (
-                        <ArrowUpAZ className="ms-2 text-info" size={24}/>
+                        <ArrowUpAZ className="text-info" size={24}/>
                       ) : header.column.getIsSorted() === "desc" ? (
-                        <ArrowDownAZ className="ms-2 text-info" size={24}/>
+                        <ArrowDownAZ className="text-info" size={24}/>
                       ) : (
-                        <ArrowDownUp className="ms-2 text-info" size={24}/>
+                        <ArrowDownUp className="text-info" size={24}/>
                       )}
                     </span>
                   </>
@@ -140,12 +140,13 @@ export function DataTable<TData>(
         <tfoot>
         <tr>
           <th colSpan={table.getCenterLeafColumns().length + extraColumn}>
-            <div className="text-center space-x-4">
+            <div className="flex flex-row items-center justify-center gap-4">
               <Tooltip tip="First Page">
                 <Button
                   color="info"
                   disabled={!table.getCanPreviousPage()}
                   onPress={() => table.firstPage()}
+                  size="sm"
                 >
                   <ArrowLeftToLine/>
                 </Button>
@@ -155,6 +156,7 @@ export function DataTable<TData>(
                   color="info"
                   disabled={!table.getCanPreviousPage()}
                   onPress={() => table.previousPage()}
+                  size="sm"
                 >
                   <ArrowLeft/>
                 </Button>
@@ -164,6 +166,7 @@ export function DataTable<TData>(
                   color="info"
                   disabled={!table.getCanNextPage()}
                   onPress={() => table.nextPage()}
+                  size="sm"
                 >
                   <ArrowRight/>
                 </Button>
@@ -173,6 +176,7 @@ export function DataTable<TData>(
                   color="info"
                   disabled={!table.getCanNextPage()}
                   onPress={() => table.lastPage()}
+                  size="sm"
                 >
                   <ArrowRightToLine/>
                 </Button>
