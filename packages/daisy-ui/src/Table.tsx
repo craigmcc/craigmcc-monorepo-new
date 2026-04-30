@@ -32,7 +32,7 @@ export const TableVariants = cva(
       // Present with a solid border
       border: {
         false: null,
-        true: "border-4",
+        true: "border-4 rounded-md",
       },
       // Make all <th> (i.e. Table.Head) columns sticky.
       pinCols: {
@@ -66,7 +66,10 @@ type TableExtraProps = {
   children: React.ReactNode;
 }
 
-type TableNativeProps = React.ComponentPropsWithoutRef<"table">;
+type TableNativeProps = Omit<
+  React.ComponentPropsWithoutRef<"table">,
+  | "border"
+>;
 
 export type TableProps =
   TableExtraProps &
@@ -102,6 +105,18 @@ export function Table({
 
 // Private Objects -----------------------------------------------------------
 
+// Render a <tbody> element and its children
+function Body({ children, className }: RowProps) {
+  useTableContext();
+  return (
+    <tbody className={twMerge(clsx(null, className))}>
+      {children}
+    </tbody>
+  )
+}
+
+Table.Body = Body;
+
 type FooterProps = {
   // Children for this component
   children: React.ReactNode;
@@ -126,13 +141,15 @@ type DataProps = {
   children: React.ReactNode;
   // CSS classes to append for this element
   className?: string;
+  // Number of columns this data spans [1]
+  colSpan?: number;
 }
 
 // Render a <td> element and its children
-function Data({ children, className }: DataProps) {
+function Data({ children, className, colSpan }: DataProps) {
   useTableContext();
   return (
-    <td className={twMerge(clsx(null, className))}>
+    <td className={twMerge(clsx(null, className))} colSpan={colSpan}>
     {children}
     </td>
   )
@@ -145,13 +162,15 @@ type HeadProps = {
   children: React.ReactNode;
   // CSS classes to append for this element
   className?: string;
+  // Number of columns this header spans [1]
+  colSpan?: number;
 }
 
 // Render a <th> element and its children
-function Head({ children, className }: HeadProps) {
+function Head({ children, className, colSpan }: HeadProps) {
   useTableContext();
   return (
-    <th className={twMerge(clsx(null, className))}>
+    <th className={twMerge(clsx(null, className))} colSpan={colSpan}>
       {children}
     </th>
   )

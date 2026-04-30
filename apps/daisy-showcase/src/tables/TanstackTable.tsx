@@ -79,7 +79,13 @@ export function TanstackTable({ users }: TanstackTableProps) {
   });
 
   return (
-    <DataTable showPagination={true} table={table}/>
+    <DataTable
+      border
+      pinRows
+      showPagination={true}
+      table={table}
+      zebra
+    />
   )
 
 }
