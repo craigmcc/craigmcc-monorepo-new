@@ -6,19 +6,22 @@
 
 // External Modules ----------------------------------------------------------
 
+import { Input } from "@repo/daisy-ui/Input";
 import { DataTable } from "@repo/daisy-table/DataTable";
 import {
   CellContext,
+  ColumnFiltersState,
   createColumnHelper,
 //  flexRender,
   getCoreRowModel,
+  getFilteredRowModel,
   getPaginationRowModel,
   getSortedRowModel,
   PaginationState,
   SortingState,
   useReactTable,
 } from "@tanstack/react-table";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 // Internal Modules ----------------------------------------------------------
 
@@ -33,13 +36,47 @@ export type TanstackTableProps = {
 
 export function TanstackTable({ users }: TanstackTableProps) {
 
+  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
+  const [emailFilter, setEmailFilter] = useState<string>("");
+  const [nameFilter, setNameFilter] = useState<string>("");
   const [pagination, setPagination] = useState<PaginationState>({
     pageIndex: 0,
     pageSize: 5,
   });
+  const [phoneFilter, setPhoneFilter] = useState<string>("");
   const [sorting, setSorting] = useState<SortingState>([
     {id: "id", desc: false},
   ]);
+
+  // Apply selection filters whenever they change
+  useEffect(() => {
+
+    const filters: ColumnFiltersState = [];
+
+    if (emailFilter.length > 0) {
+      filters.push({
+        id: "email",
+        value: emailFilter,
+      });
+    }
+
+    if (nameFilter.length > 0) {
+      filters.push({
+        id: "name",
+        value: nameFilter,
+      });
+    }
+
+    if (phoneFilter.length > 0) {
+      filters.push({
+        id: "phone",
+        value: phoneFilter,
+      });
+    }
+
+    setColumnFilters(filters);
+
+  }, [emailFilter, nameFilter, phoneFilter]);
 
   const columns = useMemo(() => [
     columnHelper.accessor("id", {
@@ -68,24 +105,55 @@ export function TanstackTable({ users }: TanstackTableProps) {
     data: users,
     enableSorting: true,
     getCoreRowModel: getCoreRowModel(),
+    getFilteredRowModel: getFilteredRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     getSortedRowModel: getSortedRowModel(),
+    onColumnFiltersChange: setColumnFilters,
     onPaginationChange: setPagination,
     onSortingChange: setSorting,
     state: {
+      columnFilters,
       pagination,
       sorting
     },
   });
 
   return (
-    <DataTable
-      border
-      pinRows
-      showPagination={true}
-      table={table}
-      zebra
-    />
+    <div className="flex flex-col gap-4">
+      <div className="flex flex-row flex-wrap gap-2 justify-center">
+        <Input
+          handleChange={(value) => setNameFilter(value)}
+          id="name"
+          label="Filter by Name:"
+          name="nameFilter"
+          placeholder="Enter part of name"
+          value={nameFilter}
+        />
+        <Input
+          handleChange={(value) => setEmailFilter(value)}
+          id="email"
+          label="Filter by Email:"
+          name="emailFilter"
+          placeholder="Enter part of email"
+          value={emailFilter}
+        />
+        <Input
+          handleChange={(value) => setPhoneFilter(value)}
+          id="phone"
+          label="Filter by Phone:"
+          name="phoneFilter"
+          placeholder="Enter part of phone"
+          value={phoneFilter}
+        />
+      </div>
+      <DataTable
+        border
+        pinRows
+        showPagination={true}
+        table={table}
+        zebra
+      />
+    </div>
   )
 
 }
