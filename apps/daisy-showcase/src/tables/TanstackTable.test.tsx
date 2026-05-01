@@ -25,9 +25,9 @@ describe("TanstackTable", () => {
       <TanstackTable users={users} />
     );
 
-    expect(getByLabelText("Filter by Name")).toBeTruthy();
-    expect(getByLabelText("Filter by Email")).toBeTruthy();
-    expect(getByLabelText("Filter by Phone")).toBeTruthy();
+    expect(getByLabelText("Filter by Name:")).toBeTruthy();
+    expect(getByLabelText("Filter by Email:")).toBeTruthy();
+    expect(getByLabelText("Filter by Phone:")).toBeTruthy();
 
     expect(getByText("Leanne Graham")).toBeTruthy();
     expect(getByText("Chelsey Dietrich")).toBeTruthy();
@@ -39,7 +39,7 @@ describe("TanstackTable", () => {
       <TanstackTable users={users} />
     );
 
-    await user.type(getByLabelText("Filter by Name"), "Kurtis Weissnat");
+    await user.type(getByLabelText("Filter by Name:"), "Kurtis Weissnat");
 
     await vi.waitFor(() => {
       expect(getByText("Kurtis Weissnat")).toBeTruthy();
@@ -52,15 +52,15 @@ describe("TanstackTable", () => {
       <TanstackTable users={users} />
     );
 
-    await user.type(getByLabelText("Filter by Email"), "rosamond.me");
+    await user.type(getByLabelText("Filter by Email:"), "rosamond.me");
 
     await vi.waitFor(() => {
       expect(getByText("Nicholas Runolfsdottir V")).toBeTruthy();
       expect(queryByText("Leanne Graham")).toBeNull();
     });
 
-    await user.clear(getByLabelText("Filter by Email"));
-    await user.type(getByLabelText("Filter by Phone"), "024-648-3804");
+    await user.clear(getByLabelText("Filter by Email:"));
+    await user.type(getByLabelText("Filter by Phone:"), "024-648-3804");
 
     await vi.waitFor(() => {
       expect(getByText("Clementina DuBuque")).toBeTruthy();
@@ -73,15 +73,15 @@ describe("TanstackTable", () => {
       <TanstackTable users={users} />
     );
 
-    await user.type(getByLabelText("Filter by Name"), "Clement");
-    await user.type(getByLabelText("Filter by Email"), "karina.biz");
+    await user.type(getByLabelText("Filter by Name:"), "Clement");
+    await user.type(getByLabelText("Filter by Email:"), "karina.biz");
 
     await vi.waitFor(() => {
       expect(getByText("Clementina DuBuque")).toBeTruthy();
       expect(queryByText("Clementine Bauch")).toBeNull();
     });
 
-    await user.type(getByLabelText("Filter by Phone"), "no-match");
+    await user.type(getByLabelText("Filter by Phone:"), "no-match");
 
     await vi.waitFor(() => {
       expect(queryByText("Clementina DuBuque")).toBeNull();
