@@ -42,7 +42,7 @@ export const TableVariants = cva(
       // Make all rows inside <thead>/<tfoot> (i.e. Table.Header/Table.Footer) sticky.
       pinRows: {
         false: null,
-        true: "table-pin-cols",
+        true: "table-pin-rows",
       },
       // Basic size of this component
       size: {
