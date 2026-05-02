@@ -7,7 +7,7 @@
 // External Modules ----------------------------------------------------------
 
 import { Input } from "@repo/daisy-ui/Input";
-import { DataTable } from "@repo/daisy-table/DataTable";
+import { DataTable, TableAction } from "@repo/daisy-table/DataTable";
 import {
   CellContext,
   ColumnFiltersState,
@@ -21,6 +21,7 @@ import {
   SortingState,
   useReactTable,
 } from "@tanstack/react-table";
+import { Package, Paperclip, Pencil } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 
 // Internal Modules ----------------------------------------------------------
@@ -147,6 +148,7 @@ export function TanstackTable({ users }: TanstackTableProps) {
         />
       </div>
       <DataTable
+        actions={actions}
         border
         pinRows
         showPagination={true}
@@ -159,5 +161,29 @@ export function TanstackTable({ users }: TanstackTableProps) {
 }
 
 // Private Objects -----------------------------------------------------------
+
+const actions: TableAction<User>[] = [
+  {
+    icon: <Package size={16} />,
+    label: "First",
+    onClick: (row) => {
+      alert(`First action for ${row.original.name}`);
+    },
+  },
+  {
+    icon: <Paperclip size={16} />,
+    label: "Second",
+    onClick: (row) => {
+      alert(`Second action for ${row.original.name}`);
+    },
+  },
+  {
+    icon: <Pencil size={16} />,
+    label: "Third",
+    onClick: (row) => {
+      alert(`Third action for ${row.original.name}`);
+    },
+  },
+];
 
 const columnHelper = createColumnHelper<User>();
