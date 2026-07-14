@@ -3,6 +3,7 @@ packages:
   - "packages/*"
 allowBuilds:
   '@prisma/engines': true
+  '@swc/core': false
   esbuild: true
   msw: false
   prisma: true

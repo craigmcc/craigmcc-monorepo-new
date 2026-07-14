@@ -35,12 +35,12 @@ PR-4 is the first route-level conversion that proves the end-to-end API contract
 
 ## Acceptance Criteria
 
-- [ ] `POST /api/list` accepts a valid operation envelope for `createList`.
-- [ ] First-seen request creates exactly one list and returns success metadata including `operationId` and `serverTimestamp`.
-- [ ] Duplicate same-key + same-payload request returns deterministic replay response without creating a second list.
-- [ ] Duplicate same-key + different-payload request returns deterministic rejection.
-- [ ] Existing create-list route tests are updated to the new request/response contract.
-- [ ] CI passes: `pnpm --filter shopshop test:ci && pnpm --filter shopshop lint && pnpm --filter shopshop check-types`.
+- [x] `POST /api/list` accepts a valid operation envelope for `createList`.
+- [x] First-seen request creates exactly one list and returns success metadata including `operationId` and `serverTimestamp`.
+- [x] Duplicate same-key + same-payload request returns deterministic replay response without creating a second list.
+- [x] Duplicate same-key + different-payload request returns deterministic rejection.
+- [x] Existing create-list route tests are updated to the new request/response contract.
+- [x] CI passes: `pnpm --filter shopshop test:ci && pnpm --filter shopshop lint && pnpm --filter shopshop check-types`.
 
 ## Suggested Files
 
@@ -94,23 +94,23 @@ Add or update route tests for:
 ## Test Cases
 
 ### First-seen execution
-- [ ] A valid `createList` envelope returns success.
-- [ ] Exactly one list is persisted.
-- [ ] Response includes `operationId` and `serverTimestamp`.
+- [x] A valid `createList` envelope returns success.
+- [x] Exactly one list is persisted.
+- [x] Response includes `operationId` and `serverTimestamp`.
 
 ### Replay
-- [ ] Same envelope sent twice returns deterministic response.
-- [ ] No second list is created.
-- [ ] Replay response shape matches the first response contract.
+- [x] Same envelope sent twice returns deterministic response.
+- [x] No second list is created.
+- [x] Replay response shape matches the first response contract.
 
 ### Payload mismatch
-- [ ] Same `operationId` with different payload is rejected.
-- [ ] Response includes stable error/status semantics.
+- [x] Same `operationId` with different payload is rejected.
+- [x] Response includes stable error/status semantics.
 
 ### Envelope validation
-- [ ] Non-envelope requests fail cleanly.
-- [ ] Wrong `operationType` for the route fails cleanly.
-- [ ] Invalid `schemaVersion` or malformed fields fail cleanly.
+- [x] Non-envelope requests fail cleanly.
+- [x] Wrong `operationType` for the route fails cleanly.
+- [x] Invalid `schemaVersion` or malformed fields fail cleanly.
 
 ## Implementation Notes
 
@@ -255,32 +255,32 @@ pnpm --filter shopshop check-types
 
 ## Checklist
 
-- [ ] `POST /api/list` accepts the operation envelope contract
-- [ ] First-seen request returns deterministic success metadata
-- [ ] Replay does not create a second list
-- [ ] Payload mismatch returns deterministic rejection
-- [ ] Invalid envelope validation fails cleanly at the route boundary
-- [ ] `test:ci`, `lint`, and `check-types` pass
-- [ ] Scope remains limited to the pilot endpoint
+- [x] `POST /api/list` accepts the operation envelope contract
+- [x] First-seen request returns deterministic success metadata
+- [x] Replay does not create a second list
+- [x] Payload mismatch returns deterministic rejection
+- [x] Invalid envelope validation fails cleanly at the route boundary
+- [x] `test:ci`, `lint`, and `check-types` pass
+- [x] Scope remains limited to the pilot endpoint
 ```
 
 ## Task Checklist
 
-- [ ] Update `apps/shopshop/src/app/api/(actions)/list/route.ts` to accept operation envelopes.
-- [ ] Forward the parsed envelope to `createList()`.
-- [ ] Return route-level idempotency metadata in the response.
-- [ ] Update `apps/shopshop/src/app/api/(actions)/list/route.test.ts` for the new contract.
-- [ ] Add replay and payload-mismatch route tests.
-- [ ] Verify lint: `pnpm --filter shopshop lint`.
-- [ ] Verify types: `pnpm --filter shopshop check-types`.
-- [ ] Verify tests: `pnpm --filter shopshop test:ci`.
+- [x] Update `apps/shopshop/src/app/api/(actions)/list/route.ts` to accept operation envelopes.
+- [x] Forward the parsed envelope to `createList()`.
+- [x] Return route-level idempotency metadata in the response.
+- [x] Update `apps/shopshop/src/app/api/(actions)/list/route.test.ts` for the new contract.
+- [x] Add replay and payload-mismatch route tests.
+- [x] Verify lint: `pnpm --filter shopshop lint`.
+- [x] Verify types: `pnpm --filter shopshop check-types`.
+- [x] Verify tests: `pnpm --filter shopshop test:ci`.
 
 ## Definition of Done
 
-- [ ] Pilot endpoint fully uses the operation envelope contract.
-- [ ] Replay and mismatch behavior are covered at the route level.
-- [ ] No additional endpoints are converted in this PR.
-- [ ] CI is green.
-- [ ] PR scope stays focused on the pilot route only.
+- [x] Pilot endpoint fully uses the operation envelope contract.
+- [x] Replay and mismatch behavior are covered at the route level.
+- [x] No additional endpoints are converted in this PR.
+- [x] CI is green.
+- [x] PR scope stays focused on the pilot route only.
 
 
