@@ -60,7 +60,7 @@ catalogs:
   pino:
     pino: 10.3.1
   postcss:
-    postcss: 8.5.14
+    postcss: 8.5.18
   postgres:
     pg: 8.20.0
   prisma7:
