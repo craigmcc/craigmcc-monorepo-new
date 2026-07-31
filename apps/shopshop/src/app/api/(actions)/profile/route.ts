@@ -4,32 +4,33 @@
 
 // External Imports ----------------------------------------------------------
 
-import { ProfileUpdateSchemaType } from "@repo/db-shopshop/zod-schemas/ProfileSchema";
-import { NextRequest, NextResponse } from "next/server";
+import { ProfileUpdateSchema, ProfileUpdateSchemaType } from "@repo/db-shopshop/zod-schemas/ProfileSchema";
+import { NextRequest } from "next/server";
 
 // Internal Imports ----------------------------------------------------------
 
 import { updateProfile } from "@/actions/ProfileActions";
+import {
+  parseOperationEnvelopeRequest,
+  resolveOperationServerTimestamp,
+  toOperationRouteResponse,
+} from "@/lib/OperationRouteHelpers";
 
 // Public Objects ------------------------------------------------------------
 
 export async function PUT(request: NextRequest) {
-  const data: ProfileUpdateSchemaType = await request.json();
-  const result = await updateProfile(data);
-  if (result.model) {
-    return NextResponse.json({
-      data: result.model,
-      success: true,
-    });
+  const parsedRequest = await parseOperationEnvelopeRequest<ProfileUpdateSchemaType>({
+    expectedOperationType: "updateProfile",
+    payloadSchema: ProfileUpdateSchema,
+    request,
+  });
+  if (!parsedRequest.ok) {
+    return parsedRequest.response;
   }
 
-  const status = result.status || 400;
-  return NextResponse.json({
-    error: result.message,
-    status,
-  }, {
-    status,
-  });
+  const result = await updateProfile(parsedRequest.payload, parsedRequest.envelope);
+  const serverTimestamp = await resolveOperationServerTimestamp(parsedRequest.envelope.operationId);
+  return toOperationRouteResponse(result, parsedRequest.envelope.operationId, serverTimestamp);
 }
 
 // Private Objects -----------------------------------------------------------

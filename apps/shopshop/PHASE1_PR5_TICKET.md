@@ -166,24 +166,24 @@ Each converted route should have tests for:
 
 ### Suggested milestones
 
-1. Route contract for create endpoints
+1. [x] Route contract for create endpoints
    - `POST /api/category`
    - `POST /api/item`
    - `PUT /api/profile`
 
-2. Route contract for list mutations
+2. [x] Route contract for list mutations
    - `PUT /api/list/:listId`
    - `DELETE /api/list/:listId`
 
-3. Route contract for category mutations
+3. [ ] Route contract for category mutations
    - `PUT /api/category/:categoryId`
    - `DELETE /api/category/:categoryId`
 
-4. Route contract for item mutations
+4. [x] Route contract for item mutations
    - `PUT /api/item/:itemId`
    - `DELETE /api/item/:itemId`
 
-5. Route test coverage and cleanup
+5. [x] Route test coverage and cleanup
    - Add/update replay, mismatch, and invalid-envelope tests for every converted endpoint
    - Re-run validation commands
 
