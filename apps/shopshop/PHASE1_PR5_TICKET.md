@@ -183,7 +183,7 @@ Each converted route should have tests for:
    - `PUT /api/item/:itemId`
    - `DELETE /api/item/:itemId`
 
-5. [ ] Route test coverage and cleanup
+5. [x] Route test coverage and cleanup
    - Add/update replay, mismatch, and invalid-envelope tests for every converted endpoint
    - Re-run validation commands
 
