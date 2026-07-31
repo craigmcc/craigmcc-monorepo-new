@@ -171,7 +171,7 @@ Each converted route should have tests for:
    - `POST /api/item`
    - `PUT /api/profile`
 
-2. [ ] Route contract for list mutations
+2. [x] Route contract for list mutations
    - `PUT /api/list/:listId`
    - `DELETE /api/list/:listId`
 
