@@ -4,8 +4,9 @@
 
 // External Imports ----------------------------------------------------------
 
-import { ERRORS } from "@repo/daisy-form/ActionResult";
+import { dbShopShop as db } from "@repo/db-shopshop";
 import { MemberRole } from "@repo/db-shopshop/enums";
+import { ItemUpdateSchemaType } from "@repo/db-shopshop/zod-schemas/ItemSchema";
 import { NextRequest } from "next/server";
 import { beforeEach, describe, expect, it } from "vitest";
 
@@ -20,6 +21,7 @@ import { lookupProfileByEmail } from "@/lib/ProfileHelpers";
 import { setProfile } from "@/lib/ProfileServerHelper";
 import { BaseUtils } from "@/test/BaseUtils";
 import { PROFILES } from "@/test/SeedData";
+import { OPERATION_ENVELOPE_SCHEMA_VERSION } from "@/types/OperationEnvelope";
 
 // Public Objects ------------------------------------------------------------
 
@@ -42,66 +44,388 @@ describe("/api/item/[itemId]", () => {
 
   // Test Cases --------------------------------------------------------------
 
-  it("returns validation errors for invalid IDs", async () => {
-    setProfile(await lookupProfileByEmail(PROFILES[0]!.email!));
-    const request = new NextRequest("http://example.test/api/item/not-a-uuid", {
-      body: JSON.stringify({
-        name: "Updated Name",
-      }),
+  it("returns an authentication error for unsigned update callers", async () => {
+    const profile = await lookupProfileByEmail(PROFILES[0]!.email!);
+    const item = await lookupItemByRole(profile!, MemberRole.GUEST);
+    const operationId = "11111111-1111-4111-8111-111111111111";
+    const request = new NextRequest(`http://example.test/api/item/${item!.id}`, {
+      body: JSON.stringify(makeEnvelope(operationId, "updateItem", {
+        itemId: item!.id,
+        data: {
+          name: "Updated Name",
+        },
+      })),
       method: "PUT",
     });
 
-    const response = await PUT(request, {
-      params: Promise.resolve({ itemId: "not-a-uuid" }),
-    });
+    const response = await PUT(request, routeContext(item!.id));
     const payload = await response.json();
 
-    expect(response.status).toBe(400);
-    expect(payload.error).toBe(ERRORS.ID_VALIDATION);
-    expect(payload.status).toBe(400);
+    expect(response.status).toBe(401);
+    expect(payload.accepted).toBe(false);
+    expect(payload.error).toBe("This Profile is not signed in");
+    expect(payload.operationId).toBe(operationId);
+    expect(payload.rejected).toBe(true);
+    expect(typeof payload.serverTimestamp).toBe("string");
+    expect(payload.status).toBe(401);
   });
 
   it("updates an item for a member", async () => {
     const profile = await lookupProfileByEmail(PROFILES[0]!.email!);
     const item = await lookupItemByRole(profile!, MemberRole.GUEST);
     setProfile(profile);
+    const operationId = "22222222-2222-4222-8222-222222222222";
+    const request = new NextRequest(`http://example.test/api/item/${item!.id}`, {
+      body: JSON.stringify(makeEnvelope(operationId, "updateItem", {
+        itemId: item!.id,
+        data: {
+          name: "Updated Item From Route",
+        },
+      })),
+      method: "PUT",
+    });
+
+    const response = await PUT(request, routeContext(item!.id));
+    const payload = await response.json();
+
+    expect(response.status).toBe(200);
+    expect(payload.accepted).toBe(true);
+    expect(payload.data.id).toBe(item!.id);
+    expect(payload.data.name).toBe("Updated Item From Route");
+    expect(payload.operationId).toBe(operationId);
+    expect(payload.rejected).toBe(false);
+    expect(typeof payload.serverTimestamp).toBe("string");
+  });
+
+  it("replays updateItem with the same operation envelope", async () => {
+    const profile = await lookupProfileByEmail(PROFILES[0]!.email!);
+    const item = await lookupItemByRole(profile!, MemberRole.GUEST);
+    setProfile(profile);
+    const operationId = "33333333-3333-4333-8333-333333333333";
+    const requestPayload: UpdateItemRoutePayload = {
+      itemId: item!.id,
+      data: {
+        name: "Replay Update Name",
+      },
+    };
+    const firstRequest = new NextRequest(`http://example.test/api/item/${item!.id}`, {
+      body: JSON.stringify(makeEnvelope(operationId, "updateItem", requestPayload)),
+      method: "PUT",
+    });
+    const secondRequest = new NextRequest(`http://example.test/api/item/${item!.id}`, {
+      body: JSON.stringify(makeEnvelope(operationId, "updateItem", requestPayload)),
+      method: "PUT",
+    });
+
+    const firstResponse = await PUT(firstRequest, routeContext(item!.id));
+    const firstPayload = await firstResponse.json();
+    const secondResponse = await PUT(secondRequest, routeContext(item!.id));
+    const secondPayload = await secondResponse.json();
+    const operationRecords = await db.operationRecord.count({
+      where: {
+        actorProfileId: profile!.id,
+        operationId,
+      },
+    });
+
+    expect(firstResponse.status).toBe(200);
+    expect(secondResponse.status).toBe(200);
+    expect(secondPayload).toEqual(firstPayload);
+    expect(operationRecords).toBe(1);
+  });
+
+  it("rejects updateItem when payload changes for the same operationId", async () => {
+    const profile = await lookupProfileByEmail(PROFILES[0]!.email!);
+    const item = await lookupItemByRole(profile!, MemberRole.GUEST);
+    setProfile(profile);
+    const operationId = "44444444-4444-4444-8444-444444444444";
+    const firstRequest = new NextRequest(`http://example.test/api/item/${item!.id}`, {
+      body: JSON.stringify(makeEnvelope(operationId, "updateItem", {
+        itemId: item!.id,
+        data: {
+          name: "First Route Item Name",
+        },
+      })),
+      method: "PUT",
+    });
+    const secondRequest = new NextRequest(`http://example.test/api/item/${item!.id}`, {
+      body: JSON.stringify(makeEnvelope(operationId, "updateItem", {
+        itemId: item!.id,
+        data: {
+          name: "Second Route Item Name",
+        },
+      })),
+      method: "PUT",
+    });
+
+    await PUT(firstRequest, routeContext(item!.id));
+    const conflictResponse = await PUT(secondRequest, routeContext(item!.id));
+    const conflictPayload = await conflictResponse.json();
+
+    expect(conflictResponse.status).toBe(409);
+    expect(conflictPayload.accepted).toBe(false);
+    expect(conflictPayload.error).toBe("Operation payload does not match existing operationId");
+    expect(conflictPayload.operationId).toBe(operationId);
+    expect(conflictPayload.rejected).toBe(true);
+    expect(typeof conflictPayload.serverTimestamp).toBe("string");
+    expect(conflictPayload.status).toBe(409);
+  });
+
+  it("rejects updateItem envelopes with the wrong operationType", async () => {
+    const profile = await lookupProfileByEmail(PROFILES[0]!.email!);
+    const item = await lookupItemByRole(profile!, MemberRole.GUEST);
+    setProfile(profile);
+    const operationId = "55555555-5555-4555-8555-555555555555";
+    const request = new NextRequest(`http://example.test/api/item/${item!.id}`, {
+      body: JSON.stringify(makeEnvelope(operationId, "deleteItem", {
+        itemId: item!.id,
+      })),
+      method: "PUT",
+    });
+
+    const response = await PUT(request, routeContext(item!.id));
+    const payload = await response.json();
+
+    expect(response.status).toBe(400);
+    expect(payload.accepted).toBe(false);
+    expect(payload.error).toBe("Operation type 'deleteItem' is invalid for this route");
+    expect(payload.operationId).toBe(operationId);
+    expect(payload.rejected).toBe(true);
+    expect(payload.status).toBe(400);
+  });
+
+  it("rejects updateItem envelopes with mismatched itemId route parameters", async () => {
+    const profile = await lookupProfileByEmail(PROFILES[0]!.email!);
+    const item = await lookupItemByRole(profile!, MemberRole.GUEST);
+    setProfile(profile);
+    const operationId = "66666666-6666-4666-8666-666666666666";
+    const request = new NextRequest(`http://example.test/api/item/${item!.id}`, {
+      body: JSON.stringify(makeEnvelope(operationId, "updateItem", {
+        itemId: "77777777-7777-4777-8777-777777777777",
+        data: {
+          name: "Route Parameter Mismatch",
+        },
+      })),
+      method: "PUT",
+    });
+
+    const response = await PUT(request, routeContext(item!.id));
+    const payload = await response.json();
+
+    expect(response.status).toBe(400);
+    expect(payload.accepted).toBe(false);
+    expect(payload.error).toBe("Operation payload itemId does not match route parameter");
+    expect(payload.operationId).toBe(operationId);
+    expect(payload.rejected).toBe(true);
+    expect(payload.status).toBe(400);
+  });
+
+  it("rejects updateItem envelopes with invalid schemaVersion", async () => {
+    const profile = await lookupProfileByEmail(PROFILES[0]!.email!);
+    const item = await lookupItemByRole(profile!, MemberRole.GUEST);
+    setProfile(profile);
+    const operationId = "88888888-8888-4888-8888-888888888888";
     const request = new NextRequest(`http://example.test/api/item/${item!.id}`, {
       body: JSON.stringify({
-        name: "Updated Item From Route",
+        ...makeEnvelope(operationId, "updateItem", {
+          itemId: item!.id,
+          data: {
+            name: "Bad Schema Version",
+          },
+        }),
+        schemaVersion: 999,
       }),
       method: "PUT",
     });
 
-    const response = await PUT(request, {
-      params: Promise.resolve({ itemId: item!.id }),
-    });
+    const response = await PUT(request, routeContext(item!.id));
     const payload = await response.json();
 
-    expect(response.status).toBe(200);
-    expect(payload.success).toBe(true);
-    expect(payload.data.id).toBe(item!.id);
-    expect(payload.data.name).toBe("Updated Item From Route");
+    expect(response.status).toBe(400);
+    expect(payload.accepted).toBe(false);
+    expect(payload.error).toBe("Request body must be a valid operation envelope");
+    expect(payload.operationId).toBe(operationId);
+    expect(payload.rejected).toBe(true);
+    expect(payload.status).toBe(400);
   });
 
   it("deletes an item for a member", async () => {
     const profile = await lookupProfileByEmail(PROFILES[0]!.email!);
     const item = await lookupItemByRole(profile!, MemberRole.GUEST);
     setProfile(profile);
+    const operationId = "99999999-9999-4999-8999-999999999999";
+    const itemCountBefore = await db.item.count({
+      where: {
+        id: item!.id,
+      },
+    });
     const request = new NextRequest(`http://example.test/api/item/${item!.id}`, {
+      body: JSON.stringify(makeEnvelope(operationId, "deleteItem", {
+        itemId: item!.id,
+      })),
       method: "DELETE",
     });
 
-    const response = await DELETE(request, {
-      params: Promise.resolve({ itemId: item!.id }),
-    });
+    const response = await DELETE(request, routeContext(item!.id));
     const payload = await response.json();
+    const itemCountAfter = await db.item.count({
+      where: {
+        id: item!.id,
+      },
+    });
 
     expect(response.status).toBe(200);
-    expect(payload.success).toBe(true);
+    expect(payload.accepted).toBe(true);
     expect(payload.data.id).toBe(item!.id);
+    expect(payload.operationId).toBe(operationId);
+    expect(payload.rejected).toBe(false);
+    expect(typeof payload.serverTimestamp).toBe("string");
+    expect(itemCountBefore).toBe(1);
+    expect(itemCountAfter).toBe(0);
+  });
+
+  it("replays deleteItem with the same operation envelope", async () => {
+    const profile = await lookupProfileByEmail(PROFILES[0]!.email!);
+    const item = await lookupItemByRole(profile!, MemberRole.GUEST);
+    setProfile(profile);
+    const operationId = "aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa";
+    const firstRequest = new NextRequest(`http://example.test/api/item/${item!.id}`, {
+      body: JSON.stringify(makeEnvelope(operationId, "deleteItem", {
+        itemId: item!.id,
+      })),
+      method: "DELETE",
+    });
+    const secondRequest = new NextRequest(`http://example.test/api/item/${item!.id}`, {
+      body: JSON.stringify(makeEnvelope(operationId, "deleteItem", {
+        itemId: item!.id,
+      })),
+      method: "DELETE",
+    });
+
+    const firstResponse = await DELETE(firstRequest, routeContext(item!.id));
+    const firstPayload = await firstResponse.json();
+    const secondResponse = await DELETE(secondRequest, routeContext(item!.id));
+    const secondPayload = await secondResponse.json();
+    const operationRecords = await db.operationRecord.count({
+      where: {
+        actorProfileId: profile!.id,
+        operationId,
+      },
+    });
+    const itemCountAfter = await db.item.count({
+      where: {
+        id: item!.id,
+      },
+    });
+
+    expect(firstResponse.status).toBe(200);
+    expect(secondResponse.status).toBe(200);
+    expect(secondPayload).toEqual(firstPayload);
+    expect(operationRecords).toBe(1);
+    expect(itemCountAfter).toBe(0);
+  });
+
+  it("rejects deleteItem when payload changes for the same operationId", async () => {
+    const profile = await lookupProfileByEmail(PROFILES[0]!.email!);
+    const firstItem = await lookupItemByRole(profile!, MemberRole.GUEST);
+    setProfile(profile);
+    const list = firstItem!.listId;
+    const categoryId = firstItem!.categoryId;
+    const secondItem = await db.item.create({
+      data: {
+        categoryId,
+        listId: list,
+        name: "Second Item",
+      },
+    });
+    const operationId = "bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb";
+    const firstRequest = new NextRequest(`http://example.test/api/item/${firstItem!.id}`, {
+      body: JSON.stringify(makeEnvelope(operationId, "deleteItem", {
+        itemId: firstItem!.id,
+      })),
+      method: "DELETE",
+    });
+    const secondRequest = new NextRequest(`http://example.test/api/item/${secondItem.id}`, {
+      body: JSON.stringify(makeEnvelope(operationId, "deleteItem", {
+        itemId: secondItem.id,
+      })),
+      method: "DELETE",
+    });
+
+    await DELETE(firstRequest, routeContext(firstItem!.id));
+    const conflictResponse = await DELETE(secondRequest, routeContext(secondItem.id));
+    const conflictPayload = await conflictResponse.json();
+    const secondItemCount = await db.item.count({
+      where: {
+        id: secondItem.id,
+      },
+    });
+
+    expect(conflictResponse.status).toBe(409);
+    expect(conflictPayload.accepted).toBe(false);
+    expect(conflictPayload.error).toBe("Operation payload does not match existing operationId");
+    expect(conflictPayload.operationId).toBe(operationId);
+    expect(conflictPayload.rejected).toBe(true);
+    expect(conflictPayload.status).toBe(409);
+    expect(secondItemCount).toBe(1);
+  });
+
+  it("rejects deleteItem envelopes with invalid schemaVersion", async () => {
+    const profile = await lookupProfileByEmail(PROFILES[0]!.email!);
+    const item = await lookupItemByRole(profile!, MemberRole.GUEST);
+    setProfile(profile);
+    const operationId = "cccccccc-cccc-4ccc-8ccc-cccccccccccc";
+    const request = new NextRequest(`http://example.test/api/item/${item!.id}`, {
+      body: JSON.stringify({
+        ...makeEnvelope(operationId, "deleteItem", {
+          itemId: item!.id,
+        }),
+        schemaVersion: 999,
+      }),
+      method: "DELETE",
+    });
+
+    const response = await DELETE(request, routeContext(item!.id));
+    const payload = await response.json();
+
+    expect(response.status).toBe(400);
+    expect(payload.accepted).toBe(false);
+    expect(payload.error).toBe("Request body must be a valid operation envelope");
+    expect(payload.operationId).toBe(operationId);
+    expect(payload.rejected).toBe(true);
+    expect(payload.status).toBe(400);
   });
 
 });
 
 // Private Objects -----------------------------------------------------------
+
+type DeleteItemRoutePayload = {
+  itemId: string;
+};
+
+type UpdateItemRoutePayload = {
+  itemId: string;
+  data: ItemUpdateSchemaType;
+};
+
+function makeEnvelope(
+  operationId: string,
+  operationType: "deleteItem" | "updateItem",
+  payload: DeleteItemRoutePayload | UpdateItemRoutePayload,
+) {
+  return {
+    clientTimestamp: new Date("2026-06-14T00:00:00.000Z"),
+    operationId,
+    operationType,
+    payload,
+    schemaVersion: OPERATION_ENVELOPE_SCHEMA_VERSION,
+  };
+}
+
+function routeContext(itemId: string) {
+  return {
+    params: Promise.resolve({ itemId }),
+  };
+}
 
