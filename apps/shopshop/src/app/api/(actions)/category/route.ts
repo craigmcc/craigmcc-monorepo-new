@@ -4,32 +4,33 @@
 
 // External Imports ----------------------------------------------------------
 
-import { CategoryCreateSchemaType } from "@repo/db-shopshop/zod-schemas/CategorySchema";
-import { NextRequest, NextResponse } from "next/server";
+import { CategoryCreateSchema, CategoryCreateSchemaType } from "@repo/db-shopshop/zod-schemas/CategorySchema";
+import { NextRequest } from "next/server";
 
 // Internal Imports ----------------------------------------------------------
 
 import { createCategory } from "@/actions/CategoryActions";
+import {
+  parseOperationEnvelopeRequest,
+  resolveOperationServerTimestamp,
+  toOperationRouteResponse,
+} from "@/lib/OperationRouteHelpers";
 
 // Public Objects ------------------------------------------------------------
 
 export async function POST(request: NextRequest) {
-  const data: CategoryCreateSchemaType = await request.json();
-  const result = await createCategory(data);
-  if (result.model) {
-    return NextResponse.json({
-      data: result.model,
-      success: true,
-    });
+  const parsedRequest = await parseOperationEnvelopeRequest<CategoryCreateSchemaType>({
+    expectedOperationType: "createCategory",
+    payloadSchema: CategoryCreateSchema,
+    request,
+  });
+  if (!parsedRequest.ok) {
+    return parsedRequest.response;
   }
 
-  const status = result.status || 400;
-  return NextResponse.json({
-    error: result.message,
-    status,
-  }, {
-    status,
-  });
+  const result = await createCategory(parsedRequest.payload, parsedRequest.envelope);
+  const serverTimestamp = await resolveOperationServerTimestamp(parsedRequest.envelope.operationId);
+  return toOperationRouteResponse(result, parsedRequest.envelope.operationId, serverTimestamp);
 }
 
 // Private Objects -----------------------------------------------------------

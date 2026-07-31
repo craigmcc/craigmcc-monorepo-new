@@ -4,32 +4,33 @@
 
 // External Imports ----------------------------------------------------------
 
-import { ItemCreateSchemaType } from "@repo/db-shopshop/zod-schemas/ItemSchema";
-import { NextRequest, NextResponse } from "next/server";
+import { ItemCreateSchema, ItemCreateSchemaType } from "@repo/db-shopshop/zod-schemas/ItemSchema";
+import { NextRequest } from "next/server";
 
 // Internal Imports ----------------------------------------------------------
 
 import { createItem } from "@/actions/ItemActions";
+import {
+  parseOperationEnvelopeRequest,
+  resolveOperationServerTimestamp,
+  toOperationRouteResponse,
+} from "@/lib/OperationRouteHelpers";
 
 // Public Objects ------------------------------------------------------------
 
 export async function POST(request: NextRequest) {
-  const data: ItemCreateSchemaType = await request.json();
-  const result = await createItem(data);
-  if (result.model) {
-    return NextResponse.json({
-      data: result.model,
-      success: true,
-    });
+  const parsedRequest = await parseOperationEnvelopeRequest<ItemCreateSchemaType>({
+    expectedOperationType: "createItem",
+    payloadSchema: ItemCreateSchema,
+    request,
+  });
+  if (!parsedRequest.ok) {
+    return parsedRequest.response;
   }
 
-  const status = result.status || 400;
-  return NextResponse.json({
-    error: result.message,
-    status,
-  }, {
-    status,
-  });
+  const result = await createItem(parsedRequest.payload, parsedRequest.envelope);
+  const serverTimestamp = await resolveOperationServerTimestamp(parsedRequest.envelope.operationId);
+  return toOperationRouteResponse(result, parsedRequest.envelope.operationId, serverTimestamp);
 }
 
 // Private Objects -----------------------------------------------------------
