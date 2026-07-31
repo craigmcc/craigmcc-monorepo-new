@@ -179,7 +179,7 @@ Each converted route should have tests for:
    - `PUT /api/category/:categoryId`
    - `DELETE /api/category/:categoryId`
 
-4. [ ] Route contract for item mutations
+4. [x] Route contract for item mutations
    - `PUT /api/item/:itemId`
    - `DELETE /api/item/:itemId`
 
