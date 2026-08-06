@@ -106,8 +106,8 @@ catalogs:
       version: 10.3.1
   postcss:
     postcss:
-      specifier: 8.5.14
-      version: 8.5.14
+      specifier: 8.5.23
+      version: 8.5.23
   postgres:
     pg:
       specifier: 8.20.0
@@ -270,7 +270,7 @@ importers:
         version: 10.3.1
       postcss:
         specifier: catalog:postcss
-        version: 8.5.14
+        version: 8.5.23
       react:
         specifier: catalog:react19
         version: 19.2.4
@@ -385,7 +385,7 @@ importers:
         version: 10.3.1
       postcss:
         specifier: catalog:postcss
-        version: 8.5.14
+        version: 8.5.23
       react:
         specifier: catalog:react19
         version: 19.2.4
@@ -479,7 +479,7 @@ importers:
         version: 1.7.0(react@19.2.4)
       postcss:
         specifier: catalog:postcss
-        version: 8.5.14
+        version: 8.5.23
       react:
         specifier: catalog:react19
         version: 19.2.4
@@ -552,7 +552,7 @@ importers:
         version: 1.7.0(react@19.2.4)
       postcss:
         specifier: catalog:postcss
-        version: 8.5.14
+        version: 8.5.23
       react:
         specifier: catalog:react19
         version: 19.2.4
@@ -622,7 +622,7 @@ importers:
         version: 1.7.0(react@19.2.4)
       postcss:
         specifier: catalog:postcss
-        version: 8.5.14
+        version: 8.5.23
       react:
         specifier: catalog:react19
         version: 19.2.4
@@ -4575,6 +4575,11 @@ packages:
     engines: {node: ^10 || ^12 || ^13.7 || ^14 || >=15.0.1}
     hasBin: true
 
+  nanoid@3.3.17:
+    resolution: {integrity: sha512-xQLf0A3HOMlgHq0n247/LRuAOYmB7dXJ/DvAxGvsSBij45XtBSmQycu+F8ODbHwns/XyFZagyL1+J0Offw1E0g==}
+    engines: {node: ^10 || ^12 || ^13.7 || ^14 || >=15.0.1}
+    hasBin: true
+
   nanostores@1.3.0:
     resolution: {integrity: sha512-XPUa/jz+P1oJvN9VBxw4L9MtdFfaH3DAryqPssqhb2kXjmb9npz0dly6rCsgFWOPr4Yg9mTfM3MDZgZZ+7A3lA==}
     engines: {node: ^20.0.0 || >=22.0.0}
@@ -4806,12 +4811,12 @@ packages:
     resolution: {integrity: sha512-PS08Iboia9mts/2ygV3eLpY5ghnUcfLV/EXTOW1E2qYxJKGGBUtNjN76FYHnMs36RmARn41bC0AZmn+rR0OVpQ==}
     engines: {node: ^10 || ^12 || >=14}
 
-  postcss@8.5.14:
-    resolution: {integrity: sha512-SoSL4+OSEtR99LHFZQiJLkT59C5B1amGO1NzTwj7TT1qCUgUO6hxOvzkOYxD+vMrXBM3XJIKzokoERdqQq/Zmg==}
-    engines: {node: ^10 || ^12 || >=14}
-
   postcss@8.5.15:
     resolution: {integrity: sha512-FfR8sjd4em2T6fb3I2MwAJU7HWVMr9zba+enmQeeWFfCbm+UOC/0X4DS8XtpUTMwWMGbjKYP7xjfNekzyGmB3A==}
+    engines: {node: ^10 || ^12 || >=14}
+
+  postcss@8.5.23:
+    resolution: {integrity: sha512-g50586zr4bZmwFiTlflMu8E0bDTb5I5gertgwAKmsdUlTQIhZtunzUlD1WSzwcVWPoAVpsrA6vlfCD7oXvRwgg==}
     engines: {node: ^10 || ^12 || >=14}
 
   postgres-array@2.0.0:
@@ -7135,7 +7140,7 @@ snapshots:
       '@alloc/quick-lru': 5.2.0
       '@tailwindcss/node': 4.3.0
       '@tailwindcss/oxide': 4.3.0
-      postcss: 8.5.14
+      postcss: 8.5.23
       tailwindcss: 4.3.0
 
   '@tanstack/devtools-event-client@0.4.4': {}
@@ -9885,6 +9890,8 @@ snapshots:
 
   nanoid@3.3.15: {}
 
+  nanoid@3.3.17: {}
+
   nanostores@1.3.0: {}
 
   napi-postinstall@0.3.4: {}
@@ -10127,15 +10134,15 @@ snapshots:
       picocolors: 1.1.1
       source-map-js: 1.2.1
 
-  postcss@8.5.14:
+  postcss@8.5.15:
     dependencies:
       nanoid: 3.3.15
       picocolors: 1.1.1
       source-map-js: 1.2.1
 
-  postcss@8.5.15:
+  postcss@8.5.23:
     dependencies:
-      nanoid: 3.3.15
+      nanoid: 3.3.17
       picocolors: 1.1.1
       source-map-js: 1.2.1
 
