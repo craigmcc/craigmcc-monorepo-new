@@ -15,6 +15,11 @@ import {
   isUniqueConstraintError,
   lookupOperationRecord,
 } from "@/lib/OperationRecordRepository";
+import {
+  incrementOperationMetric,
+  logOperationOutcome,
+  type OperationObservationContext,
+} from "@/lib/OperationObservabilityHelpers";
 import type { OperationType } from "@/types/OperationEnvelope";
 
 // Public Objects ------------------------------------------------------------
@@ -31,16 +36,22 @@ export async function executeIdempotentOperation<M>(
   handler: () => Promise<ActionResult<M>>,
 ): Promise<ActionResult<M>> {
   const payloadHash = hashPayload(input.payload);
+  const observationContext: OperationObservationContext = {
+    operationId: input.operationId,
+    operationType: input.operationType,
+    actorProfileId: input.actorProfileId,
+  };
+
   const existing = await lookupOperationRecord(input.actorProfileId, input.operationId);
   if (existing) {
-    return replayOrReject<M>(existing.payloadHash, payloadHash, existing.responseBody);
+    return replayOrReject<M>(existing.payloadHash, payloadHash, existing.responseBody, observationContext);
   }
 
   const created = await tryCreatePendingRecord(input.actorProfileId, input.operationId, input.operationType, payloadHash);
   if (!created) {
     const raced = await lookupOperationRecord(input.actorProfileId, input.operationId);
     if (raced) {
-      return replayOrReject<M>(raced.payloadHash, payloadHash, raced.responseBody);
+      return replayOrReject<M>(raced.payloadHash, payloadHash, raced.responseBody, observationContext);
     }
 
     return { message: ERRORS.INTERNAL_SERVER_ERROR, status: 500 };
@@ -49,13 +60,23 @@ export async function executeIdempotentOperation<M>(
   try {
     const result = await handler();
     const snapshot = toReplaySnapshot(result);
+    const responseStatus = statusFromActionResult(snapshot);
+
     await completeOperationRecord({
       actorProfileId: input.actorProfileId,
       operationId: input.operationId,
       responseBody: snapshot,
-      responseStatus: statusFromActionResult(snapshot),
+      responseStatus,
       status: snapshot.status ? "REJECTED" : "COMPLETED",
     });
+
+    // Log and record metrics for accepted operations
+    const outcome = snapshot.status ? "validation-failed" : "accepted";
+    logOperationOutcome(observationContext, outcome, {
+      responseStatus,
+    });
+    incrementOperationMetric(outcome);
+
     return snapshot;
   } catch (error) {
     const fallback: ActionResult<M> = {
@@ -99,13 +120,26 @@ function hashPayload(payload: unknown): string {
     .digest("hex");
 }
 
-function replayOrReject<M>(storedPayloadHash: string, currentPayloadHash: string, responseBody: unknown): ActionResult<M> {
+function replayOrReject<M>(
+  storedPayloadHash: string,
+  currentPayloadHash: string,
+  responseBody: unknown,
+  observationContext: OperationObservationContext,
+): ActionResult<M> {
   if (storedPayloadHash !== currentPayloadHash) {
+    logOperationOutcome(observationContext, "rejected", {
+      reason: "payload_mismatch",
+    });
+    incrementOperationMetric("rejected");
+
     return {
       message: PAYLOAD_MISMATCH_MESSAGE,
       status: 409,
     };
   }
+
+  logOperationOutcome(observationContext, "replay");
+  incrementOperationMetric("replay");
 
   return responseBody as ActionResult<M>;
 }
