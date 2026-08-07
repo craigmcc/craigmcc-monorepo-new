@@ -453,6 +453,9 @@ importers:
       tailwindcss:
         specifier: catalog:tailwind4
         version: 4.3.0
+      tsx:
+        specifier: catalog:tsx
+        version: 4.22.1
       typescript:
         specifier: catalog:typescript6
         version: 6.0.2

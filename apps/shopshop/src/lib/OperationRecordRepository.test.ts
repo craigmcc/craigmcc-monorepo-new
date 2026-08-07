@@ -10,7 +10,10 @@ import { beforeEach, describe, expect, it } from "vitest";
 // Internal Imports ----------------------------------------------------------
 
 import {
+  cleanupStaleOperationRecords,
   completeOperationRecord,
+  computeOperationRecordCutoff,
+  countStaleOperationRecords,
   createOperationRecord,
   isUniqueConstraintError,
   lookupOperationRecord,
@@ -197,5 +200,123 @@ describe("OperationRecordRepository", () => {
 
   });
 
+  describe("retention cleanup", () => {
+
+    it("removes only stale terminal records", async () => {
+      const now = new Date("2026-08-06T12:00:00.000Z");
+      const staleCompletedAt = new Date("2026-08-01T12:00:00.000Z");
+      const recentCompletedAt = new Date("2026-08-06T10:00:00.000Z");
+
+      await createAndCompleteOperation(actorProfileId, "cleanup-stale-completed", "COMPLETED", staleCompletedAt);
+      await createAndCompleteOperation(actorProfileId, "cleanup-stale-rejected", "REJECTED", staleCompletedAt);
+      await createAndCompleteOperation(actorProfileId, "cleanup-recent-completed", "COMPLETED", recentCompletedAt);
+
+      await createOperationRecord({
+        actorProfileId,
+        operationId: "cleanup-stale-pending",
+        operationType: OPERATION_TYPE,
+        payloadHash: PAYLOAD_HASH_A,
+      });
+      await db.operationRecord.update({
+        where: {
+          actorProfileId_operationId: {
+            actorProfileId,
+            operationId: "cleanup-stale-pending",
+          },
+        },
+        data: {
+          createdAt: staleCompletedAt,
+        },
+      });
+
+      const result = await cleanupStaleOperationRecords({
+        now,
+        retentionHours: 24,
+      });
+
+      expect(result.deletedCount).toBe(2);
+
+      const staleCompleted = await lookupOperationRecord(actorProfileId, "cleanup-stale-completed");
+      const staleRejected = await lookupOperationRecord(actorProfileId, "cleanup-stale-rejected");
+      const recentCompleted = await lookupOperationRecord(actorProfileId, "cleanup-recent-completed");
+      const stalePending = await lookupOperationRecord(actorProfileId, "cleanup-stale-pending");
+
+      expect(staleCompleted).toBeNull();
+      expect(staleRejected).toBeNull();
+      expect(recentCompleted).not.toBeNull();
+      expect(stalePending).not.toBeNull();
+      expect(stalePending!.status).toBe("PENDING");
+    });
+
+    it("reports stale record count during dry run without deleting", async () => {
+      const now = new Date("2026-08-06T12:00:00.000Z");
+      const staleCompletedAt = new Date("2026-08-01T12:00:00.000Z");
+
+      await createAndCompleteOperation(actorProfileId, "cleanup-dry-run-stale", "COMPLETED", staleCompletedAt);
+
+      const result = await cleanupStaleOperationRecords({
+        dryRun: true,
+        now,
+        retentionHours: 24,
+      });
+
+      expect(result.dryRun).toBe(true);
+      expect(result.deletedCount).toBe(1);
+
+      const stillExists = await lookupOperationRecord(actorProfileId, "cleanup-dry-run-stale");
+      expect(stillExists).not.toBeNull();
+    });
+
+    it("counts stale records using retention cutoff", async () => {
+      const now = new Date("2026-08-06T12:00:00.000Z");
+      const staleCompletedAt = new Date("2026-08-01T12:00:00.000Z");
+      const cutoff = computeOperationRecordCutoff(now, 24);
+
+      await createAndCompleteOperation(actorProfileId, "cleanup-count-stale", "COMPLETED", staleCompletedAt);
+      await createAndCompleteOperation(actorProfileId, "cleanup-count-recent", "COMPLETED", now);
+
+      const staleCount = await countStaleOperationRecords(cutoff);
+      expect(staleCount).toBe(1);
+    });
+
+  });
+
 });
+
+async function createAndCompleteOperation(
+  actorProfileId: string,
+  operationId: string,
+  status: "COMPLETED" | "REJECTED",
+  completedAt: Date,
+): Promise<void> {
+  await createOperationRecord({
+    actorProfileId,
+    operationId,
+    operationType: OPERATION_TYPE,
+    payloadHash: PAYLOAD_HASH_A,
+  });
+
+  await completeOperationRecord({
+    actorProfileId,
+    operationId,
+    responseBody: {
+      message: status,
+    },
+    responseStatus: status === "COMPLETED" ? 200 : 409,
+    status,
+  });
+
+  await db.operationRecord.update({
+    where: {
+      actorProfileId_operationId: {
+        actorProfileId,
+        operationId,
+      },
+    },
+    data: {
+      completedAt,
+      createdAt: completedAt,
+    },
+  });
+}
 
