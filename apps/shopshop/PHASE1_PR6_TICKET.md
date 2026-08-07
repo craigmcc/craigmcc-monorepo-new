@@ -142,7 +142,7 @@ The docs should explain:
    - Implement a cleanup script or scheduled maintenance entrypoint.
    - Add tests for safe cleanup behavior and any repository-level filtering.
 
-4. [ ] Runbook and rollout notes
+4. [x] Runbook and rollout notes
    - Document the observability signals and cleanup procedure.
    - Add rollout guidance for enabling the cleanup job and validating metrics/logging.
    - Record any operational caveats discovered while implementing the PR.
@@ -169,8 +169,8 @@ The docs should explain:
 
 ### Documentation
 
-- [ ] Runbook or maintenance notes explain observability signals and cleanup
-- [ ] Rollout guidance is captured for production use
+- [x] Runbook or maintenance notes explain observability signals and cleanup
+- [x] Rollout guidance is captured for production use
 
 ### Verification
 
