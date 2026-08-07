@@ -13,8 +13,11 @@ import { serverLogger as logger } from "@repo/shared-utils/ServerLogger";
 import { executeIdempotentOperation } from "@/lib/ExecuteIdempotentOperation";
 import { lookupOperationRecord } from "@/lib/OperationRecordRepository";
 import {
+  getOperationMetricsByTypeSnapshot,
   getOperationMetricsSnapshot,
   resetOperationMetrics,
+  setOperationMetricEmitter,
+  type OperationMetricEmitterPayload,
 } from "@/lib/OperationObservabilityHelpers";
 import { BaseUtils } from "@/test/BaseUtils";
 
@@ -31,6 +34,7 @@ describe("ExecuteIdempotentOperation", () => {
     });
     actorProfileId = profiles[0]!.id;
     resetOperationMetrics();
+    setOperationMetricEmitter(null);
     vi.clearAllMocks();
   });
 
@@ -140,6 +144,8 @@ describe("ExecuteIdempotentOperation", () => {
   describe("observability and metrics", () => {
     it("logs and records metrics for first-seen accepted operation", async () => {
       const logSpy = vi.spyOn(logger, "info");
+      const emitter = vi.fn<(payload: OperationMetricEmitterPayload) => void>();
+      setOperationMetricEmitter(emitter);
 
       await executeIdempotentOperation({
         actorProfileId,
@@ -168,6 +174,20 @@ describe("ExecuteIdempotentOperation", () => {
       const metrics = getOperationMetricsSnapshot();
       expect(metrics.accepted).toBe(1);
       expect(metrics.replay).toBe(0);
+
+      const byType = getOperationMetricsByTypeSnapshot();
+      expect(byType.createCategory?.accepted).toBe(1);
+
+      expect(emitter).toHaveBeenCalledWith({
+        metricName: "operation.accepted",
+        outcome: "accepted",
+        operationType: "createCategory",
+        tags: {
+          outcome: "accepted",
+          operationType: "createCategory",
+        },
+        value: 1,
+      });
     });
 
     it("logs and records metrics for replay operation", async () => {

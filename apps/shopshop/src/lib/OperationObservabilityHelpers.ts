@@ -31,6 +31,16 @@ export type OperationObservationContext = {
  */
 export type OperationOutcome = "accepted" | "replay" | "rejected" | "auth-failed" | "validation-failed";
 
+export type OperationMetricEmitterPayload = {
+  metricName: string;
+  outcome: OperationOutcome;
+  operationType?: string;
+  tags: Record<string, string>;
+  value: number;
+};
+
+export type OperationMetricEmitter = (payload: OperationMetricEmitterPayload) => void;
+
 /**
  * Log structured information about an operation outcome.
  * Chooses log level based on outcome severity:
@@ -89,10 +99,27 @@ export const operationMetrics = {
   validationFailed: 0,
 };
 
+export const operationMetricsByType: Record<string, typeof operationMetrics> = {};
+
+/**
+ * Register an optional backend emitter for operation metrics.
+ * The emitter is called on each metric increment with normalized tags.
+ */
+export function setOperationMetricEmitter(emitter: OperationMetricEmitter | null): void {
+  operationMetricEmitter = emitter;
+}
+
 /**
  * Increment the appropriate metric counter for the given outcome.
  */
-export function incrementOperationMetric(outcome: OperationOutcome): void {
+export function incrementOperationMetric(
+  outcome: OperationOutcome,
+  options?: {
+    operationType?: string;
+  },
+): void {
+  const counterKey = counterKeyFromOutcome(outcome);
+
   switch (outcome) {
     case "accepted":
       operationMetrics.accepted++;
@@ -110,6 +137,13 @@ export function incrementOperationMetric(outcome: OperationOutcome): void {
       operationMetrics.validationFailed++;
       break;
   }
+
+  if (options?.operationType) {
+    const operationTypeMetrics = getOrCreateOperationTypeMetrics(options.operationType);
+    operationTypeMetrics[counterKey]++;
+  }
+
+  emitOperationMetric(outcome, options?.operationType);
 }
 
 /**
@@ -122,6 +156,10 @@ export function resetOperationMetrics(): void {
   operationMetrics.rejected = 0;
   operationMetrics.authFailed = 0;
   operationMetrics.validationFailed = 0;
+
+  for (const operationType of Object.keys(operationMetricsByType)) {
+    delete operationMetricsByType[operationType];
+  }
 }
 
 /**
@@ -130,5 +168,80 @@ export function resetOperationMetrics(): void {
  */
 export function getOperationMetricsSnapshot(): typeof operationMetrics {
   return { ...operationMetrics };
+}
+
+export function getOperationMetricsByTypeSnapshot(): Record<string, typeof operationMetrics> {
+  const snapshot: Record<string, typeof operationMetrics> = {};
+
+  for (const [operationType, metrics] of Object.entries(operationMetricsByType)) {
+    snapshot[operationType] = { ...metrics };
+  }
+
+  return snapshot;
+}
+
+// Private Objects -----------------------------------------------------------
+
+let operationMetricEmitter: OperationMetricEmitter | null = null;
+
+const OPERATION_OUTCOME_TO_COUNTER_KEY: Record<OperationOutcome, keyof typeof operationMetrics> = {
+  accepted: "accepted",
+  replay: "replay",
+  rejected: "rejected",
+  "auth-failed": "authFailed",
+  "validation-failed": "validationFailed",
+};
+
+const OPERATION_OUTCOME_TO_TAG_VALUE: Record<OperationOutcome, string> = {
+  accepted: "accepted",
+  replay: "replay",
+  rejected: "rejected",
+  "auth-failed": "auth_failed",
+  "validation-failed": "validation_failed",
+};
+
+function counterKeyFromOutcome(outcome: OperationOutcome): keyof typeof operationMetrics {
+  return OPERATION_OUTCOME_TO_COUNTER_KEY[outcome];
+}
+
+function emitOperationMetric(outcome: OperationOutcome, operationType?: string): void {
+  if (!operationMetricEmitter) {
+    return;
+  }
+
+  const metricOutcome = OPERATION_OUTCOME_TO_TAG_VALUE[outcome];
+  const metricName = `operation.${metricOutcome}`;
+  const tags: Record<string, string> = {
+    outcome: metricOutcome,
+  };
+
+  if (operationType) {
+    tags.operationType = operationType;
+  }
+
+  operationMetricEmitter({
+    metricName,
+    outcome,
+    operationType,
+    tags,
+    value: 1,
+  });
+}
+
+function getOrCreateOperationTypeMetrics(operationType: string): typeof operationMetrics {
+  const existing = operationMetricsByType[operationType];
+  if (existing) {
+    return existing;
+  }
+
+  const created: typeof operationMetrics = {
+    accepted: 0,
+    replay: 0,
+    rejected: 0,
+    authFailed: 0,
+    validationFailed: 0,
+  };
+  operationMetricsByType[operationType] = created;
+  return created;
 }
 

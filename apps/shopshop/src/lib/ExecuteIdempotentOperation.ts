@@ -75,7 +75,9 @@ export async function executeIdempotentOperation<M>(
     logOperationOutcome(observationContext, outcome, {
       responseStatus,
     });
-    incrementOperationMetric(outcome);
+    incrementOperationMetric(outcome, {
+      operationType: observationContext.operationType,
+    });
 
     return snapshot;
   } catch (error) {
@@ -130,7 +132,9 @@ function replayOrReject<M>(
     logOperationOutcome(observationContext, "rejected", {
       reason: "payload_mismatch",
     });
-    incrementOperationMetric("rejected");
+    incrementOperationMetric("rejected", {
+      operationType: observationContext.operationType,
+    });
 
     return {
       message: PAYLOAD_MISMATCH_MESSAGE,
@@ -139,7 +143,9 @@ function replayOrReject<M>(
   }
 
   logOperationOutcome(observationContext, "replay");
-  incrementOperationMetric("replay");
+  incrementOperationMetric("replay", {
+    operationType: observationContext.operationType,
+  });
 
   return responseBody as ActionResult<M>;
 }

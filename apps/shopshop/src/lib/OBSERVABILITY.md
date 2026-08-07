@@ -41,6 +41,7 @@ This is the foundation layer that enables consistent observability across all op
    - `rejected`: Number of conflicting operations
    - `authFailed`: Number of auth failures
    - `validationFailed`: Number of validation failures
+    - `operationMetricsByType`: Per-operation-type counters for hotspot detection
 
 ## Usage Guide
 
@@ -160,8 +161,10 @@ Current metrics are stored in-memory and available via:
 
 ```typescript
 import {
+  getOperationMetricsByTypeSnapshot,
   getOperationMetricsSnapshot,
   operationMetrics,
+  setOperationMetricEmitter,
 } from "@/lib/OperationObservabilityHelpers";
 
 // Get current snapshot
@@ -171,28 +174,35 @@ console.log(snapshot);
 
 // Or directly access
 console.log(operationMetrics.accepted);
+
+// Grouped counters by operation type
+console.log(getOperationMetricsByTypeSnapshot());
+// { createCategory: { accepted: 10, replay: 1, rejected: 0, authFailed: 0, validationFailed: 0 } }
+
+// Optional backend emission hook
+setOperationMetricEmitter((payload) => {
+  // forward to Prometheus, StatsD, OpenTelemetry, etc.
+  metricsService.increment(payload.metricName, payload.value, payload.tags);
+});
 ```
 
 ### Production Metrics Export
 
-The in-memory metrics foundation is designed to be extended. To emit to a metrics backend:
+Milestone 2 adds a backend emission hook and operation-type tagging:
 
-1. Extend `incrementOperationMetric` to also call a metrics service
-2. Or, periodically export snapshots via `getOperationMetricsSnapshot()`
-3. Metrics should be tagged with operation type for aggregation
+1. `incrementOperationMetric` now accepts optional `operationType` metadata
+2. `setOperationMetricEmitter` registers a backend forwarding callback
+3. Emitted metrics include `metricName`, `value`, and `tags` (`outcome`, optional `operationType`)
 
-Example future enhancement:
-```typescript
-export function incrementOperationMetric(outcome: OperationOutcome): void {
-  switch (outcome) {
-    case "accepted":
-      operationMetrics.accepted++;
-      metricsService.increment("operation.accepted"); // TODO: add metrics service
-      break;
-    // ...
-  }
-}
-```
+Emitted metric names:
+
+- `operation.accepted`
+- `operation.replay`
+- `operation.rejected`
+- `operation.auth_failed`
+- `operation.validation_failed`
+
+This keeps instrumentation lightweight while enabling external dashboards and alerts.
 
 ## Testing
 

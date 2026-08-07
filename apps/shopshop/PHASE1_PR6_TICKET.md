@@ -127,12 +127,12 @@ The docs should explain:
 
 ## Suggested milestones
 
-1. [ ] Observability helper foundation
+1. [x] Observability helper foundation
    - Add or extend shared logging helpers for operation-aware writes.
    - Ensure the helpers are reusable from actions and/or route support code.
    - Keep the logging shape consistent across the Phase 1 write paths.
 
-2. [ ] Metrics instrumentation
+2. [x] Metrics instrumentation
    - Add counters or similar instrumentation for accepted, replayed, rejected, and auth-failed outcomes.
    - Capture enough context to distinguish operation types and identify hotspots.
    - Keep instrumentation low overhead and server-side only.
@@ -151,15 +151,15 @@ The docs should explain:
 
 ### Observability
 
-- [ ] Structured logs include operation context and outcome
-- [ ] Logs are consistent across the operation-aware write paths
-- [ ] Logs avoid secrets and sensitive request data
+- [x] Structured logs include operation context and outcome
+- [x] Logs are consistent across the operation-aware write paths
+- [x] Logs avoid secrets and sensitive request data
 
 ### Metrics
 
-- [ ] Counters exist for accepted, replayed, rejected, and auth-failed operations
-- [ ] Metrics can be used to spot replay spikes or validation issues
-- [ ] Instrumentation is lightweight and server-side only
+- [x] Counters exist for accepted, replayed, rejected, and auth-failed operations
+- [x] Metrics can be used to spot replay spikes or validation issues
+- [x] Instrumentation is lightweight and server-side only
 
 ### Retention
 
@@ -174,18 +174,18 @@ The docs should explain:
 
 ### Verification
 
-- [ ] `pnpm --filter shopshop test:ci` passes
-- [ ] `pnpm --filter shopshop lint` passes
-- [ ] `pnpm --filter shopshop check-types` passes
+- [x] `pnpm --filter shopshop test:ci` passes
+- [x] `pnpm --filter shopshop lint` passes
+- [x] `pnpm --filter shopshop check-types` passes
 
 ## Test Cases
 
 ### Logging and instrumentation
 
-- [ ] First-seen operation logs the expected context and accepted outcome.
-- [ ] Replay logs a distinct replay outcome and does not create a second mutation.
-- [ ] Payload mismatch logs a rejection outcome.
-- [ ] Auth failures are visible in logs or counters.
+- [x] First-seen operation logs the expected context and accepted outcome.
+- [x] Replay logs a distinct replay outcome and does not create a second mutation.
+- [x] Payload mismatch logs a rejection outcome.
+- [x] Auth failures are visible in logs or counters.
 
 ### Retention / cleanup
 
@@ -195,8 +195,8 @@ The docs should explain:
 
 ### Regression coverage
 
-- [ ] Existing route/action idempotency behavior remains unchanged.
-- [ ] Phase 1 write routes still pass their replay and mismatch tests.
+- [x] Existing route/action idempotency behavior remains unchanged.
+- [x] Phase 1 write routes still pass their replay and mismatch tests.
 
 ## Implementation Notes
 

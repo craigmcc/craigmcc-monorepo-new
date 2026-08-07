@@ -10,11 +10,15 @@ import { serverLogger as logger } from "@repo/shared-utils/ServerLogger";
 // Internal Imports ----------------------------------------------------------
 
 import {
+  getOperationMetricsByTypeSnapshot,
   logOperationOutcome,
   operationMetrics,
+  operationMetricsByType,
   incrementOperationMetric,
   resetOperationMetrics,
   getOperationMetricsSnapshot,
+  setOperationMetricEmitter,
+  type OperationMetricEmitterPayload,
   type OperationObservationContext,
 } from "@/lib/OperationObservabilityHelpers";
 
@@ -23,6 +27,7 @@ import {
 describe("OperationObservabilityHelpers", () => {
   beforeEach(() => {
     resetOperationMetrics();
+    setOperationMetricEmitter(null);
     vi.clearAllMocks();
   });
 
@@ -217,6 +222,70 @@ describe("OperationObservabilityHelpers", () => {
       expect(operationMetrics.authFailed).toBe(0);
       expect(operationMetrics.validationFailed).toBe(0);
     });
+
+    it("tracks operation type counters when operation type is provided", () => {
+      incrementOperationMetric("accepted", {
+        operationType: "createCategory",
+      });
+      incrementOperationMetric("replay", {
+        operationType: "createCategory",
+      });
+      incrementOperationMetric("rejected", {
+        operationType: "updateCategory",
+      });
+
+      expect(operationMetricsByType.createCategory).toEqual({
+        accepted: 1,
+        replay: 1,
+        rejected: 0,
+        authFailed: 0,
+        validationFailed: 0,
+      });
+      expect(operationMetricsByType.updateCategory).toEqual({
+        accepted: 0,
+        replay: 0,
+        rejected: 1,
+        authFailed: 0,
+        validationFailed: 0,
+      });
+    });
+
+    it("emits backend metrics with operation type tags", () => {
+      const emitter = vi.fn<(payload: OperationMetricEmitterPayload) => void>();
+      setOperationMetricEmitter(emitter);
+
+      incrementOperationMetric("validation-failed", {
+        operationType: "updateProfile",
+      });
+
+      expect(emitter).toHaveBeenCalledWith({
+        metricName: "operation.validation_failed",
+        outcome: "validation-failed",
+        operationType: "updateProfile",
+        tags: {
+          outcome: "validation_failed",
+          operationType: "updateProfile",
+        },
+        value: 1,
+      });
+    });
+
+    it("emits backend metrics without operation type when omitted", () => {
+      const emitter = vi.fn<(payload: OperationMetricEmitterPayload) => void>();
+      setOperationMetricEmitter(emitter);
+
+      incrementOperationMetric("auth-failed");
+
+      expect(emitter).toHaveBeenCalledWith({
+        metricName: "operation.auth_failed",
+        outcome: "auth-failed",
+        operationType: undefined,
+        tags: {
+          outcome: "auth_failed",
+        },
+        value: 1,
+      });
+    });
   });
 
   describe("resetOperationMetrics", () => {
@@ -240,6 +309,7 @@ describe("OperationObservabilityHelpers", () => {
       expect(operationMetrics.rejected).toBe(0);
       expect(operationMetrics.authFailed).toBe(0);
       expect(operationMetrics.validationFailed).toBe(0);
+      expect(operationMetricsByType).toEqual({});
     });
   });
 
@@ -275,6 +345,40 @@ describe("OperationObservabilityHelpers", () => {
 
       // Original metrics should be unchanged
       expect(operationMetrics.accepted).toBe(1);
+    });
+  });
+
+  describe("getOperationMetricsByTypeSnapshot", () => {
+    it("returns counters grouped by operation type", () => {
+      incrementOperationMetric("accepted", {
+        operationType: "createCategory",
+      });
+      incrementOperationMetric("replay", {
+        operationType: "createCategory",
+      });
+
+      const snapshot = getOperationMetricsByTypeSnapshot();
+
+      expect(snapshot).toEqual({
+        createCategory: {
+          accepted: 1,
+          replay: 1,
+          rejected: 0,
+          authFailed: 0,
+          validationFailed: 0,
+        },
+      });
+    });
+
+    it("returns an independent copy", () => {
+      incrementOperationMetric("accepted", {
+        operationType: "createCategory",
+      });
+
+      const snapshot = getOperationMetricsByTypeSnapshot();
+      snapshot.createCategory!.accepted = 99;
+
+      expect(operationMetricsByType.createCategory!.accepted).toBe(1);
     });
   });
 
