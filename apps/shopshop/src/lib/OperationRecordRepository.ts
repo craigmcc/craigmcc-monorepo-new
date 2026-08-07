@@ -14,6 +14,14 @@ import type { OperationRecord } from "@repo/db-shopshop/types";
 // Internal Imports ----------------------------------------------------------
 
 import { extractPrismaUniqueConstraintTargets } from "@/lib/PrismaErrorHelpers";
+import {
+  cleanupStaleOperationRecords,
+  type CleanupOperationRecordsInput,
+  type CleanupOperationRecordsResult,
+  computeOperationRecordCutoff,
+  countStaleOperationRecords,
+  DEFAULT_OPERATION_RECORD_RETENTION_HOURS,
+} from "@/lib/OperationRecordRetention";
 
 // Public Objects ------------------------------------------------------------
 
@@ -104,6 +112,18 @@ export async function lookupOperationRecord(actorProfileId: string, operationId:
     },
   });
 }
+
+export {
+  cleanupStaleOperationRecords,
+  computeOperationRecordCutoff,
+  countStaleOperationRecords,
+  DEFAULT_OPERATION_RECORD_RETENTION_HOURS,
+};
+
+export type {
+  CleanupOperationRecordsInput,
+  CleanupOperationRecordsResult,
+};
 
 // Private Objects -----------------------------------------------------------
 

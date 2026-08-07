@@ -137,7 +137,7 @@ The docs should explain:
    - Capture enough context to distinguish operation types and identify hotspots.
    - Keep instrumentation low overhead and server-side only.
 
-3. [ ] Retention and cleanup job
+3. [x] Retention and cleanup job
    - Define the retention policy for stale idempotency records.
    - Implement a cleanup script or scheduled maintenance entrypoint.
    - Add tests for safe cleanup behavior and any repository-level filtering.
@@ -163,9 +163,9 @@ The docs should explain:
 
 ### Retention
 
-- [ ] Retention policy is defined and documented
-- [ ] Stale idempotency records can be cleaned up safely
-- [ ] Cleanup behavior is covered by tests
+- [x] Retention policy is defined and documented
+- [x] Stale idempotency records can be cleaned up safely
+- [x] Cleanup behavior is covered by tests
 
 ### Documentation
 
@@ -189,9 +189,9 @@ The docs should explain:
 
 ### Retention / cleanup
 
-- [ ] Cleanup removes only stale operation records.
-- [ ] Recent records remain available for replay.
-- [ ] Cleanup does not change the response of active, recent operations.
+- [x] Cleanup removes only stale operation records.
+- [x] Recent records remain available for replay.
+- [x] Cleanup does not change the response of active, recent operations.
 
 ### Regression coverage
 

@@ -289,6 +289,34 @@ Use `getOperationMetricsSnapshot()` to:
 - Track validation failure trends
 - Monitor auth failure spikes
 
+## Retention and Cleanup
+
+Milestone 3 introduces lifecycle cleanup for stale idempotency records.
+
+- Retention window: `30 days` by default (`720` hours)
+- Cleanup target: terminal operation records only (`COMPLETED` or `REJECTED`)
+- Safety guard: `PENDING` records are never removed by the cleanup path
+
+CLI entrypoint:
+
+```bash
+pnpm --filter shopshop cleanup:operations
+pnpm --filter shopshop cleanup:operations:dry-run
+```
+
+Optional retention override:
+
+```bash
+pnpm --filter shopshop cleanup:operations -- --retention-hours 168
+```
+
+The cleanup script logs a structured `OperationRecordCleanup` summary with:
+
+- cutoff timestamp
+- retention hours
+- dry-run mode flag
+- deleted (or would-delete) record count
+
 ## Future Enhancements
 
 Milestone 1 foundation enables:
